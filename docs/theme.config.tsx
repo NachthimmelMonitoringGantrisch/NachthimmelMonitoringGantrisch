@@ -6,17 +6,17 @@ const config: DocsThemeConfig = {
     logo: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
             <Image
-                src="/images/ballenberg.svg"
-                alt="Interaktive Webkarte Ballenberg"
+                src="/images/gantrisch.svg"
+                alt="Nachthimmelmonitoring Gantrisch"
                 width={40}
                 height={40}
                 style={{ marginRight: '10px' }}
             />
-            <span>Interaktive Webkarte Ballenberg</span>
+            <span>Nachthimmelmonitoring Gantrisch</span>
         </div>
     ),
     project: {
-        link: 'https://github.com/InteraktiveWebkarteBallenberg/InteraktiveWebkarteBallenberg.git',
+        link: 'https://github.com/NachthimmelMonitoringGantrisch/NachthimmelMonitoringGantrisch.git',
     },
     docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
     footer: {
@@ -33,7 +33,7 @@ const config: DocsThemeConfig = {
     },
     feedback: {
         content: 'Feedback geben',
-        useLink: () => 'https://github.com/InteraktiveWebkarteBallenberg/InteraktiveWebkarteBallenberg/issues'
+        useLink: () => 'https://github.com/NachthimmelMonitoringGantrisch/NachthimmelMonitoringGantrisch/issues'
     }
 }
 
