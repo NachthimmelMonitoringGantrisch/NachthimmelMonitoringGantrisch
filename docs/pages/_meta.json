@@ -1,0 +1,15 @@
+{
+  "index": "Einführung",
+  "konzept": "Konzept",
+  "bericht": "Bericht",
+  "about": {
+    "title": "Über uns",
+    "type": "page"
+  },
+  "contact": {
+    "title": "Kontakt ↗",
+    "type": "page",
+    "href": "mailto:interaktivewebkarteballenberg@gmail.com",
+    "newWindow": false
+  }
+}

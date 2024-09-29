@@ -1,0 +1,7 @@
+{
+  "einleitung": { "title": "Einleitung", "order": 1 },
+  "literaturrecherche": { "title": "Literaturrecherche", "order": 2 },
+  "projekt": { "title": "Projekt", "order": 3 },
+  "reflektion": { "title": "Reflektion", "order": 4 },
+  "fazit": { "title": "Fazit", "order": 5 }
+}

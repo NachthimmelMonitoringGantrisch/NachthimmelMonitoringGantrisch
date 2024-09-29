@@ -1,0 +1,11 @@
+{
+  "einleitung": { "title": "Einleitung", "order": 1 },
+  "ist-analyse": { "title": "Ist-Analyse", "order": 2 },
+  "zielsetzung": { "title": "Zielsetzung", "order": 3 },
+  "anforderungen": { "title": "Anforderungen", "order": 4 },
+  "user-persona": { "title": "User-Persona", "order": 5 },
+  "methoden": { "title": "Methoden und Vorgehen", "order": 6 },
+  "ressourcen": { "title": "Ressourcen", "order": 7 },
+  "herausforderungen": { "title": "Risiken und Herausforderungen", "order": 8 },
+  "zeitplan": { "title": "Zeitplan", "order": 9 }
+}
