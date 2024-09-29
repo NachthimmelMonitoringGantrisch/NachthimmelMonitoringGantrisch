@@ -8,7 +8,7 @@ This is a template for creating documentation with [Nextra](https://nextra.site)
 
 ## Go directly to our Documentation
 
-[**Documenation →**](https://nachhimmel-monitoring-gantrisch-docs.vercel.app/)
+[**Documenation →**](https://nachthimmel-monitoring-gantrisch-docs.vercel.app/)
 
 ## Quick Start
 
