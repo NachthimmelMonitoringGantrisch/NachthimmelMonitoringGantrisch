@@ -35,7 +35,7 @@ const config: DocsThemeConfig = {
     feedback: {
         content: 'Feedback geben',
         useLink: () => 'https://github.com/NachthimmelMonitoringGantrisch/NachthimmelMonitoringGantrisch/issues'
-    }
+    },
 }
 
 export default config
