@@ -1,23 +1,39 @@
 library(shiny)
 
-# UI-Elemente für die Shiny-App
-ui <- fluidPage(
-  titlePanel("Photometer Daten Analyse"),
+# UI-Komponente mit drei Tabs
+ui <- navbarPage(
+  title = "Photometer Analyse App",
   
-  sidebarLayout(
-    sidebarPanel(
-      # Kompakteres Layout: Die Eingabefelder werden untereinander angeordnet
-      tags$div(
-        style = "display: flex; flex-direction: column; gap: 10px;",
-        dateRangeInput("dateRange", "Wähle Datum:", 
-                       start = Sys.Date() - 30,  # Standardwert für Startdatum (letzte 30 Tage)
-                       end = Sys.Date())  # Aktuelles Datum als Enddatum
-      )
-    ),
-    
-    mainPanel(
-      # Grafikbereich wird in der Höhe gestreckt
-      plotOutput("magnitudePlot", height = "700px")  # Erhöht die Höhe des Plots
-    )
-  )
+  # Tab für Datenbezug
+  tabPanel("Datenbezug",
+           sidebarLayout(
+             sidebarPanel(
+               fileInput("fileUpload", "Wähle eine Datei zum Hochladen:", accept = c(".dat"))
+             ),
+             mainPanel(
+               textOutput("dataStatus")  # Platzhalter, um zu zeigen, ob Daten hochgeladen wurden
+             )
+           )),
+  
+  # Tab für Photometer-Analyse
+  tabPanel("photometer-analyse",
+           sidebarLayout(
+             sidebarPanel(
+               dateRangeInput("dateRange", "Wähle Datum:")
+             ),
+             mainPanel(
+               plotOutput("plotOutput")  # Platzhalter für einen Beispiel-Plot
+             )
+           )),
+  
+  # Tab für Analyse Report
+  tabPanel("Analyse Report",
+           sidebarLayout(
+             sidebarPanel(
+               actionButton("exportButton", "Exportiere Report")
+             ),
+             mainPanel(
+               textOutput("reportStatus")  # Platzhalter für den Export-Status
+             )
+           ))
 )
