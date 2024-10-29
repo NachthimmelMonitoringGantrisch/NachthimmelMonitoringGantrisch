@@ -8,7 +8,8 @@ ui <- navbarPage(
   tabPanel("Datenbezug",
            sidebarLayout(
              sidebarPanel(
-               fileInput("fileUpload", "Wähle eine Datei zum Hochladen:", accept = c(".dat"))
+               # Eingabefeld für den Photometer-Namen
+               textInput("photometerName", "Gib den Photometer-Namen ein:", value = "stars")  # Standardwert ist "stars"
              ),
              mainPanel(
                textOutput("dataStatus")  # Platzhalter, um zu zeigen, ob Daten hochgeladen wurden
@@ -37,3 +38,4 @@ ui <- navbarPage(
              )
            ))
 )
+
