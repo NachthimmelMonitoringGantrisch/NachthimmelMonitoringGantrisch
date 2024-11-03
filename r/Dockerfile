@@ -8,7 +8,7 @@ WORKDIR /srv/shiny-server
 COPY Shiny_Gantrisch/ .
 
 # Installiere benötigte R-Pakete
-RUN R -e "install.packages(c('shiny', 'ggplot2'))"
+RUN R -e "install.packages(c('shiny', 'ggplot2', 'RSQLite', 'reticulate'))"
 
 # Exponiere den Port
 EXPOSE 3838
