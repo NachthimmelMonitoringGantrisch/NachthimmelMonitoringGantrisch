@@ -1,5 +1,6 @@
 library(shiny)
 
+
 # UI-Komponente mit drei Tabs
 ui <- navbarPage(
   title = "Photometer Analyse App",
@@ -9,7 +10,11 @@ ui <- navbarPage(
            sidebarLayout(
              sidebarPanel(
                # Eingabefeld für den Photometer-Namen
-               textInput("photometerName", "Gib den Photometer-Namen ein:", value = "stars")  # Standardwert ist "stars"
+               textInput("photometerName", "Gib den Photometer-Namen ein:", value = "stars"),
+               dateRangeInput("dateRangeFetchData", "Wähle Datum:"),
+               checkboxInput("preprocessing", "Vorprozessierung", value = FALSE),
+               actionButton("updateData", "aktualisieren", icon = NULL, width = NULL, disabled = FALSE),
+               actionButton("nextPanelToAnalysis", "weiter zur Auswertung", icon = NULL, width = NULL, disabled = FALSE)  # Add the switch here
              ),
              mainPanel(
                textOutput("dataStatus")  # Platzhalter, um zu zeigen, ob Daten hochgeladen wurden
@@ -17,7 +22,7 @@ ui <- navbarPage(
            )),
   
   # Tab für Photometer-Analyse
-  tabPanel("photometer-analyse",
+  tabPanel("Photometer Analyse",
            sidebarLayout(
              sidebarPanel(
                dateRangeInput("dateRange", "Wähle Datum:")
@@ -39,3 +44,23 @@ ui <- navbarPage(
            ))
 )
 
+# Server function (placeholder for this example)
+server <- function(input, output, session) {
+  output$dataStatus <- renderText({
+    paste("Daten für Photometer", input$photometerName, "wurden hochgeladen.")
+  })
+  
+  output$reportStatus <- renderText({
+    if (input$exportButton > 0) {
+      "Der Report wurde exportiert."
+    }
+  })
+  
+  output$plotOutput <- renderPlot({
+    # Placeholder plot
+    plot(1:10, 1:10, main = "Beispiel-Plot für die Photometer-Analyse")
+  })
+}
+
+# Run the app
+shinyApp(ui = ui, server = server)
