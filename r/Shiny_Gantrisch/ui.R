@@ -16,7 +16,7 @@ ui <- navbarPage(
                               "Wähle Datum:"),
                checkboxInput("preprocessing", 
                              "Vorprozessierung", 
-                             value = FALSE),
+                             value = TRUE),
                actionButton("updateData", 
                             "aktualisieren", 
                             icon = NULL, 
