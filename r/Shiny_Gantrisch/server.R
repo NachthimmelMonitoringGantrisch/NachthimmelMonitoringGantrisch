@@ -39,24 +39,53 @@ print(f'Preprocessing Enabled: {preprocessing}')
 # Server component
 server <- function(input, output, session) {
   
-  # Observe event for updateData button to trigger Python code execution
-  observeEvent(input$updateData, {
-    # Ensure all necessary inputs are present
-    req(input$photometerName, input$dateRangeFetchData, input$preprocessing)
-    
-    # Retrieve values from the UI
-    photometer_name <- input$photometerName
-    date_range <- input$dateRangeFetchData
-    preprocessing <- input$preprocessing
-    
-    # Run the Python code with parameters
-    source_python_code(photometer_name, date_range[1], date_range[2], preprocessing)
-    
-    # Update the data status message
-    output$dataStatus <- renderText({
-      paste("Daten für Photometer", photometer_name, "wurden aktualisiert.")
+  # Set working directory (adjust as necessary)
+  setwd("C:/Users/Nando Amport/5230_Geoinformatik_Repository/NachthimmelMonitoringGantrisch")
+  
+  # Check the current working directory
+  print(paste("Current working directory:", getwd()))
+  
+  # Define relative path and convert to absolute path
+  db_path <- normalizePath(file.path("data", "TessNetwork_metadata.db"), mustWork = FALSE)
+  
+  # Debugging output
+  print(paste("Database path:", db_path))
+  
+  # Check if the database file exists
+  if (!file.exists(db_path)) {
+    print(paste("Database file not found at path:", db_path))
+    output$tablePhotometerDownload <- renderText({
+      "Database file not found. Check the file path and try again."
     })
-  })
+  } else {
+    # Try connecting to the SQLite database with error handling
+    tryCatch({
+      db <- dbConnect(SQLite(), dbname = db_path)
+      
+      # Check if table exists before querying
+      if ("TessNetwork_metadata" %in% dbListTables(db)) {
+        # Load data
+        data <- dbReadTable(db, "TessNetwork_metadata")
+      } else {
+        stop("Table 'TessNetwork_metadata' does not exist in the database.")
+      }
+      
+      # Disconnect from the database
+      dbDisconnect(db)
+      
+      # Render the static data table at the start
+      output$tablePhotometerDownload <- renderDT({
+        datatable(data, options = list(pageLength = 10, deferRender = TRUE, scrollY = 400))
+      })
+      
+    }, error = function(e) {
+      # Error handling
+      print(paste("Error connecting to database at path:", db_path, ":", e$message))
+      output$tablePhotometerDownload <- renderText({
+        "Unable to load data. Check database connection and path."
+      })
+    })
+  }
   
   # Placeholder for data status if no file is uploaded
   output$dataStatus <- renderText({
