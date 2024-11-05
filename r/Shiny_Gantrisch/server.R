@@ -46,41 +46,41 @@ server <- function(input, output, session) {
   print(paste("Current working directory:", getwd()))
   
   # Define relative path and convert to absolute path
-  db_path <- normalizePath(file.path("data", "TessNetwork_metadata.db"), mustWork = FALSE)
+  db_metadata_path <- normalizePath(file.path("data", "TessNetwork_metadata.db"), mustWork = FALSE)
   
   # Debugging output
-  print(paste("Database path:", db_path))
+  print(paste("Database path:", db_metadata_path))
   
   # Check if the database file exists
-  if (!file.exists(db_path)) {
-    print(paste("Database file not found at path:", db_path))
+  if (!file.exists(db_metadata_path)) {
+    print(paste("Database file not found at path:", db_metadata_path))
     output$tablePhotometerDownload <- renderText({
       "Database file not found. Check the file path and try again."
     })
   } else {
     # Try connecting to the SQLite database with error handling
     tryCatch({
-      db <- dbConnect(SQLite(), dbname = db_path)
+      db_metadata <- dbConnect(SQLite(), dbname = db_metadata_path)
       
       # Check if table exists before querying
-      if ("TessNetwork_metadata" %in% dbListTables(db)) {
+      if ("TessNetwork_metadata" %in% dbListTables(db_metadata)) {
         # Load data
-        data <- dbReadTable(db, "TessNetwork_metadata")
+        photometer_metadata <- dbReadTable(db_metadata, "TessNetwork_metadata")
       } else {
         stop("Table 'TessNetwork_metadata' does not exist in the database.")
       }
       
       # Disconnect from the database
-      dbDisconnect(db)
+      dbDisconnect(db_metadata)
       
       # Render the static data table at the start
       output$tablePhotometerDownload <- renderDT({
-        datatable(data, options = list(pageLength = 10, deferRender = TRUE, scrollY = 400))
+        datatable(photometer_metadata, options = list(pageLength = 10, deferRender = TRUE, scrollY = 400))
       })
       
     }, error = function(e) {
       # Error handling
-      print(paste("Error connecting to database at path:", db_path, ":", e$message))
+      print(paste("Error connecting to database at path:", db_metadata_path, ":", e$message))
       output$tablePhotometerDownload <- renderText({
         "Unable to load data. Check database connection and path."
       })

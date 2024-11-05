@@ -22,8 +22,8 @@ drop_table_query = "DROP TABLE IF EXISTS TessNetwork_metadata;"
 create_table_query = '''
 CREATE TABLE TessNetwork_metadata (
     name VARCHAR(255),
-    latitude DECIMAL(10, 7),
-    longitude DECIMAL(10, 7),
+    latitude DECIMAL(10, 2),
+    longitude DECIMAL(10, 2),
     country VARCHAR(255),
     city VARCHAR(255),
     place VARCHAR(255),
@@ -43,7 +43,7 @@ with engine.connect() as connection:
     connection.execute(text(create_table_query))
     print("Table created successfully.")
 
-    # API URL
+# API URL
 api_url = "https://api.stars4all.eu/photometers"
 
 # Fetch data from the API
@@ -55,8 +55,8 @@ records = []
 for item in data:
     record = {
         "name": item.get("name"),
-        "latitude": item.get("latitude"),
-        "longitude": item.get("longitude"),
+        "latitude": round(float(item.get("latitude")), 2) if item.get("latitude") is not None else None,
+        "longitude": round(float(item.get("longitude")), 2) if item.get("longitude") is not None else None,
         "country": item.get("country", item.get("info_location", {}).get("country")),
         "city": item.get("city", item.get("info_location", {}).get("town")),
         "place": item.get("place", item.get("info_location", {}).get("place")),
