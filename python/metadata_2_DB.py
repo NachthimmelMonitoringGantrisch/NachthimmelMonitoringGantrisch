@@ -15,9 +15,12 @@ else:
 # Create the engine regardless, since it will just connect to the existing database
 engine = create_engine(f'sqlite:///{db_name}')
 
-# SQL query to create the table if it doesn't exist
+# SQL query to drop the table if it exists
+drop_table_query = "DROP TABLE IF EXISTS TessNetwork_metadata;"
+
+# SQL query to create the table
 create_table_query = '''
-CREATE TABLE IF NOT EXISTS TessNetwork_metadata (
+CREATE TABLE TessNetwork_metadata (
     name VARCHAR(255),
     latitude DECIMAL(10, 7),
     longitude DECIMAL(10, 7),
@@ -30,14 +33,17 @@ CREATE TABLE IF NOT EXISTS TessNetwork_metadata (
 );
 '''
 
-# Connect to the database and execute the create table query
+# Connect to the database, drop the table, and then create a new one
 with engine.connect() as connection:
+    # Drop the existing table if it exists
+    connection.execute(text(drop_table_query))
+    print("Table dropped successfully (if it existed).")
+    
+    # Create the table
     connection.execute(text(create_table_query))
-    connection.execute(text("DELETE FROM TessNetwork_metadata"))
-    print("Table checked/created successfully.")
+    print("Table created successfully.")
 
-
-# API URL
+    # API URL
 api_url = "https://api.stars4all.eu/photometers"
 
 # Fetch data from the API
@@ -63,11 +69,7 @@ for item in data:
 # Convert to DataFrame
 df = pd.DataFrame(records)
 
-# Clear existing data in the table
-with engine.connect() as connection:
-    connection.execute(text("DELETE FROM TessNetwork_metadata"))
-
 # Insert new data into SQLite database
 df.to_sql('TessNetwork_metadata', con=engine, if_exists='append', index=False)
 
-print("Data cleared and new data inserted successfully!")
+print("New data inserted successfully!")
