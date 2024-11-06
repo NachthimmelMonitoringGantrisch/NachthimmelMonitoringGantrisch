@@ -50,9 +50,6 @@ server <- function(input, output, session) {
   # Define relative path and convert to absolute path
   db_metadata_path <- normalizePath(file.path("data", "TessNetwork_metadata.db"), mustWork = FALSE)
   
-  # Debugging output
-  print(paste("Database path:", db_metadata_path))
-  
   # Check if the database file exists
   if (!file.exists(db_metadata_path)) {
     print(paste("Database file not found at path:", db_metadata_path))
@@ -63,6 +60,7 @@ server <- function(input, output, session) {
     # Try connecting to the SQLite database with error handling
     tryCatch({
       db_metadata <- dbConnect(SQLite(), dbname = db_metadata_path)
+      print("Successfully connected to TessNetwork_metadata database.")
       
       # Check if table exists before querying
       if ("TessNetwork_metadata" %in% dbListTables(db_metadata)) {
@@ -117,6 +115,42 @@ server <- function(input, output, session) {
       print(paste("Error connecting to database at path:", db_metadata_path, ":", e$message))
       output$tablePhotometerDownload <- renderText({
         "Unable to load data. Check database connection and path."
+      })
+    })
+  }
+  
+#---------------------------------------------------------------- "Photometer Analyse" - Datenverbindung -----------------------------------------
+  
+  # Path to the tess_data database
+  db_tess_data_path <- normalizePath(file.path("data", "tess_data.db"), mustWork = FALSE)
+  
+  # Check if the database file exists
+  if (!file.exists(db_tess_data_path)) {
+    print(paste("Database file 'tess_data' not found at path:", db_tess_data_path))
+    output$tableDropdown <- renderUI({
+      "Database file not found. Check the file path and try again."
+    })
+  } else {
+    # Connect to the tess_data database and list tables
+    tryCatch({
+      db_tess_data <- dbConnect(SQLite(), dbname = db_tess_data_path)
+      print("Successfully connected to tess_data database.")
+      
+      # List all tables in the tess_data database
+      table_names <- dbListTables(db_tess_data)
+      table_names <- table_names[table_names != "data_import_control"]
+      print("Tables in tess_data database:")
+      print(table_names)
+      
+      # Update the choices in the dropdown menu
+      updateSelectInput(session, "tableDropdown", choices = table_names)
+      
+      dbDisconnect(db_tess_data)
+      
+    }, error = function(e) {
+      print(paste("Error connecting to 'tess_data' database at path:", db_tess_data_path, ":", e$message))
+      output$tableDropdown <- renderText({
+        "Unable to connect to tess_data database. Check connection settings."
       })
     })
   }

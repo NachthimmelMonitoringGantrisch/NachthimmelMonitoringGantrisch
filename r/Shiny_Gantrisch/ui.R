@@ -48,7 +48,9 @@ ui <- navbarPage(
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerGraphicsMonthly'",
-                 dateRangeInput("dateRange2", "Wähle Datum für Plot 2:")
+                 dateRangeInput("dateRange2", "Wähle den Zeitraum für die Analyse:"),
+                 selectInput("tableDropdown", "Wähle den Photometer für die Analyse:", choices = NULL),
+                 textOutput("tableList")
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerGraphicsPerNight'",
