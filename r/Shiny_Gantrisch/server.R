@@ -36,8 +36,10 @@ print(f'Preprocessing Enabled: {preprocessing}')
 ")
 }
 
-# Server component
+#---------------------------------------------------------------------- Server component ----------------------------------------------------------
 server <- function(input, output, session) {
+  
+#----------------------------------------------------------------- "Datenbezug" - Table Metadata --------------------------------------------------
   
   # Set working directory (adjust as necessary)
   setwd("C:/Users/Nando Amport/5230_Geoinformatik_Repository/NachthimmelMonitoringGantrisch")
@@ -94,6 +96,8 @@ server <- function(input, output, session) {
         }
       })
       
+#---------------------------------------------------------------- "Datenbezug" - Button Download --------------------------------------------------
+      
       # Observe event for "downloadData" button click
       observeEvent(input$downloadData, {
         # Get the list of selected names
@@ -117,15 +121,31 @@ server <- function(input, output, session) {
     })
   }
   
-  # Placeholder for data status if no file is uploaded
-  output$dataStatus <- renderText({
-    "Keine Datei hochgeladen."
-  })
+#------------------------------------------------------------------------------------------------------------------------------------------------
   
-  # Placeholder for Plot
+  # Render different plots based on selected tab in "Photometer Analysis"
   output$plotOutput <- renderPlot({
-    plot(cars)  # Simple example plot
+    selected_tab <- input$AnalysisTabs
+    
+    if (selected_tab == "PhotometerStatistics") {
+      # Plot for Photometer Statistics
+      plot(cars, main = "Photometer Statistics")
+      
+    } else if (selected_tab == "PhotometerGraphicsMonthly") {
+      # Plot for Monthly Photometer Graphics
+      hist(mtcars$mpg, col = "blue", main = "Monthly Photometer Graphics", xlab = "MPG", ylab = "Frequency")
+      
+    } else if (selected_tab == "PhotometerGraphicsPerNight") {
+      # Plot for Photometer Graphics Per Night
+      boxplot(mpg ~ cyl, data = mtcars, col = "orange", main = "Photometer Graphics Per Night", xlab = "Cylinders", ylab = "MPG")
+      
+    } else if (selected_tab == "PhotometerComparison") {
+      # Plot for Photometer Comparison
+      plot(pressure, type = "l", col = "red", main = "Photometer Comparison", xlab = "Temperature", ylab = "Pressure")
+    }
   })
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
   
   # Placeholder for export status
   output$reportStatus <- renderText({

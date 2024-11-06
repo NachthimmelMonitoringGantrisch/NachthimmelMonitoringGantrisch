@@ -10,31 +10,19 @@ ui <- navbarPage(
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
   ),
   
-  # Tab für Datenbezug
-  tabPanel("Datenbezug",
+  #----------------------------------------------------------------- Tab for "Daten herunterladen" -------------------------------------------------
+  tabPanel("Daten herunterladen",
            fillPage(
              sidebarLayout(
                sidebarPanel(
                  dateRangeInput("dateRangeFetchData", 
                                 "Wähle die Zeitspanne für den Download:"),
-                 checkboxInput("preprocessing", 
-                               "Vorprozessierung", 
-                               value = TRUE),
                  actionButton("updateData", 
-                              "aktualisieren", 
-                              icon = NULL, 
-                              width = NULL, 
-                              disabled = FALSE),
+                              "aktualisieren"),
                  actionButton("nextPanelToAnalysis", 
-                              "weiter zur Auswertung", 
-                              icon = NULL, 
-                              width = NULL, 
-                              disabled = FALSE),
+                              "weiter zur Auswertung"),
                  actionButton("downloadData", 
-                              "Daten herunterladen", 
-                              icon = NULL, 
-                              width = NULL, 
-                              disabled = FALSE)
+                              "Daten herunterladen")
                ),
                mainPanel(
                  DTOutput("tablePhotometerDownload", height = "100%")
@@ -42,25 +30,54 @@ ui <- navbarPage(
              )
            )),
   
-  # Tab für Photometer-Analyse
+  #---------------------------------------------------------------- Tab for "Photometer Analyse" ---------------------------------------------------
   tabPanel("Photometer Analyse",
            sidebarLayout(
              sidebarPanel(
-               dateRangeInput("dateRange", "Wähle Datum:")
+               # Sidebar tab navigation for different analysis plots
+               tabsetPanel(
+                 id = "AnalysisTabs",
+                 
+                 tabPanel("PhotometerStatistics",
+                          dateRangeInput("dateRange1", "Wähle Datum für Plot 1:")
+                 ),
+                 
+                 tabPanel("PhotometerGraphicsMonthly",
+                          dateRangeInput("dateRange2", "Wähle Datum für Plot 2:")
+                 ),
+                 
+                 tabPanel("PhotometerGraphicsPerNight",
+                          dateRangeInput("dateRange3", "Wähle Datum für Plot 3:"),
+                          sliderInput("slider1", "Wähle den Abstand", -1, 1, 0.25)
+                 ),
+                 
+                 tabPanel("PhotometerComparison",
+                          dateRangeInput("dateRange4", "Wähle Datum für Plot 4:")
+                 )
+               )
              ),
+             
+             # Main panel to display the plot
              mainPanel(
-               plotOutput("plotOutput")  # Platzhalter für einen Beispiel-Plot
+               plotOutput("plotOutput")  # Placeholder for the selected plot
              )
            )),
   
-  # Tab für Analyse Report
+  #----------------------------------------------------------------- Tab for "Analyse Report" ------------------------------------------------------
   tabPanel("Analyse Report",
            sidebarLayout(
              sidebarPanel(
-               actionButton("exportButton", "Exportiere Report")
+               checkboxInput("check_PhotometerStatistics", 
+                             "Photometer Statistik", value = TRUE),
+               checkboxInput("check_PhotometerGraphics", 
+                             "Photometer Grafik", value = TRUE),
+               checkboxInput("check_PhotometerComparison", 
+                             "Photometer Vergleich", value = TRUE),
+               actionButton("exportButton", 
+                            "Exportiere Report")
              ),
              mainPanel(
-               textOutput("reportStatus")  # Platzhalter für den Export-Status
+               textOutput("reportStatus")  # Placeholder for export status
              )
            ))
 )
