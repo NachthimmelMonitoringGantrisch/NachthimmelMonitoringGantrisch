@@ -34,32 +34,36 @@ ui <- navbarPage(
   tabPanel("Photometer Analyse",
            sidebarLayout(
              sidebarPanel(
-               # Sidebar tab navigation for different analysis plots
-               tabsetPanel(
-                 id = "AnalysisTabs",
-                 
-                 tabPanel("PhotometerStatistics",
-                          dateRangeInput("dateRange1", "Wähle Datum für Plot 1:")
-                 ),
-                 
-                 tabPanel("PhotometerGraphicsMonthly",
-                          dateRangeInput("dateRange2", "Wähle Datum für Plot 2:")
-                 ),
-                 
-                 tabPanel("PhotometerGraphicsPerNight",
-                          dateRangeInput("dateRange3", "Wähle Datum für Plot 3:"),
-                          sliderInput("slider1", "Wähle den Abstand", -1, 1, 0.25)
-                 ),
-                 
-                 tabPanel("PhotometerComparison",
-                          dateRangeInput("dateRange4", "Wähle Datum für Plot 4:")
-                 )
+               # Dropdown to select the analysis type
+               selectInput("analysisType", "Select Analysis Type:",
+                           choices = c("PhotometerStatistics", 
+                                       "PhotometerGraphicsMonthly", 
+                                       "PhotometerGraphicsPerNight", 
+                                       "PhotometerComparison")),
+               
+               # Conditional UI elements based on the selected analysis type
+               conditionalPanel(
+                 condition = "input.analysisType == 'PhotometerStatistics'",
+                 dateRangeInput("dateRange1", "Wähle Datum für Plot 1:")
+               ),
+               conditionalPanel(
+                 condition = "input.analysisType == 'PhotometerGraphicsMonthly'",
+                 dateRangeInput("dateRange2", "Wähle Datum für Plot 2:")
+               ),
+               conditionalPanel(
+                 condition = "input.analysisType == 'PhotometerGraphicsPerNight'",
+                 dateRangeInput("dateRange3", "Wähle Datum für Plot 3:"),
+                 sliderInput("slider1", "Wähle den Abstand", -1, 1, 0.25)
+               ),
+               conditionalPanel(
+                 condition = "input.analysisType == 'PhotometerComparison'",
+                 dateRangeInput("dateRange4", "Wähle Datum für Plot 4:")
                )
              ),
              
              # Main panel to display the plot
              mainPanel(
-               plotOutput("plotOutput")  # Placeholder for the selected plot
+               plotOutput("plotOutput")
              )
            )),
   
