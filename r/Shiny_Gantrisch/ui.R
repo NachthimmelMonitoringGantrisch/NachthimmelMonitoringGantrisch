@@ -5,31 +5,40 @@ library(DT)
 ui <- navbarPage(
   title = "Photometer Analyse App",
   
+  # Link to the CSS file
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+  ),
+  
   # Tab für Datenbezug
   tabPanel("Datenbezug",
-           sidebarLayout(
-             sidebarPanel(
-               textInput("photometerName", 
-                         "Gib den Photometer-Namen ein:", 
-                         value = "stars"),
-               dateRangeInput("dateRangeFetchData", 
-                              "Wähle Datum:"),
-               checkboxInput("preprocessing", 
-                             "Vorprozessierung", 
-                             value = TRUE),
-               actionButton("updateData", 
-                            "aktualisieren", 
-                            icon = NULL, 
-                            width = NULL, 
-                            disabled = FALSE),
-               actionButton("nextPanelToAnalysis", 
-                            "weiter zur Auswertung", 
-                            icon = NULL, 
-                            width = NULL, 
-                            disabled = FALSE)
-             ),
-             mainPanel(
-               DTOutput("tablePhotometerDownload")
+           fillPage(
+             sidebarLayout(
+               sidebarPanel(
+                 dateRangeInput("dateRangeFetchData", 
+                                "Wähle die Zeitspanne für den Download:"),
+                 checkboxInput("preprocessing", 
+                               "Vorprozessierung", 
+                               value = TRUE),
+                 actionButton("updateData", 
+                              "aktualisieren", 
+                              icon = NULL, 
+                              width = NULL, 
+                              disabled = FALSE),
+                 actionButton("nextPanelToAnalysis", 
+                              "weiter zur Auswertung", 
+                              icon = NULL, 
+                              width = NULL, 
+                              disabled = FALSE),
+                 actionButton("downloadData", 
+                              "Daten herunterladen", 
+                              icon = NULL, 
+                              width = NULL, 
+                              disabled = FALSE)
+               ),
+               mainPanel(
+                 DTOutput("tablePhotometerDownload", height = "100%")
+               )
              )
            )),
   

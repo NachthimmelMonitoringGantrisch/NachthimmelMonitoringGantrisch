@@ -73,9 +73,39 @@ server <- function(input, output, session) {
       # Disconnect from the database
       dbDisconnect(db_metadata)
       
-      # Render the static data table at the start
+      # Render the static data table with row selection enabled
       output$tablePhotometerDownload <- renderDT({
-        datatable(photometer_metadata, options = list(pageLength = 10, deferRender = TRUE, scrollY = 400))
+        datatable(photometer_metadata,
+                  rownames = FALSE, 
+                  selection = 'multiple',  # Allow multiple row selection
+                  options = list(pageLength = 25, 
+                                 deferRender = TRUE, 
+                                 scrollY = 600,
+                                 scrollX = FALSE))
+      })
+      
+      # Reactive expression to extract 'name' values from selected rows
+      selected_names <- reactive({
+        selected_rows <- input$tablePhotometerDownload_rows_selected
+        if (length(selected_rows) > 0) {
+          photometer_metadata[selected_rows, "name"]
+        } else {
+          NULL  # No rows selected
+        }
+      })
+      
+      # Observe event for "downloadData" button click
+      observeEvent(input$downloadData, {
+        # Get the list of selected names
+        names_list <- selected_names()
+        
+        # Print the list in the console when the button is clicked
+        if (!is.null(names_list) && length(names_list) > 0) {
+          print("Selected Photometer Names:")
+          print(names_list)
+        } else {
+          print("Keine Photometer ausgewählt.")
+        }
       })
       
     }, error = function(e) {

@@ -1,0 +1,71 @@
+/* Style the sidebar */
+.sidebar {
+    background-color: #f0f0f0; /* Light gray background */
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Change sidebar background on hover */
+.sidebar:hover {
+    background-color: #e0e0e0; /* Slightly darker gray on hover */
+}
+
+/* Style the sidebar title and tab text */
+.sidebar h1, /* Adjust this selector based on your title element */
+.sidebar a {
+    color: #333333; /* Dark gray text for title and tabs */
+}
+
+.sidebar a:not(.active) {
+    color: #666666; /* Lighter gray for inactive tab text */
+}
+
+/* Style the main panel table */
+.dataTable-container {
+    height: calc(100vh - 250px) !important; /* Full-height display */
+    overflow: auto;
+}
+
+table.dataTable {
+    width: 100%;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px;
+    background-color: #ffffff; /* White background for the table */
+}
+
+/* Make the DataTable container take full viewport height minus other components */
+.dataTable-container {
+    height: calc(100vh - 100px) !important; /* Adjust 200px as needed to account for header or other components */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Style table headers */
+table.dataTable thead th {
+    background-color: #888888; /* Dark gray header */
+    color: #ffffff; /* White text for contrast */
+}
+
+/* Style selected rows */
+table.dataTable tbody tr.selected {
+    background-color: #ff6200; /* Change to your desired selected color */
+    color: #ffffff; /* White text for selected rows */
+}
+
+/* Style the navbar */
+.navbar {
+    background-color: #888888; /* Dark gray navbar */
+    color: #ffffff; /* White text */
+}
+
+/* Style the buttons */
+.btn {
+    background-color: #888888; /* Dark gray button */
+    color: #ffffff; /* White text */
+    border: none;
+}
+
+.btn:hover {
+    background-color: #555555; /* Darker gray on hover */
+    color:  #ffffff; /* White text */
+}
