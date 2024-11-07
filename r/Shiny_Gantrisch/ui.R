@@ -15,14 +15,21 @@ ui <- navbarPage(
            fillPage(
              sidebarLayout(
                sidebarPanel(
+                 width = 2,
+                 
                  dateRangeInput("dateRangeFetchData", 
                                 "Wähle die Zeitspanne für den Download:"),
-                 actionButton("updateData", 
-                              "aktualisieren"),
-                 actionButton("nextPanelToAnalysis", 
-                              "weiter zur Auswertung"),
-                 actionButton("downloadData", 
-                              "Daten herunterladen")
+                 
+                 # Use fluidRow for each button in separate rows
+                 fluidRow(
+                   column(12, actionButton("downloadData", "Daten herunterladen", class = "btn-custom"))
+                 ),
+                 fluidRow(
+                   column(12, actionButton("nextPanelToAnalysis", "Weiter zur Auswertung", class = "btn-custom"))
+                 ),
+                 fluidRow(
+                   column(12, actionButton("updateData", "Aktualisieren", class = "btn-custom"))
+                 )
                ),
                mainPanel(
                  DTOutput("tablePhotometerDownload", height = "100%")
@@ -34,32 +41,59 @@ ui <- navbarPage(
   tabPanel("Photometer Analyse",
            sidebarLayout(
              sidebarPanel(
-               # Dropdown to select the analysis type
-               selectInput("analysisType", "Select Analysis Type:",
+               width = 2,
+               
+               # Analyse Typ Dropdown
+               selectInput("analysisType", "Wähle den Analyse Typ:",
                            choices = c("PhotometerStatistics", 
                                        "PhotometerGraphicsMonthly", 
                                        "PhotometerGraphicsPerNight", 
                                        "PhotometerComparison")),
                
-               # Conditional UI elements based on the selected analysis type
+               # Photometer Dropdown
+               conditionalPanel(
+                 condition = "input.analysisType != 'PhotometerComparison'",
+                 selectInput("photometerDropdown", 
+                             "Wähle den Photometer für die Analyse:", 
+                             choices = NULL)
+               ),
+               
+               # Input Data Range
+               dateRangeInput("dateRange", 
+                              "Wähle den Zeitraum für die Analyse:"),
+               
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerStatistics'",
-                 dateRangeInput("dateRange1", "Wähle Datum für Plot 1:")
+                
                ),
+               
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerGraphicsMonthly'",
-                 dateRangeInput("dateRange2", "Wähle den Zeitraum für die Analyse:"),
-                 selectInput("tableDropdown", "Wähle den Photometer für die Analyse:", choices = NULL),
-                 textOutput("tableList")
+                 
                ),
+               
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerGraphicsPerNight'",
-                 dateRangeInput("dateRange3", "Wähle Datum für Plot 3:"),
-                 sliderInput("slider1", "Wähle den Abstand", -1, 1, 0.25)
+                 sliderInput("slider1", 
+                             "Wähle den Abstand", 
+                             -1, 1, 0.25)
                ),
+               
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerComparison'",
-                 dateRangeInput("dateRange4", "Wähle Datum für Plot 4:")
+                 # Add side-by-side dropdowns for photometer comparison
+                 fluidRow(
+                   column(6,
+                          selectInput("photometerCompare1", 
+                                      "Wähle den ersten Photometer:", 
+                                      choices = NULL)
+                   ),
+                   column(6,
+                          selectInput("photometerCompare2", 
+                                      "Wähle den zweiten Photometer:", 
+                                      choices = NULL)
+                   )
+                 )
                )
              ),
              

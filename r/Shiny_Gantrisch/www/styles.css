@@ -83,13 +83,55 @@ table.dataTable tbody tr.selected {
     background-color: #888888;
     color: #ffffff;
     border: none;
+    border-radius: 5px; /* Rounded button edges */
+    padding: 12px 20px; /* Padding to make buttons more clickable */
+    width: 100%; /* Make buttons full-width */
+    margin-bottom: 15px; /* Space between buttons */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
 .btn:hover {
-    background-color: #555555;
+    background-color: #555555; /* Darker gray on hover */
+    color: #ffffff;
+}
+
+/* Specific class for button layout */
+.btn-custom {
+    width: 100%;
+    margin-bottom: 15px;
 }
 
 /* Main panel styling for plot */
 .main-panel {
     padding: 10px;
+}
+
+/* Customizing active button state for better visibility */
+.action-button.active {
+    background-color: #ff6200; /* Highlight active button */
+    color: #ffffff;
+}
+
+/* Adjustments for table responsiveness */
+.dataTable-container {
+    height: calc(100vh - 150px) !important;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+table.dataTable thead th {
+    background-color: #666666;
+    color: #ffffff;
+    text-align: center; /* Centering the header text */
+}
+
+table.dataTable tbody td {
+    text-align: center; /* Centering the data */
+}
+
+/* Custom styles for modal and popups (if needed) */
+.modal-content {
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    padding: 20px;
 }
