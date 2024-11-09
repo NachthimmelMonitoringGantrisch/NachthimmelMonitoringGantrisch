@@ -1,4 +1,3 @@
-# Load necessary libraries
 library(DBI)
 library(RSQLite)
 library(dplyr)
@@ -6,15 +5,21 @@ library(ggplot2)
 library(lubridate)
 
 # Path to the SQLite database
-db_tess_data_path <- normalizePath(file.path("..","..","data", "tess_data.db"), mustWork = FALSE)
+db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
 
 # Function to load data from the SQLite database for a specific photometer
 load_data_from_database <- function(photometer_id) {
+  # Check if the database exists
+  if (!file.exists(db_tess_data_path)) {
+    stop(paste("Database not found at path:", db_tess_data_path))
+  }
+  
   # Connect to the SQLite database
   conn <- dbConnect(RSQLite::SQLite(), db_tess_data_path)
   
   # Construct the SQL query to get data for the selected photometer
   table_name <- paste0(photometer_id, "_data")
+  print(paste("Loading data from table:", table_name))
   query <- paste("SELECT * FROM", table_name)
   
   # Fetch the data into a data frame
@@ -23,36 +28,92 @@ load_data_from_database <- function(photometer_id) {
   # Close the connection
   dbDisconnect(conn)
   
+  if (nrow(df) == 0) {
+    stop(paste("No data found for photometer:", photometer_id))
+  }
+  
   return(df)
 }
 
-# Function to preprocess the data and calculate mean MSAS per night
+# Preprocess the data
 preprocess_data <- function(df) {
-  # Convert timestamp to POSIXct and assign to a new column for processing
-  df$timestamp <- as.POSIXct(df$timestamp)
+  # Check for NA values in the 'time' column and remove them
+  if (any(is.na(df$time))) {
+    warning("NA values detected in time column. Removing them...")
+    df <- df %>% filter(!is.na(time))
+  }
   
-  # Define "night" as starting at 18:00 (6:00 PM) and ending at 06:00 the next day
+  # Ensure 'time' column exists in the dataframe
+  if (!"time" %in% colnames(df)) {
+    stop("Time column not found in the data.")
+  }
+  
+  # Print class before converting to POSIXct
+  print("Class of time before conversion:")
+  print(class(df$time))
+  
+  # Convert 'time' to POSIXct format for proper datetime handling
+  df$time <- as.POSIXct(df$time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+  
+  # Print class after converting to POSIXct
+  print("Class of time after conversion:")
+  print(class(df$time))
+  
+  # Ensure we still have data after filtering
+  if (nrow(df) == 0) {
+    stop("No data available after filtering NA values in time.")
+  }
+  
+  # Filter data to only include night times (18:00–06:00)
   df <- df %>%
+    filter(hour(time) >= 18 | hour(time) < 6) %>%
     mutate(
-      # Assign the start of the "night" for each observation
-      night_start = if_else(
-        hour(timestamp) >= 18,
-        as.POSIXct(format(timestamp, "%Y-%m-%d 18:00:00")),
-        as.POSIXct(format(timestamp - days(1), "%Y-%m-%d 18:00:00"))
+      # Calculate the 'night_start' for grouping purposes
+      night_start = ifelse(
+        hour(time) >= 18,
+        as.POSIXct(format(time, "%Y-%m-%d 18:00:00")),
+        as.POSIXct(format(time - lubridate::days(1), "%Y-%m-%d 18:00:00"))
       )
     )
   
+  # Print class of 'night_start' after creation
+  print("Class of night_start after creation:")
+  print(class(df$night_start))
+  
+  # Ensure the night_start column is POSIXct
+  df$night_start <- as.POSIXct(df$night_start, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+  
+  # Check if the 'night_start' column was successfully created
+  if (!"night_start" %in% colnames(df)) {
+    stop("Failed to create night_start column.")
+  }
+  
+  # Ensure there's enough data to proceed
+  if (nrow(df) == 0) {
+    stop("No data available after filtering by night time (18:00-06:00).")
+  }
+  
   # Group by each night and calculate mean MSAS for each night period
-  nightly_stats <- df %>%
+  df_nightly_stats <- df %>%
     group_by(night_start) %>%
     summarise(mean_msas = mean(msas, na.rm = TRUE)) %>%
     ungroup()
   
-  return(nightly_stats)
+  # Check if the night_start and mean_msas columns are available
+  if (!"night_start" %in% colnames(df_nightly_stats) | !"mean_msas" %in% colnames(df_nightly_stats)) {
+    stop("Failed to calculate nightly statistics. Missing required columns.")
+  }
+  
+  return(df_nightly_stats)
 }
 
 # Function to plot the histogram of the number of nights per mean MSAS value by month
 plot_histogram <- function(df_nightly_stats) {
+  # Check if the necessary column for month exists
+  if (!"night_start" %in% colnames(df_nightly_stats)) {
+    stop("night_start column is missing in the processed data.")
+  }
+  
   # Extract the month for grouping by month
   df_nightly_stats$month <- month(df_nightly_stats$night_start, label = TRUE)
   
@@ -72,9 +133,11 @@ main <- function(photometer_id) {
   data <- load_data_from_database(photometer_id)
   processed_data <- preprocess_data(data)
   
+  # Check if the processed data contains any rows
+  if (nrow(processed_data) == 0) {
+    stop("No valid data available for the selected photometer.")
+  }
+  
   # Plot the histogram of the processed data
   plot_histogram(processed_data)
 }
-
-main(photometer_id)
-

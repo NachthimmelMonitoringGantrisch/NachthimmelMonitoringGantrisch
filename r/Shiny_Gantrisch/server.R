@@ -153,7 +153,7 @@ server <- function(input, output, session) {
       plot_result <- main(photometer_id)  # Call the main function from photometer_statistics with the selected photometer ID
       
       if (!is.null(plot_result)) {
-        plot_result  # Display the plot returned by the main function
+        plot_result
       } else {
         print("Plot could not be generated. Check photometer_statistics.R for issues.")
       }
