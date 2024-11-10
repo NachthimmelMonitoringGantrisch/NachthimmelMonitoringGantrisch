@@ -144,7 +144,7 @@ server <- function(input, output, session) {
   # Call photometer_statistics Script and Generate Plot
   #-------------------------------------------------------------------
   
-  output$plotOutput <- renderPlot({
+  output$plotPhotometerStatistics <- renderPlot({
     photometer_id <- input$photometerDropdown  # Selected photometer ID
     print(photometer_id)
     

@@ -97,9 +97,12 @@ ui <- navbarPage(
                )
              ),
              
-             # Main panel to display the plot
+             # Main panel to display the plot conditionally
              mainPanel(
-               plotOutput("plotOutput")
+               conditionalPanel(
+                 condition = "input.analysisType == 'PhotometerStatistics'",
+                 plotOutput("plotPhotometerStatistics")
+               )
              )
            )),
   
