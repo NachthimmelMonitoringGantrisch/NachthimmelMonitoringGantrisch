@@ -54,13 +54,9 @@ ui <- navbarPage(
                conditionalPanel(
                  condition = "input.analysisType != 'PhotometerComparison'",
                  selectInput("photometerDropdown", 
-                             "Wähle den Photometer für die Analyse:", 
+                             "Auswahl Photometer:", 
                              choices = NULL)
                ),
-               
-               # Input Data Range
-               dateRangeInput("dateRange", 
-                              "Wähle den Zeitraum für die Analyse:"),
                
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerStatistics'",
@@ -69,28 +65,26 @@ ui <- navbarPage(
                
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerGraphicsMonthly'",
-                 
+                 dateRangeInput("dateRange", 
+                                "Auswahl Analyse Zeitraum:"),
                ),
                
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerGraphicsPerNight'",
-                 sliderInput("slider1", 
-                             "Wähle den Abstand", 
-                             -1, 1, 0.25)
                ),
                
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerComparison'",
-                 # Add side-by-side dropdowns for photometer comparison
+                 
                  fluidRow(
                    column(6,
                           selectInput("photometerCompare1", 
-                                      "Wähle den ersten Photometer:", 
+                                      "1. Photometer:", 
                                       choices = NULL)
                    ),
                    column(6,
                           selectInput("photometerCompare2", 
-                                      "Wähle den zweiten Photometer:", 
+                                      "2. Photometer:", 
                                       choices = NULL)
                    )
                  )

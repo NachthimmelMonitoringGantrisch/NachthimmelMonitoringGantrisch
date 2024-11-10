@@ -29,7 +29,7 @@ load_data_from_database <- function(photometer_id) {
 # Preprocess the data to calculate mean MSAS per night based on night_id
 preprocess_data <- function(df) {
   df <- df %>%
-    filter(!is.na(time)) %>%
+    filter(!is.na(time), !is.na(msas)) %>%  # Filter out NA values in time and msas columns
     mutate(time = as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
   
   # Filter for nighttime hours and create a night_id
@@ -40,13 +40,14 @@ preprocess_data <- function(df) {
         ifelse(hour(time) < 5, -1, 0)
     )
   
-  # Group by "night_id" and calculate mean MSAS for each night
+  # Group by "night_id" and calculate mean MSAS for each night, while handling potential NA values
   df_nightly_stats <- df %>%
     group_by(night_id) %>%
     summarise(
       mean_msas = mean(msas, na.rm = TRUE),
       night_date = as.Date(min(time))  # Capture the start date for each night_id
     ) %>%
+    filter(!is.na(mean_msas)) %>%  # Remove any rows with NA mean_msas values
     ungroup()
   
   return(df_nightly_stats)
@@ -58,6 +59,9 @@ plot_histogram <- function(df_nightly_stats) {
   df_nightly_stats <- df_nightly_stats %>%
     filter(mean_msas > 21.3) %>%
     mutate(month = month(night_date, label = TRUE, abbr = TRUE))  # Extract month from night_date
+  
+  # Final check to remove any non-finite values in 'month' or 'mean_msas' before plotting
+  df_nightly_stats <- df_nightly_stats %>% filter(!is.na(month), !is.na(mean_msas))
   
   ggplot(df_nightly_stats, aes(x = month)) +
     geom_bar(stat = "count", fill = "steelblue", show.legend = FALSE) +
