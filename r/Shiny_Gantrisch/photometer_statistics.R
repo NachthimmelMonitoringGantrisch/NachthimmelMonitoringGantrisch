@@ -29,7 +29,7 @@ load_data_from_database <- function(photometer_id) {
 # Preprocess the data to calculate mean MSAS per night based on night_id
 preprocess_data <- function(df) {
   df <- df %>%
-    filter(!is.na(time), !is.na(msas)) %>%  # Filter out NA values in time and msas columns
+    filter(!is.na(time), !is.na(msas)) %>%
     mutate(time = as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
   
   # Filter for nighttime hours and create a night_id
@@ -45,33 +45,45 @@ preprocess_data <- function(df) {
     group_by(night_id) %>%
     summarise(
       mean_msas = mean(msas, na.rm = TRUE),
-      night_date = as.Date(min(time))  # Capture the start date for each night_id
+      night_date = as.Date(min(time))
     ) %>%
-    filter(!is.na(mean_msas)) %>%  # Remove any rows with NA mean_msas values
+    filter(!is.na(mean_msas)) %>%
     ungroup()
   
   return(df_nightly_stats)
 }
 
-# Function to plot the histogram of the number of nights per mean MSAS value by month
 plot_histogram <- function(df_nightly_stats) {
-  # Filter for nights with mean MSAS over 21.3 and extract month from night_date
+  # Filter for nights with mean MSAS over 21.3, extract month and year from night_date
   df_nightly_stats <- df_nightly_stats %>%
     filter(mean_msas > 21.3) %>%
-    mutate(month = month(night_date, label = TRUE, abbr = TRUE))  # Extract month from night_date
+    mutate(
+      month = month(night_date, label = TRUE, abbr = TRUE),
+      year = year(night_date)
+    )
   
-  # Final check to remove any non-finite values in 'month' or 'mean_msas' before plotting
-  df_nightly_stats <- df_nightly_stats %>% filter(!is.na(month), !is.na(mean_msas))
+  # Calculate the data timespan for the subtitle
+  date_range <- range(df_nightly_stats$night_date, na.rm = TRUE)
+  subtitle_text <- paste("Data from", format(date_range[1], "%Y-%m-%d"), "to", format(date_range[2], "%Y-%m-%d"))
   
   ggplot(df_nightly_stats, aes(x = month)) +
     geom_bar(stat = "count", fill = "steelblue", show.legend = FALSE) +
-    labs(title = "Nights with Mean MSAS > 21.3 per Month (20:00–05:00)",
-         x = "Month", y = "Number of Nights") +
+    labs(
+      title = "Nights with Mean MSAS > 21.3 per Month",
+      subtitle = subtitle_text,  # Display timespan of data
+      x = "Month", y = "Number of Nights"
+    ) +
     scale_x_discrete(limits = month.abb) +
     scale_y_continuous(limits = c(0, 31)) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      strip.text = element_text(size = 12, face = "bold"),  # Enhance year labels
+      panel.spacing = unit(1, "lines")  # Add spacing between plots for clarity
+    ) +
+    facet_wrap(~ year, ncol = 2)  # Arrange plots in 2 columns
 }
+
 
 # Main function to run the analysis
 main <- function(photometer_id) {
