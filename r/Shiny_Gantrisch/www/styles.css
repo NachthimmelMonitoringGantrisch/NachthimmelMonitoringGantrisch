@@ -1,137 +1,194 @@
-/* General app styling */
+/* Import Roboto font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* ----------------------------------------
+   General App Styling
+---------------------------------------- */
+
 body, .navbar, .btn, .sidebar, .main-panel {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif; /* Updated font */
+    color: #444444;
 }
 
-/* Navbar styling */
-.navbar {
-    background-color: #888888; /* Dark gray */
-    color: #ffffff; /* White text */
+/* ----------------------------------------
+   Navbar Styling for navbarPage tabs
+---------------------------------------- */
+
+/* Apply background color to navbar */
+.navbar-default {
+    background-color: #666666 !important; /* Set background color */
+    color: #ffffff !important;
 }
 
-/* Sidebar styling */
+/* Style navbar brand title */
+.navbar-default .navbar-brand {
+    color: #ffffff !important;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Style each tab link in navbar */
+.navbar-default .navbar-nav > li > a {
+    color: #ffffff !important; /* Set text color */
+    padding: 15px 20px; /* Adjust padding for larger click area */
+}
+
+/* Hover effect for tabs */
+.navbar-default .navbar-nav > li > a:hover {
+    color: #cccccc !important; /* Light gray on hover */
+    background-color: #555555 !important; /* Slightly darker background on hover */
+}
+
+/* Active tab styling */
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover {
+    background-color: #444444 !important; /* Darker gray for active tab */
+    color: #ffffff !important;
+}
+
+/* ----------------------------------------
+   Sidebar and General Styling
+---------------------------------------- */
+
 .sidebar {
-    background-color: #f0f0f0; /* Light gray background */
+    background-color: #f2f2f2; /* Light gray background */
     padding: 20px;
     border-radius: 5px;
 }
 
-.sidebar:hover {
-    background-color: #e0e0e0; /* Slightly darker gray on hover */
-}
-
 .sidebar h1, .sidebar a {
-    color: #333333; /* Dark gray text for title and tabs */
+    color: #444444; /* Medium gray text for title and tabs */
 }
 
 .sidebar a:not(.active) {
     color: #666666; /* Lighter gray for inactive tab text */
 }
 
-/* Sidebar tab styles */
+/* ----------------------------------------
+   Sidebar Tab Styles
+---------------------------------------- */
+
 .nav-tabs {
-    border-bottom: none; /* Remove default underline */
+    border-bottom: none;
 }
 
 .nav-tabs .nav-item {
-    margin-bottom: 5px; /* Add space between tabs */
+    margin-bottom: 8px; /* Space between tabs */
 }
 
 .nav-tabs .nav-link {
-    background-color: #888888; /* Dark gray for tab background */
-    color: #ffffff; /* White text */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px 15px; /* Padding for a larger clickable area */
+    background-color: #666666; /* Gray for tab background */
+    color: #ffffff;
+    border-radius: 5px;
+    padding: 10px 15px;
     text-align: center;
+    transition: background-color 0.3s;
 }
 
 .nav-tabs .nav-link:hover {
     background-color: #555555; /* Darker gray on hover */
-    color: #ffffff;
 }
 
 .nav-tabs .nav-link.active {
-    background-color: #ff6200; /* Active tab color (orange) */
+    background-color: #333333; /* Dark gray for active tab */
     color: #ffffff;
 }
 
-/* DataTable styling */
-.dataTable-container {
-    height: calc(100vh - 250px) !important; /* Full height */
-    overflow: auto;
-}
+/* ----------------------------------------
+   Button Styling
+---------------------------------------- */
 
-table.dataTable {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #ffffff;
-}
-
-table.dataTable thead th {
-    background-color: #888888;
-    color: #ffffff;
-}
-
-table.dataTable tbody tr.selected {
-    background-color: #ff6200;
-    color: #ffffff;
-}
-
-/* Button styling */
 .btn {
-    background-color: #888888;
+    background-color: #666666; /* Gray background */
     color: #ffffff;
-    border: none;
-    border-radius: 5px; /* Rounded button edges */
-    padding: 12px 20px; /* Padding to make buttons more clickable */
-    width: 100%; /* Make buttons full-width */
-    margin-bottom: 15px; /* Space between buttons */
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+    border: 1px solid #666666;
+    border-radius: 5px;
+    padding: 12px 20px;
+    width: 100%; /* Full-width buttons */
+    margin-bottom: 10px; /* Space between buttons */
+    font-family: 'Roboto', sans-serif; /* Updated font */
+    font-weight: 500; /* Medium weight */
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .btn:hover {
     background-color: #555555; /* Darker gray on hover */
     color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Specific class for button layout */
+.btn:active {
+    background-color: #444444; /* Even darker gray on click */
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Consistent button layout */
 .btn-custom {
     width: 100%;
     margin-bottom: 15px;
 }
 
-/* Main panel styling for plot */
-.main-panel {
-    padding: 10px;
-}
+/* ----------------------------------------
+   DataTable Styling
+---------------------------------------- */
 
-/* Customizing active button state for better visibility */
-.action-button.active {
-    background-color: #ff6200; /* Highlight active button */
-    color: #ffffff;
-}
-
-/* Adjustments for table responsiveness */
 .dataTable-container {
-    height: calc(100vh - 150px) !important;
-    overflow-y: auto;
-    overflow-x: auto;
+    height: calc(100vh - 250px) !important;
+    overflow: auto;
+}
+
+table.dataTable {
+    width: 100%;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    font-family: 'Roboto', sans-serif; /* Updated font */
 }
 
 table.dataTable thead th {
-    background-color: #666666;
+    background-color: #444444;
     color: #ffffff;
-    text-align: center; /* Centering the header text */
+    text-align: center;
+    font-weight: 700; /* Bold headings */
 }
 
 table.dataTable tbody td {
-    text-align: center; /* Centering the data */
+    text-align: center;
+    font-weight: 400; /* Regular weight */
 }
 
-/* Custom styles for modal and popups (if needed) */
+table.dataTable tbody tr.selected {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+/* ----------------------------------------
+   Modal Styling
+---------------------------------------- */
+
 .modal-content {
     background-color: #f8f8f8;
     border-radius: 5px;
     padding: 20px;
+    font-family: 'Roboto', sans-serif; /* Updated font */
+}
+
+/* ----------------------------------------
+   Main Panel Styling for Plot
+---------------------------------------- */
+
+.main-panel {
+    padding: 15px;
+    background-color: #f9f9f9; /* Light gray for background */
+    border-radius: 5px;
+}
+
+/* ----------------------------------------
+   Action Button for Special Highlight
+---------------------------------------- */
+
+.action-button.active {
+    background-color: #333333;
+    color: #ffffff;
 }
