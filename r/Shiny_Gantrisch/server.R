@@ -180,9 +180,9 @@ server <- function(input, output, session) {
     updateSelectInput(session, "singleYearsDropdown", choices = available_years, selected = NULL)
   })
   
-  #-------------------------------------------------------------------
-  # Observe "photometerDropdown" selection to update available months grouped by year
-  #-------------------------------------------------------------------
+  #--------------------------------------------------------------------------
+  # Observe "photometerDropdown" selection to update "singleMonthsDropdown" with latest month on top
+  #--------------------------------------------------------------------------
   
   observeEvent(input$photometerDropdown, {
     # Ensure a photometer is selected
@@ -200,20 +200,26 @@ server <- function(input, output, session) {
       query <- paste(
         "SELECT DISTINCT strftime('%Y', time) AS year, strftime('%m', time) AS month",
         "FROM", table_name,
-        "ORDER BY year, month"
+        "ORDER BY year DESC, month DESC"  # Order by year and month in descending order
       )
       months_data <- dbGetQuery(conn, query)
       
       # Check if there are results, then organize the months by year with "Year - Month" format
       if (nrow(months_data) > 0) {
-        # Create a named list with years as keys and formatted "Year - Month Name" as values
-        available_months <- split(months_data, months_data$year)
-        available_months <- setNames(lapply(names(available_months), function(year) {
-          months <- available_months[[year]]$month
+        # Initialize an empty list for available months
+        available_months <- list()
+        
+        # Loop through each unique year and format months
+        unique_years <- unique(months_data$year)
+        for (year in unique_years) {
+          # Filter months for the current year
+          months <- months_data %>% filter(year == !!year) %>% pull(month)
           # Format each month as "Year - Month Name"
           month_labels <- format(as.Date(paste(year, months, "01", sep = "-")), "%Y - %B")
-          setNames(as.character(months), month_labels)
-        }), names(available_months))  # Ensure each year group has a name
+          # Create a named vector for the months of the current year
+          available_months[[year]] <- setNames(as.character(paste(year, months, sep = "-")), month_labels)
+        }
+        
       } else {
         available_months <- list()
       }
@@ -224,7 +230,7 @@ server <- function(input, output, session) {
     # Disconnect from the database
     dbDisconnect(conn)
     
-    # Update the "singleMonthsDropdown" with the available months grouped by year
+    # Update the "singleMonthsDropdown" with the available months grouped by year, latest month on top
     updateSelectInput(session, "singleMonthsDropdown", choices = available_months, selected = NULL)
   })
   
