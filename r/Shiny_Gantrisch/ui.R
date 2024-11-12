@@ -3,7 +3,7 @@ library(DT)
 
 # UI-Komponente mit drei Tabs
 ui <- navbarPage(
-  title = "Photometer Analyse App",
+  title = "Nachthimmelmonitoring Naturpark Gantrisch",
   
   # Link to the CSS file
   tags$head(
@@ -18,7 +18,7 @@ ui <- navbarPage(
                  width = 2,
                  
                  dateRangeInput("dateRangeFetchData", 
-                                "Wähle die Zeitspanne für den Download:"),
+                                "Auswahl Zeitspanne für den Download:"),
                  
                  # Use fluidRow for each button in separate rows
                  fluidRow(
@@ -44,43 +44,56 @@ ui <- navbarPage(
                width = 2,
                
                # Analyse Typ Dropdown
-               selectInput("analysisType", "Wähle den Analyse Typ:",
-                           choices = c("PhotometerStatistics",
-                                       "monatliche Analyse",
-                                       "PhotometerGraphicsMonthly", 
-                                       "PhotometerGraphicsPerNight", 
-                                       "PhotometerComparison")),
+               selectInput("analysisType", "Auswahl Analyse Typ:",
+                           choices = c("Photometer Statistik",
+                                       "Analyse pro Jahr",
+                                       "Analyse pro Monat", 
+                                       "Analyse Einzelnächte", 
+                                       "Photometer Vergleich")),
                
                # Photometer Dropdown
                conditionalPanel(
-                 condition = "input.analysisType != 'PhotometerComparison'",
+                 condition = "input.analysisType != 'Photometer Vergleich'",
                  selectInput("photometerDropdown", 
                              "Auswahl Photometer:", 
                              choices = NULL)
                ),
                
+               # Photometer Statistics
                conditionalPanel(
-                 condition = "input.analysisType == 'PhotometerStatistics'",
-                
+                 condition = "input.analysisType == 'Photometer Statistik'",
                ),
                
+               # Analyse pro Jahr
                conditionalPanel(
-                 condition = "input.analysisType == 'monatliche Analyse'",
-                 
+                 condition = "input.analysisType == 'Analyse pro Jahr'",
+                 selectInput( 
+                   "multipleYearsDropdown", 
+                   "Auswahl der Jahre:", 
+                   choices = NULL, 
+                   multiple = TRUE 
+                 )
                ),
                
+               # Analyse pro Monat
                conditionalPanel(
-                 condition = "input.analysisType == 'PhotometerGraphicsMonthly'",
-                 dateRangeInput("dateRange", 
-                                "Auswahl Analyse Zeitraum:"),
+                 condition = "input.analysisType == 'Analyse pro Monat'",
+                 selectInput("singleMonthsDropdown", 
+                             "Auswahl Monat:", 
+                             choices = NULL)
                ),
                
+               # Analyse Einzelnächte
                conditionalPanel(
-                 condition = "input.analysisType == 'PhotometerGraphicsPerNight'",
+                 condition = "input.analysisType == 'Analyse Einzelnächte'",
+                 selectInput("singleMonthsDropdown", 
+                             "Auswahl Monat:", 
+                             choices = NULL)
                ),
                
+               # Photometer Vergleich
                conditionalPanel(
-                 condition = "input.analysisType == 'PhotometerComparison'",
+                 condition = "input.analysisType == 'Photometer Vergleich'",
                  
                  fluidRow(
                    column(6,
@@ -100,8 +113,12 @@ ui <- navbarPage(
              # Main panel to display the plot conditionally
              mainPanel(
                conditionalPanel(
-                 condition = "input.analysisType == 'monatliche Analyse'",
-                 plotOutput("plotPerYear")
+                 condition = "input.analysisType == 'Photometer Statistik'",
+                 plotOutput("plotHistogramPerYear")
+               ),
+               conditionalPanel(
+                 condition = "input.analysisType == 'Analyse pro Jahr'",
+                 plotOutput("plotPhotometerStatistics")
                )
              )
            )),
@@ -110,10 +127,10 @@ ui <- navbarPage(
   tabPanel("Analyse Report",
            sidebarLayout(
              sidebarPanel(
-               checkboxInput("check_PhotometerStatistics", 
+               checkboxInput("check_Photometer Statistik", 
                              "Photometer Statistik", value = TRUE),
                checkboxInput("check_PhotometerGraphics", 
-                             "Photometer Grafik", value = TRUE),
+                             "Visualisierung pro Monat", value = TRUE),
                checkboxInput("check_PhotometerComparison", 
                              "Photometer Vergleich", value = TRUE),
                actionButton("exportButton", 

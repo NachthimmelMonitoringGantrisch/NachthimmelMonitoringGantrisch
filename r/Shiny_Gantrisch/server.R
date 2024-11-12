@@ -104,7 +104,7 @@ server <- function(input, output, session) {
   }
   
   #-------------------------------------------------------------------
-  # "Photometer Analyse" - Load Data and Populate Dropdown
+  # "PhotometerDropdown" - Load Data and Populate Dropdown
   #-------------------------------------------------------------------
   
   db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
@@ -121,14 +121,14 @@ server <- function(input, output, session) {
       
       table_names <- dbListTables(db_tess_data)
       table_names <- table_names[table_names != "data_import_control"]
-      table_names <- gsub("_data$", "", table_names)
+      photometer_names <- gsub("_data$", "", table_names)
       print("Tables in tess_data database:")
-      print(table_names)
+      print(photometer_names)
       
       # Update dropdown choices
-      updateSelectInput(session, "photometerDropdown", choices = table_names)
-      updateSelectInput(session, "photometerCompare1", choices = table_names)
-      updateSelectInput(session, "photometerCompare2", choices = table_names)
+      updateSelectInput(session, "photometerDropdown", choices = photometer_names)
+      updateSelectInput(session, "photometerCompare1", choices = photometer_names)
+      updateSelectInput(session, "photometerCompare2", choices = photometer_names)
       
       dbDisconnect(db_tess_data)
       
@@ -140,22 +140,132 @@ server <- function(input, output, session) {
     })
   }
   
+  #--------------------------------------------------------------------------
+  # Observe "photometerDropdown" selection to update "multipleYearsDropdown" and "singleYearsDropdown"
+  #--------------------------------------------------------------------------
+  
+  observeEvent(input$photometerDropdown, {
+    # Ensure a photometer is selected
+    req(input$photometerDropdown)
+    
+    # Connect to the database
+    conn <- dbConnect(RSQLite::SQLite(), db_tess_data_path)
+    
+    # Define the table name dynamically based on the selected photometer
+    table_name <- paste0(input$photometerDropdown, "_data")
+    
+    # Check if the table exists in the database
+    if (table_name %in% dbListTables(conn)) {
+      # Query to get distinct years in the data
+      query <- paste("SELECT DISTINCT strftime('%Y', time) AS year FROM", table_name)
+      years_data <- dbGetQuery(conn, query)
+      
+      # If years_data has rows, convert the year column to numeric
+      if (nrow(years_data) > 0) {
+        available_years <- sort(as.numeric(years_data$year))
+      } else {
+        available_years <- NULL
+      }
+    } else {
+      available_years <- NULL
+    }
+    
+    # Disconnect from the database
+    dbDisconnect(conn)
+    
+    # Update "multipleYearsDropdown" with available years and set all as selected by default
+    updateSelectInput(session, "multipleYearsDropdown", choices = available_years, selected = available_years)
+    
+    # Update "singleYearsDropdown" with available years (no default selection)
+    updateSelectInput(session, "singleYearsDropdown", choices = available_years, selected = NULL)
+  })
+  
   #-------------------------------------------------------------------
-  # Call photometer_statistics Script and Generate Plot
+  # Observe "photometerDropdown" selection to update available months grouped by year
   #-------------------------------------------------------------------
   
-  output$plotPerYear <- renderPlot({
+  observeEvent(input$photometerDropdown, {
+    # Ensure a photometer is selected
+    req(input$photometerDropdown)
+    
+    # Connect to the database
+    conn <- dbConnect(RSQLite::SQLite(), db_tess_data_path)
+    
+    # Define the table name dynamically based on the selected photometer
+    table_name <- paste0(input$photometerDropdown, "_data")
+    
+    # Check if the table exists in the database
+    if (table_name %in% dbListTables(conn)) {
+      # Query to get distinct years and months
+      query <- paste(
+        "SELECT DISTINCT strftime('%Y', time) AS year, strftime('%m', time) AS month",
+        "FROM", table_name,
+        "ORDER BY year, month"
+      )
+      months_data <- dbGetQuery(conn, query)
+      
+      # Check if there are results, then organize the months by year with "Year - Month" format
+      if (nrow(months_data) > 0) {
+        # Create a named list with years as keys and formatted "Year - Month Name" as values
+        available_months <- split(months_data, months_data$year)
+        available_months <- setNames(lapply(names(available_months), function(year) {
+          months <- available_months[[year]]$month
+          # Format each month as "Year - Month Name"
+          month_labels <- format(as.Date(paste(year, months, "01", sep = "-")), "%Y - %B")
+          setNames(as.character(months), month_labels)
+        }), names(available_months))  # Ensure each year group has a name
+      } else {
+        available_months <- list()
+      }
+    } else {
+      available_months <- list()
+    }
+    
+    # Disconnect from the database
+    dbDisconnect(conn)
+    
+    # Update the "singleMonthsDropdown" with the available months grouped by year
+    updateSelectInput(session, "singleMonthsDropdown", choices = available_months, selected = NULL)
+  })
+  
+  #-------------------------------------------------------------------
+  # Call "Histogram_over21perMonth_yearly.R" Script and Generate Plot
+  #-------------------------------------------------------------------
+  
+  output$plotHistogramPerYear <- renderPlot({
     photometer_id <- input$photometerDropdown  # Selected photometer ID
     print(photometer_id)
     
     if (!is.null(photometer_id) && photometer_id != "") {
-      source("photometer_statistics.R")  # Source the photometer statistics script
+      source("Histogram_over21perMonth_yearly.R")
       plot_result <- main(photometer_id)  # Call the main function from photometer_statistics with the selected photometer ID
       
       if (!is.null(plot_result)) {
         plot_result
       } else {
-        print("Plot could not be generated. Check photometer_statistics.R for issues.")
+        print("Plot could not be generated. Check Histogram_over21perMonth_yearly.R for issues.")
+      }
+    } else {
+      print("No photometer selected in the dropdown.")
+    }
+  })
+  
+  #-------------------------------------------------------------------
+  # Call "PhotometerStatistics_overYears.R" Script and Generate Plot
+  #-------------------------------------------------------------------
+  
+  output$plotPhotometerStatistics <- renderPlot({
+    photometer_id <- input$photometerDropdown  # Selected photometer ID
+    print(photometer_id)
+    
+    if (!is.null(photometer_id) && photometer_id != "") {
+      source("PhotometerStatistics_overYears.R")
+      plot_result <- main(photometer_id)  # Call the main function from photometer_statistics with the selected photometer ID
+      
+      if (!is.null(plot_result)) {
+        plot_result
+      } else {
+        print("Plot could not be generated. PhotometerStatistics_overYears.R for issues.")
       }
     } else {
       print("No photometer selected in the dropdown.")
