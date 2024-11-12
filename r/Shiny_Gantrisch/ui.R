@@ -114,11 +114,11 @@ ui <- navbarPage(
              mainPanel(
                conditionalPanel(
                  condition = "input.analysisType == 'Photometer Statistik'",
-                 plotOutput("plotHistogramPerYear")
+                 plotOutput("plotPhotometerStatistics")
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Jahr'",
-                 plotOutput("plotPhotometerStatistics")
+                 plotOutput("plotHistogramPerYear")
                )
              )
            )),

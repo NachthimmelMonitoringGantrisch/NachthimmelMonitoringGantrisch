@@ -200,7 +200,7 @@ server <- function(input, output, session) {
       query <- paste(
         "SELECT DISTINCT strftime('%Y', time) AS year, strftime('%m', time) AS month",
         "FROM", table_name,
-        "ORDER BY year DESC, month DESC"  # Order by year and month in descending order
+        "ORDER BY year DESC, month DESC"
       )
       months_data <- dbGetQuery(conn, query)
       
@@ -266,7 +266,7 @@ server <- function(input, output, session) {
     
     if (!is.null(photometer_id) && photometer_id != "") {
       source("PhotometerStatistics_overYears.R")
-      plot_result <- main(photometer_id)  # Call the main function from photometer_statistics with the selected photometer ID
+      plot_result <- main(photometer_id)
       
       if (!is.null(plot_result)) {
         plot_result
