@@ -45,7 +45,8 @@ ui <- navbarPage(
                
                # Analyse Typ Dropdown
                selectInput("analysisType", "Wähle den Analyse Typ:",
-                           choices = c("PhotometerStatistics", 
+                           choices = c("PhotometerStatistics",
+                                       "monatliche Analyse",
                                        "PhotometerGraphicsMonthly", 
                                        "PhotometerGraphicsPerNight", 
                                        "PhotometerComparison")),
@@ -61,6 +62,11 @@ ui <- navbarPage(
                conditionalPanel(
                  condition = "input.analysisType == 'PhotometerStatistics'",
                 
+               ),
+               
+               conditionalPanel(
+                 condition = "input.analysisType == 'monatliche Analyse'",
+                 
                ),
                
                conditionalPanel(
@@ -94,8 +100,8 @@ ui <- navbarPage(
              # Main panel to display the plot conditionally
              mainPanel(
                conditionalPanel(
-                 condition = "input.analysisType == 'PhotometerStatistics'",
-                 plotOutput("plotPhotometerStatistics")
+                 condition = "input.analysisType == 'monatliche Analyse'",
+                 plotOutput("plotPerYear")
                )
              )
            )),

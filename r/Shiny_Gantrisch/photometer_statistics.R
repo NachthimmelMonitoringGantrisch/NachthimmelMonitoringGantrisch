@@ -48,6 +48,7 @@ process_night_data <- function(df) {
 }
 
 # Function to plot the histogram of nights with max_msas > 21.3
+# Function to plot the histogram of nights with max_msas > 21.3
 plot_histogram <- function(df_nightly_stats) {
   # Group by night_id to calculate the max MSAS per night
   df_nightly_stats <- df_nightly_stats %>%
@@ -71,7 +72,6 @@ plot_histogram <- function(df_nightly_stats) {
       geom_blank() +
       labs(
         title = "Nights with Max MSAS > 21.3 per Month",
-        subtitle = "No nights found with max MSAS > 21.3",
         x = "Month", y = "Number of Nights"
       ) +
       scale_y_continuous(limits = c(0, 31)) +
@@ -80,7 +80,8 @@ plot_histogram <- function(df_nightly_stats) {
         axis.text.x = element_text(angle = 45, hjust = 1),
         strip.text = element_text(size = 12, face = "bold"),
         panel.spacing = unit(1, "lines")
-      )
+      ) +
+      annotate("text", x = 6.5, y = 15, label = "No nights found with max MSAS > 21.3", color = "red", size = 5, fontface = "bold")
   } else {
     ggplot(df_nightly_stats, aes(x = month)) +
       geom_bar(stat = "count", fill = "steelblue", show.legend = FALSE) +
@@ -103,7 +104,6 @@ plot_histogram <- function(df_nightly_stats) {
 main <- function(photometer_id) {
   data <- load_data_from_database(photometer_id)
   nights_count <- process_night_data(data)
-  print(paste("Number of nights with max MSAS > 21.3:", nights_count))
   plot_histogram(data)
 }
 
