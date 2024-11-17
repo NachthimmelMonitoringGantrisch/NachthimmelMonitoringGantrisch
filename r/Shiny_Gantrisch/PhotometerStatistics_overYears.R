@@ -5,6 +5,7 @@ library(dplyr)
 library(ggplot2)
 library(lubridate)
 library(tidyr)
+library(gridExtra)
 
 # Path to the SQLite database
 db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
@@ -33,28 +34,29 @@ process_night_data <- function(df) {
   df <- df %>%
     mutate(
       time = as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
+      year = year(time),
       night_id = as.integer(difftime(time, as.POSIXct("1970-01-01 20:00:00", tz = "UTC"), units = "days")) +
         ifelse(hour(time) < 9, -1, 0)
     ) %>%
     filter(sun_alt <= -18, sky_temperature < 0, moon_illumination <= 0.2)
   
-  # Group by night_id and calculate max_msas per night, and % of readings with sky_temperature < 0 per night
+  # Group by year and night_id to calculate max_msas per night, and % of readings with sky_temperature < 0 per night
   night_stats <- df %>%
-    group_by(night_id) %>%
+    group_by(year, night_id) %>%
     summarise(
       max_msas = max(msas, na.rm = TRUE),
       sky_temp_below_zero_pct = mean(sky_temperature < 0, na.rm = TRUE)
     ) %>%
     ungroup()
   
-  # Calculate counts per year
-  yearly_counts <- df %>%
-    mutate(year = year(time)) %>%
+  # Calculate counts per year, ensuring that each year is calculated independently
+  yearly_counts <- night_stats %>%
     group_by(year) %>%
     summarise(
-      nights_over_21_3 = sum(night_stats$max_msas > 21.3, na.rm = TRUE),  # Count nights with max_msas > 21.3
-      nights_cold = sum(night_stats$sky_temp_below_zero_pct >= 0.9, na.rm = TRUE)  # Count nights with 90% of sky_temperature < 0
-    )
+      nights_over_21_3 = sum(max_msas > 21.3, na.rm = TRUE),  # Count nights with max_msas > 21.3
+      nights_cold = sum(sky_temp_below_zero_pct >= 0.9, na.rm = TRUE)  # Count nights with 90% of sky_temperature < 0
+    ) %>%
+    mutate(ratio = ifelse(nights_cold > 0, (nights_over_21_3 / nights_cold) * 100, NA))  # Calculate ratio if nights_cold > 0
   
   return(yearly_counts)
 }
@@ -80,24 +82,52 @@ plot_yearly_counts <- function(yearly_counts, filtered_data) {
     mutate(condition = recode(condition, "nights_over_21_3" = "Nights with max MSAS > 21.3", 
                               "nights_cold" = "Nights with 90% of sky temp < 0"))
   
-  ggplot(yearly_counts_long, aes(x = factor(year), y = count, fill = condition)) +
+  # Plot the bar chart for yearly counts
+  p1 <- ggplot(yearly_counts_long, aes(x = factor(year), y = count, fill = condition)) +
     geom_bar(stat = "identity", position = position_dodge(width = 0.5), width = 0.3) +  # Thinner bars
     labs(
       title = "Yearly Counts of Nights by Condition",
-      subtitle = subtitle_text,  # Add the generated subtitle with exact dates
+      subtitle = subtitle_text,
       x = "Year",
       y = "Number of Nights",
       fill = "Condition"
     ) +
-    scale_y_continuous(limits = c(0, 366), breaks = seq(0, 366, by = 50)) +
+    scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 25)) +
     theme_minimal() +
     theme(
       axis.text.x = element_text(angle = 0, hjust = 0.5),
       plot.title = element_text(size = 16),
       plot.subtitle = element_text(size = 12, color = "gray"),
-      axis.title = element_text(size = 12)
+      axis.title = element_text(size = 12),
+      legend.position = "bottom"
     ) +
     scale_fill_manual(values = c("#7A4EA3", "#C88719"))  # Dark pastel violet and orange
+  
+  # Plot the ratio as points with optional labels or trendline
+  p2 <- ggplot(yearly_counts, aes(x = factor(year), y = ratio)) +
+    geom_point(color = "#C88719", size = 3) +
+    labs(
+      title = "Anteil an Nächten mit max MSAS > 21.3 an Nächten mit Himmelstemperatur < 0°",
+      x = "Year",
+      y = "Anteil [%]"
+    ) +
+    scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 25)) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 0, hjust = 0.5),
+      plot.title = element_text(size = 16),
+      axis.title = element_text(size = 12)
+    )
+  
+  # Add a trendline if more than two points are available; otherwise, add annotations for the two points
+  if (nrow(yearly_counts) > 2) {
+    p2 <- p2 + geom_smooth(method = "lm", color = "#404040", linetype = "dashed", se = FALSE)
+  } else {
+    p2 <- p2 + geom_text(aes(label = paste0(round(ratio, 1), "%")), vjust = -1, size = 4, color = "#404040")
+  }
+  
+  # Arrange both plots vertically with equal widths and align x-axis labels
+  grid.arrange(p1, p2, ncol = 1, heights = c(2, 1))
 }
 
 # Main function to run the analysis
