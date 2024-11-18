@@ -49,13 +49,13 @@ Windows: .venv\Scripts\activate
 `aiohttp` must be installed because of the error `aiodns needs a SelectorEventLoop on Windows`. This is the recommended [solution](https://github.com/nathom/streamrip/issues/729), which installs `aiohttp` at a specific version. That works for me.
 
 ```bash
-pip install -U pip
-pip install notebook matplotlib
-pip install git+https://github.com/STARS4ALL/TESS-IDA-TOOLS#main
-pip install aiodns
-pip install aiohttp==3.9.5
-pip install importlib_resources
-pip install pandas psycopg2 sqlalchemy
+    pip install -U pip #maybe not necessary
+    pip install notebook matplotlib
+    pip install git+https://github.com/STARS4ALL/TESS-IDA-TOOLS#main
+    pip install aiodns
+    pip install aiohttp==3.9.5
+    pip install importlib_resources
+    pip install pandas psycopg2 sqlalchemy
 ```
 
 ## Step 1: Configure TESS-IDA-TOOLS
@@ -80,11 +80,11 @@ Download a single IDA monthly file `stars289_2022-03.dat` and convert into an EC
 ```bash
 tess-ida-pipe --console single --in-dir IDA --out-dir ECSV --name stars926 --month 2024-03
 ```
+
 If no such File exists: [WARNING] [download] [stars926] No monthly file exits: stars926_2022-03.dat
 If there is no internet connection: [CRITICAL] [root] [tess.ida.pipeline] Fatal error => Cannot connect to host fta-cloud.fis.ucm.es:443 ssl:default [getaddrinfo failed]
 
-
-Download IDA monthly files in between a range and convert into ECSV file  using the pipleline tool
+Download IDA monthly files in between a range and convert into ECSV file using the pipleline tool
 
 ```bash
 tess-ida-pipe --console range --in-dir IDA --out-dir ECSV --name stars926 --since 2023-10 --until 2024-09
@@ -93,4 +93,5 @@ tess-ida-pipe --console range --in-dir IDA --out-dir ECSV --name stars927 --sinc
 ```
 
 # Step DB import
+
 import_DB.ipynb
