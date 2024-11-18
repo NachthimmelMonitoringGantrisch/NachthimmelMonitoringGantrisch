@@ -4,7 +4,7 @@ import requests
 import os
 
 # Define the database path
-db_name = 'data/TessNetwork_metadata.db'
+db_name = '../../data/TessNetwork_metadata.db'
 
 # Check if the database file exists
 if not os.path.isfile(db_name):

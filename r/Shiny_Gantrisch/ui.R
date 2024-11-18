@@ -18,18 +18,18 @@ ui <- navbarPage(
                  width = 2,
                  
                  dateRangeInput("dateRangeFetchData", 
-                                "Auswahl Zeitspanne für den Download:"),
-                 
-                 # Use fluidRow for each button in separate rows
+                                "Auswahl Zeitspanne:",
+                                start = Sys.Date() - 30,
+                                end = Sys.Date(),
+                                max = Sys.Date()
+                                ),
+
                  fluidRow(
                    column(12, actionButton("downloadData", "Daten herunterladen", class = "btn-custom"))
                  ),
                  fluidRow(
-                   column(12, actionButton("nextPanelToAnalysis", "Weiter zur Auswertung", class = "btn-custom"))
+                   column(12, uiOutput("notificationArea"))
                  ),
-                 fluidRow(
-                   column(12, actionButton("updateData", "Aktualisieren", class = "btn-custom"))
-                 )
                ),
                mainPanel(
                  DTOutput("tablePhotometerDownload", height = "100%")

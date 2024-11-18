@@ -6,18 +6,6 @@ library(jsonlite)
 library(DT)
 library(dplyr)
 
-# Initial setup function that runs only once when the app starts
-initial_setup <- function() {
-  print("First check if Python env is installed")
-  print("If not installed, create Env")
-  print("If installed, install TESS-IDA")
-  print("Else skip")
-  print("Finished")
-}
-
-# Call the setup function
-initial_setup()
-
 # Define a function to execute Python code with UI parameters
 source_python_code <- function(photometer_name, start_date, end_date, preprocessing) {
   py$photometer_name <- photometer_name
@@ -38,6 +26,29 @@ source_python_code <- function(photometer_name, start_date, end_date, preprocess
 #----------------------------------------------------------------------
 
 server <- function(input, output, session) {
+  
+  #-------------------------------------------------------------------
+  # Run initial setup "metadata_2_DB.py"
+  #-------------------------------------------------------------------
+
+  observe({
+    withProgress(message = "Initialisiere Metadaten Datenbank", value = 0, {
+      tryCatch({
+        fetch_metadata_path <- normalizePath("../../python/metadata_2_DB.py", mustWork = TRUE)
+        
+        incProgress(0.3, detail = "Starte Live-Abfrage @ https://api.stars4all.eu/photometers")
+        py_run_file(fetch_metadata_path)
+        
+        incProgress(0.7, detail = "Finalisiere Setup Metadaten")
+        print("Python script executed successfully.")
+        
+        incProgress(1, detail = "Setup komplett.")
+      }, error = function(e) {
+        print(paste("Error executing Python script:", e$message))
+        showNotification(paste("Error initializing database:", e$message), type = "error")
+      })
+    })
+  })
   
   #-------------------------------------------------------------------
   # "Datenbezug" - Load Metadata Table and Display
@@ -75,6 +86,10 @@ server <- function(input, output, session) {
                                  scrollX = FALSE))
       })
       
+      #-------------------------------------------------------------------
+      #  Selected Photometer names for "downloadData" button click
+      #-------------------------------------------------------------------
+      
       selected_names <- reactive({
         selected_rows <- input$tablePhotometerDownload_rows_selected
         if (length(selected_rows) > 0) {
@@ -84,17 +99,78 @@ server <- function(input, output, session) {
         }
       })
       
-      # Observe event for "downloadData" button click
+      
+      #-------------------------------------------------------------------
+      # Selected time range for "downloadData" button click
+      #-------------------------------------------------------------------
+      
+      selected_date_range <- reactive({
+        if (!is.null(input$dateRangeFetchData) && length(input$dateRangeFetchData) == 2) {
+          input$dateRangeFetchData
+        } else {
+          NULL
+        }
+      })
+      
+      #-------------------------------------------------------------------
+      # "downloadData" / "Daten herunterladen" - Observe event for  button click
+      #-------------------------------------------------------------------
+      
       observeEvent(input$downloadData, {
-        names_list <- selected_names()
+        # Clear any previous notification
+        output$notificationArea <- renderUI({ NULL })
         
+        # Fetch selected photometer names
+        names_list <- selected_names()
+        date_range <- selected_date_range()
+        
+        # Validate the date range
+        if (!is.null(date_range)) {
+          start_date <- date_range[1]
+          end_date <- date_range[2]
+          
+          # Check if start date is after end date
+          if (start_date > end_date) {
+            print("Fehler: Startdatum ist später als Enddatum.")
+            output$notificationArea <- renderUI({
+              div(style = "color: red; font-weight: bold;",
+                  "Fehler: Das Startdatum darf nicht später als das Enddatum sein.")
+            })
+            return()
+          }
+          
+          print("Selected Date Range:")
+          print(paste("Start Date:", start_date, "| End Date:", end_date))
+        } else {
+          print("Kein Datumsbereich ausgewählt.")
+          output$notificationArea <- renderUI({
+            div(style = "color: red; font-weight: bold;",
+                "Fehler: Bitte wählen Sie einen gültigen Datumsbereich aus.")
+          })
+          return()
+        }
+        
+        # Print selected photometer names
         if (!is.null(names_list) && length(names_list) > 0) {
           print("Selected Photometer Names:")
           print(names_list)
         } else {
           print("Keine Photometer ausgewählt.")
+          output$notificationArea <- renderUI({
+            div(style = "color: red; font-weight: bold;",
+                "Fehler: Es wurde kein Photometer ausgewählt.")
+          })
+          return()
         }
-      })
+        
+        # If all validations pass, display a green notification and start the download
+        output$notificationArea <- renderUI({
+          div(style = "color: green; font-weight: bold;",
+              "Download wird gestartet...")
+        })
+        
+        print("Download starting...")
+      })  # End of observeEvent
       
     }, error = function(e) {
       print(paste("Error connecting to database at path:", db_metadata_path, ":", e$message))
@@ -103,6 +179,7 @@ server <- function(input, output, session) {
       })
     })
   }
+  
   
   #-------------------------------------------------------------------
   # "PhotometerDropdown" - Load Data and Populate Dropdown
