@@ -1,9 +1,10 @@
 # Load required libraries
 library(shiny)
 library(RSQLite)
-library(reticulate)  # Enable Python code execution
+library(reticulate)
 library(jsonlite)
 library(DT)
+library(dplyr)
 
 # Initial setup function that runs only once when the app starts
 initial_setup <- function() {
