@@ -133,34 +133,99 @@ body, .navbar, .btn, .sidebar, .main-panel {
    DataTable Styling
 ---------------------------------------- */
 
-.dataTable-container {
-    height: calc(100vh - 250px) !important;
-    overflow: auto;
+/* Adjust the wrapper to fit the parent container */
+.dataTables_wrapper {
+    width: 100%; /* Use full width of the parent container */
+    margin: 0 auto; /* Center the table wrapper horizontally */
+    padding: 0; /* Remove unnecessary padding */
 }
 
+/* Adjust table container for vertical and horizontal scrolling */
+.dataTables_scroll {
+    display: block;
+    width: 100%; /* Ensure scroll container uses full width */
+}
+
+/* Vertical scrolling adjustments */
+.dataTables_scrollBody {
+    height: calc(100vh - 220px) !important; /* Dynamic height based on viewport */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+/* Table element styling */
 table.dataTable {
-    width: 100%;
+    width: 100%; /* Stretch table to full width */
     border: 1px solid #cccccc;
     border-radius: 5px;
     background-color: #ffffff;
-    font-family: 'Roboto', sans-serif; /* Updated font */
+    font-family: 'Roboto', sans-serif; /* Font consistency */
 }
 
+/* Table header styling */
 table.dataTable thead th {
-    background-color: #444444;
-    color: #ffffff;
-    text-align: center;
+    background-color: #444444; /* Dark gray background */
+    color: #ffffff; /* White text */
+    text-align: left; /* Center align text */
     font-weight: 700; /* Bold headings */
+    white-space: nowrap; /* Prevent wrapping in headers */
 }
 
+/* height of DataTable rows */
+table.dataTable tbody tr {
+    height: 60px; /* Set desired row height in pixels */
+    line-height: 60px; /* Match line height for vertical alignment */
+}
+
+/* Table body styling */
 table.dataTable tbody td {
-    text-align: center;
-    font-weight: 400; /* Regular weight */
+    text-align: left; /* Center align text in cells */
+    font-weight: 400; /* Regular text weight */
+    white-space: normal; /* Allow wrapping for longer text */
 }
 
+/* Highlight selected rows */
 table.dataTable tbody tr.selected {
-    background-color: #333333;
-    color: #ffffff;
+    background-color: #333333; /* Darker background for selected rows */
+    color: #ffffff; /* White text */
+}
+
+/* ----------------------------------------
+   DataTable Styling Adjustments
+---------------------------------------- */
+
+/* Stretch DataTable horizontally */
+.dataTables_wrapper {
+    width: 100%; /* Full width for wrapper */
+}
+
+/* Prevent wrapping in cells (optional) */
+table.dataTable tbody td {
+    text-align: center; /* Center cell text */
+    font-weight: 400; /* Regular weight */
+    white-space: nowrap; /* Disable wrapping for compact layout */
+}
+
+/* Adjust scroll container height */
+.dataTables_scrollBody {
+    height: calc(100vh - 220px) !important; /* Dynamic height adjustment */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+/* Customize table headers */
+table.dataTable thead th {
+    background-color: #444444; /* Dark header background */
+    color: #ffffff; /* White text */
+    text-align: center; /* Align header text to center */
+    font-weight: 700; /* Bold headers */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Scroll adjustments for both axes */
+.dataTables_scroll {
+    display: block;
+    width: 100%; /* Full width for scroll container */
 }
 
 /* ----------------------------------------

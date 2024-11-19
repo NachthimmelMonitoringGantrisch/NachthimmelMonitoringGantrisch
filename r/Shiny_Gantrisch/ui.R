@@ -32,7 +32,7 @@ ui <- navbarPage(
                  ),
                ),
                mainPanel(
-                 DTOutput("tablePhotometerDownload", height = "100%")
+                 DTOutput("tablePhotometerDownload", height = "100%", width = "100%")
                )
              )
            )),

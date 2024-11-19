@@ -57,6 +57,7 @@ server <- function(input, output, session) {
   db_metadata_path <- normalizePath(file.path("..", "..", "data", "TessNetwork_metadata.db"), mustWork = FALSE)
   
   if (!file.exists(db_metadata_path)) {
+    # Notify user of missing database file
     print(paste("Database file not found at path:", db_metadata_path))
     output$tablePhotometerDownload <- renderText({
       "Database file not found. Check the file path and try again."
@@ -67,23 +68,49 @@ server <- function(input, output, session) {
       db_metadata <- dbConnect(SQLite(), dbname = db_metadata_path)
       print("Successfully connected to TessNetwork_metadata database.")
       
+      # Check if the metadata table exists
       if ("TessNetwork_metadata" %in% dbListTables(db_metadata)) {
+        # Fetch the metadata table
         photometer_metadata <- dbReadTable(db_metadata, "TessNetwork_metadata")
+        print("Metadata table loaded successfully.")
       } else {
         stop("Table 'TessNetwork_metadata' does not exist in the database.")
       }
       
+      # Disconnect from the database
       dbDisconnect(db_metadata)
       
-      # Render metadata table with row selection enabled
+      # Ensure columns are in the correct order (if required)
+      desired_columns <- c(
+        "name", "latitude", "longitude", "country", "city", "place", 
+        "local_timezone_name", "local_timezone", "org_name"
+      )
+      missing_columns <- setdiff(desired_columns, colnames(photometer_metadata))
+      if (length(missing_columns) > 0) {
+        stop(paste("The following required columns are missing:", paste(missing_columns, collapse = ", ")))
+      }
+      photometer_metadata <- photometer_metadata[, desired_columns]
+      
+      # Render the metadata table
       output$tablePhotometerDownload <- renderDT({
-        datatable(photometer_metadata,
-                  rownames = FALSE, 
-                  selection = 'multiple',
-                  options = list(pageLength = 25, 
-                                 deferRender = TRUE, 
-                                 scrollY = 600,
-                                 scrollX = 600))
+        datatable(
+          photometer_metadata,
+          rownames = FALSE,
+          selection = 'multiple',
+          options = list(
+            pageLength = 25,
+            autoWidth = TRUE,
+            scrollY = "calc(100vh - 200px)",  # Use viewport height dynamically for vertical scrolling
+            scrollX = TRUE,                 # Fully stretch horizontally to avoid horizontal scrolling
+            columnDefs = list(
+              list(width = "80px", targets = c(0, 1, 2)),  # Width for first three columns
+              list(width = "100px", targets = c(3:(ncol(photometer_metadata) - 1)))  # Width for remaining columns
+            ),
+            dom = "lfrtip"  # Keep filtering, search bar, and pagination controls
+          ),
+          class = "display nowrap cell-border",  # Apply compact and striped row style
+          style = "default"
+        )
       })
       
       #-------------------------------------------------------------------

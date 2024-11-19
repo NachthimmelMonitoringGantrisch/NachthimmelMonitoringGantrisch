@@ -84,12 +84,6 @@ wikipedia_url = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
 def fetch_timezone_data(wikipedia_url):
     tables = pd.read_html(wikipedia_url, header=[0, 1])  # Fetch all tables with multi-level headers
 
-    # Debug: Inspect all fetched tables
-    print("Available Tables from Wikipedia:")
-    for i, table in enumerate(tables):
-        print(f"Table {i} Columns:")
-        print(table.columns)
-
     for i, table in enumerate(tables):
         if ('TZ identifier' in table.columns.get_level_values(1) and 
             'UTC offset ±hh:mm' in table.columns.get_level_values(0)):
@@ -121,14 +115,15 @@ def map_timezones(photometer_df, timezone_df):
         return None
 
     photometer_df['local_timezone'] = photometer_df.apply(map_timezone, axis=1)
-    
-    # Debug: Inspect the DataFrame after mapping
-    print("Photometer DataFrame with Mapped Timezones:")
-    print(photometer_df[['name', 'local_timezone_name', 'local_timezone']].head())
-    
     return photometer_df
 
 photometer_metadata = map_timezones(photometer_metadata, timezone_data)
+
+column_order = [
+    "name", "latitude", "longitude", "country", "city", "place", 
+    "local_timezone_name", "local_timezone", "org_name"
+]
+photometer_metadata = photometer_metadata[column_order]
 
 # 5. Save to SQLite
 photometer_metadata.to_sql('TessNetwork_metadata', con=engine, if_exists='replace', index=False)
