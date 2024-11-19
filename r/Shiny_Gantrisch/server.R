@@ -36,13 +36,13 @@ server <- function(input, output, session) {
       tryCatch({
         fetch_metadata_path <- normalizePath("../../python/metadata_2_DB.py", mustWork = TRUE)
         
-        incProgress(0.3, detail = "Starte Live-Abfrage @ https://api.stars4all.eu/photometers")
+        incProgress(0.2, detail = "Starte Live-Abfrage @ https://api.stars4all.eu/photometers")
         py_run_file(fetch_metadata_path)
         
         incProgress(0.7, detail = "Finalisiere Setup Metadaten")
         print("Python script executed successfully.")
         
-        incProgress(1, detail = "Setup komplett.")
+        incProgress(0.95, detail = "Setup komplett.")
       }, error = function(e) {
         print(paste("Error executing Python script:", e$message))
         showNotification(paste("Error initializing database:", e$message), type = "error")
@@ -83,7 +83,7 @@ server <- function(input, output, session) {
                   options = list(pageLength = 25, 
                                  deferRender = TRUE, 
                                  scrollY = 600,
-                                 scrollX = FALSE))
+                                 scrollX = 600))
       })
       
       #-------------------------------------------------------------------
