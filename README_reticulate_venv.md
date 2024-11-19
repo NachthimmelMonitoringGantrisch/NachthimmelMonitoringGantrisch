@@ -2,5 +2,5 @@ in Git-Bash:
 
 /.venv
 . Scripts/activate
-pip install pandas sqlalchemy requests
+pip install pandas sqlalchemy requests lxml
 
