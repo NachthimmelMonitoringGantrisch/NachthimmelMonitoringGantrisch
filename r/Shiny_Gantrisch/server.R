@@ -106,9 +106,9 @@ server <- function(input, output, session) {
               list(width = "80px", targets = c(0, 1, 2)),  # Width for first three columns
               list(width = "100px", targets = c(3:(ncol(photometer_metadata) - 1)))  # Width for remaining columns
             ),
-            dom = "lfrtip"  # Keep filtering, search bar, and pagination controls
+            dom = "lfrtip"
           ),
-          class = "display nowrap cell-border",  # Apply compact and striped row style
+          class = "display nowrap cell-border",
           style = "default"
         )
       })
