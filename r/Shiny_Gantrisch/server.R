@@ -372,25 +372,48 @@ server <- function(input, output, session) {
   
   output$plotHistogramPerYear <- renderPlot({
     photometer_id <- input$photometerDropdown  # Selected photometer ID
-    print(photometer_id)
+    selected_years <- input$multipleYearsDropdown  # Selected years from the dropdown
+    
+    # Ensure valid inputs
+    req(photometer_id, selected_years)
     
     withProgress(message = "Rendering Photometer Statistics...", value = 0, {
       incProgress(0.3, detail = "Loading data and processing...")
-    
-    if (!is.null(photometer_id) && photometer_id != "") {
-      source("Histogram_over21perMonth_yearly.R")
-      plot_result <- main(photometer_id)  # Call the main function from photometer_statistics with the selected photometer ID
       
-      if (!is.null(plot_result)) {
-        incProgress(1, detail = "Render complete.")
-        plot_result
-      } else {
-        print("Plot could not be generated. Check Histogram_over21perMonth_yearly.R for issues.")
-      }
-    } else {
-      print("No photometer selected in the dropdown.")
-    }
-   })
+      tryCatch({
+        # Source the script to ensure updated logic
+        source("Histogram_over21perMonth_yearly.R")
+        
+        # Call the main function with photometer ID and selected years
+        plot_result <- main(photometer_id, as.numeric(selected_years))
+        
+        # Ensure the plot result is valid
+        if (!is.null(plot_result)) {
+          incProgress(1, detail = "Render complete.")
+          return(plot_result)
+        } else {
+          stop("The plot could not be generated. Please check your data or the script.")
+        }
+      },
+      error = function(e) {
+        # Log the error and notify the user
+        print(paste("Error occurred:", e$message))
+        showNotification(
+          paste("Error rendering plot:", e$message),
+          type = "error",
+          duration = 5
+        )
+      },
+      warning = function(w) {
+        # Log warnings
+        print(paste("Warning occurred:", w$message))
+        showNotification(
+          paste("Warning during rendering:", w$message),
+          type = "warning",
+          duration = 5
+        )
+      })
+    })
   })
   
   #-------------------------------------------------------------------
