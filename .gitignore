@@ -1,5 +1,10 @@
 .DS_Store
 .Rproj.user
+.venv_R
+.Rhistory
+.RData
+data/tess_data.db
+data/tessNetwork_metadata.db
 python/TESS-IDA-TOOLS
 python/adm
 python/ECSV
