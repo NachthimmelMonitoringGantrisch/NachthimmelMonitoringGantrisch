@@ -6,7 +6,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 # 2. Define and Create Database Path
-db_path = '../data/'
+db_path = '../../data/'
 db_name = os.path.join(db_path, 'TessNetwork_metadata.db')
 os.makedirs(db_path, exist_ok=True)
 
