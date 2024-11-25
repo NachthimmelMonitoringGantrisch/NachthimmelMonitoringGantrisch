@@ -4,6 +4,7 @@ import sqlite3
 import requests
 import pandas as pd
 from sqlalchemy import create_engine
+from time import sleep
 
 # 2. Define and Create Database Path
 db_path = '../../data/'
@@ -45,35 +46,45 @@ else:
 
 engine = create_engine(f'sqlite:///{db_name}')
 
-# 3. Fetch API Data for Photometer Metadata
+# 3. Fetch API Data for Photometer Metadata with Retry Logic
 photometer_api_url = "http://api.stars4all.eu/photometers"
 
-def fetch_photometer_metadata(api_url):
-    response = requests.get(api_url)
-    response.raise_for_status()
-    data = response.json()
+def fetch_photometer_metadata(api_url, max_retries=3, backoff_factor=5):
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = requests.get(api_url, timeout=10)  # Add a timeout to avoid hanging
+            response.raise_for_status()  # Raise HTTP errors
+            data = response.json()
 
-    if not isinstance(data, list):
-        raise ValueError("Expected API to return a list of photometer data.")
+            if not isinstance(data, list):
+                raise ValueError("Expected API to return a list of photometer data.")
 
-    # Process records
-    records = []
-    for item in data:
-        record = {
-            "name": item.get("name", ""),
-            "latitude": round(item.get("info_location", {}).get("latitude", 0), 4) if item.get("info_location", {}).get("latitude") else None,
-            "longitude": round(item.get("info_location", {}).get("longitude", 0), 4) if item.get("info_location", {}).get("longitude") else None,
-            "country": item.get("info_location", {}).get("country", ""),
-            "city": item.get("info_location", {}).get("town", ""),
-            "place": item.get("info_location", {}).get("place", ""),
-            "local_timezone_name": item.get("info_tess", {}).get("local_timezone", ""),
-            "org_name": item.get("info_org", {}).get("name", ""),
-        }
-        records.append(record)
+            # Process records
+            records = []
+            for item in data:
+                record = {
+                    "name": item.get("name", ""),
+                    "latitude": round(item.get("info_location", {}).get("latitude", 0), 4) if item.get("info_location", {}).get("latitude") else None,
+                    "longitude": round(item.get("info_location", {}).get("longitude", 0), 4) if item.get("info_location", {}).get("longitude") else None,
+                    "country": item.get("info_location", {}).get("country", ""),
+                    "city": item.get("info_location", {}).get("town", ""),
+                    "place": item.get("info_location", {}).get("place", ""),
+                    "local_timezone_name": item.get("info_tess", {}).get("local_timezone", ""),
+                    "org_name": item.get("info_org", {}).get("name", ""),
+                }
+                records.append(record)
 
-    df = pd.DataFrame(records)
+            df = pd.DataFrame(records)
+            return df
 
-    return df
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            print(f"Attempt {attempt}/{max_retries} failed: {e}")
+            if attempt < max_retries:
+                sleep_time = backoff_factor * attempt
+                print(f"Retrying in {sleep_time} seconds...")
+                sleep(sleep_time)
+            else:
+                raise RuntimeError("Maximum retries reached. Unable to fetch data.") from e
 
 photometer_metadata = fetch_photometer_metadata(photometer_api_url)
 print(f"Total rows fetched from API: {len(photometer_metadata)}")

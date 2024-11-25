@@ -21,8 +21,9 @@ def library_installed(pip_executable, library):
 
 
 def create_and_setup_venv(requirements_file):
-    # Define the virtual environment directory name
-    venv_dir = ".venv_R"
+    # Define the root directory and the virtual environment directory
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))  # Root folder
+    venv_dir = os.path.join(root_dir, ".venv_R")  # Path to .venv_R in root
 
     # Check if the virtual environment already exists
     if not os.path.exists(venv_dir):
@@ -35,7 +36,7 @@ def create_and_setup_venv(requirements_file):
         print(f"Virtual environment '{venv_dir}' already exists. Skipping creation.")
 
     # Construct the pip executable path within the virtual environment
-    pip_executable = os.path.join(venv_dir, "Scripts", "pip")
+    pip_executable = os.path.join(venv_dir, "Scripts", "pip") if os.name == "nt" else os.path.join(venv_dir, "bin", "pip")
 
     # Install only missing libraries from the requirements file
     if os.path.exists(requirements_file):
@@ -57,7 +58,7 @@ def create_and_setup_venv(requirements_file):
 
 if __name__ == "__main__":
     # Get the relative path to the requirements file
-    requirements_file = os.path.join("requirements", "requirements_venv_R.txt")
+    requirements_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "requirements", "requirements_venv_R.txt"))
 
     try:
         create_and_setup_venv(requirements_file)
