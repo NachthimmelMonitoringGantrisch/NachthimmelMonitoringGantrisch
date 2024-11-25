@@ -357,11 +357,15 @@ server <- function(input, output, session) {
     photometer_id <- input$photometerDropdown  # Selected photometer ID
     print(photometer_id)
     
+    withProgress(message = "Rendering Photometer Statistics...", value = 0, {
+      incProgress(0.3, detail = "Loading data and processing...")
+    
     if (!is.null(photometer_id) && photometer_id != "") {
       source("Histogram_over21perMonth_yearly.R")
       plot_result <- main(photometer_id)  # Call the main function from photometer_statistics with the selected photometer ID
       
       if (!is.null(plot_result)) {
+        incProgress(1, detail = "Render complete.")
         plot_result
       } else {
         print("Plot could not be generated. Check Histogram_over21perMonth_yearly.R for issues.")
@@ -369,6 +373,7 @@ server <- function(input, output, session) {
     } else {
       print("No photometer selected in the dropdown.")
     }
+   })
   })
   
   #-------------------------------------------------------------------
@@ -379,11 +384,15 @@ server <- function(input, output, session) {
     photometer_id <- input$photometerDropdown  # Selected photometer ID
     print(photometer_id)
     
+    withProgress(message = "Rendering Photometer Statistics...", value = 0, {
+      incProgress(0.3, detail = "Loading data and processing...")
+    
     if (!is.null(photometer_id) && photometer_id != "") {
       source("PhotometerStatistics_overYears.R")
       plot_result <- main(photometer_id)
       
       if (!is.null(plot_result)) {
+        incProgress(1, detail = "Render complete.")
         plot_result
       } else {
         print("Plot could not be generated. PhotometerStatistics_overYears.R for issues.")
@@ -391,6 +400,7 @@ server <- function(input, output, session) {
     } else {
       print("No photometer selected in the dropdown.")
     }
+   })
   })
   
   #-------------------------------------------------------------------
