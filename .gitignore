@@ -4,7 +4,7 @@
 .Rhistory
 .RData
 data/tess_data.db
-data/tessNetwork_metadata.db
+data/TessNetwork_metadata.db
 python/TESS-IDA-TOOLS
 python/adm
 python/ECSV
