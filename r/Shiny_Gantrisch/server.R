@@ -404,6 +404,33 @@ server <- function(input, output, session) {
   })
   
   #-------------------------------------------------------------------
+  # Call "MinMax_MSAS_perMonth_and_Moon.R" Script and Generate Plot
+  #-------------------------------------------------------------------
+  
+  output$plotHistogramPerMonth <- renderPlot({
+    photometer_id <- input$photometerDropdown  # Selected photometer ID
+    print(photometer_id)
+    
+    withProgress(message = "Rendering Photometer Statistics...", value = 0, {
+      incProgress(0.3, detail = "Loading data and processing...")
+      
+      if (!is.null(photometer_id) && photometer_id != "") {
+        source("MinMax_MSAS_perMonth_and_Moon.R")
+        plot_result <- main(photometer_id)
+        
+        if (!is.null(plot_result)) {
+          incProgress(1, detail = "Render complete.")
+          plot_result
+        } else {
+          print("Plot could not be generated. PhotometerStatistics_overYears.R for issues.")
+        }
+      } else {
+        print("No photometer selected in the dropdown.")
+      }
+    })
+  })
+  
+  #-------------------------------------------------------------------
   # Report Status Placeholder
   #-------------------------------------------------------------------
   

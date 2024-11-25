@@ -119,6 +119,10 @@ ui <- navbarPage(
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Jahr'",
                  plotOutput("plotHistogramPerYear")
+               ),
+               conditionalPanel(
+                 condition = "input.analysisType == 'Analyse pro Monat'",
+                 plotOutput("plotHistogramPerMonth")
                )
              )
            )),
