@@ -6,6 +6,23 @@ library(jsonlite)
 library(DT)
 library(dplyr)
 
+# Define Python setup script path (relative)
+setup_script_path <- normalizePath(file.path("..", "..", "python", "setup_venv_R.py"), mustWork = TRUE)
+
+# Run the Python setup script using system() instead of reticulate
+tryCatch({
+  message("Setting up virtual environment...")
+  setup_command <- sprintf(
+    'python "%s"',
+    normalizePath("../../python/setup_venv_R.py", mustWork = TRUE)
+  )
+  system(setup_command, intern = TRUE)
+  message("Virtual environment setup completed successfully.")
+}, error = function(e) {
+  stop("Failed to set up the virtual environment. Error: ", e$message)
+})
+
+
 # Set Python environment path using a relative path
 python_env_path <- normalizePath(file.path("..", "..", ".venv_R", "Scripts", "python.exe"), mustWork = TRUE)
 
