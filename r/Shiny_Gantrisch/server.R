@@ -6,6 +6,16 @@ library(jsonlite)
 library(DT)
 library(dplyr)
 
+# Set Python environment path using a relative path
+python_env_path <- normalizePath(file.path("..", "..", ".venv_R", "Scripts", "python.exe"), mustWork = TRUE)
+
+# Use the Python environment
+use_python(python_env_path, required = TRUE)
+
+# Check if reticulate is correctly configured
+print("Python Configuration:")
+print(py_config())
+
 # Define a function to execute Python code with UI parameters
 source_python_code <- function(photometer_name, start_date, end_date, preprocessing) {
   py$photometer_name <- photometer_name
