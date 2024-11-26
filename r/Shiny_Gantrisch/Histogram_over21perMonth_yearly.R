@@ -49,16 +49,35 @@ process_night_data <- function(df, selected_years) {
 
 # Function to plot the histogram of nights with max_msas > 21.3
 plot_histogram <- function(df_nightly_stats, selected_years) {
+  # Debug: Check selected_years
+  print("Selected years:")
+  print(selected_years)
+  
+  # Ensure time is in POSIXct and year is extracted
   df_nightly_stats <- df_nightly_stats %>%
     mutate(
       time = as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
-      night_id = as.integer(difftime(time, as.POSIXct("1970-01-01 20:00:00", tz = "UTC"), units = "days")) +
-        ifelse(hour(time) < 5, -1, 0),
-      year = year(time)
-    ) %>%
+      year = year(time)  # Extract year
+    )
+  
+  # Debug: Check year column
+  print("Year column in df_nightly_stats:")
+  print(unique(df_nightly_stats$year))
+  
+  # Check if the dataset has valid time values for subtitle creation
+  if (nrow(df_nightly_stats) > 0) {
+    date_range <- range(df_nightly_stats$time, na.rm = TRUE)
+    subtitle_text <- paste("Daten von", format(date_range[1], "%Y-%m-%d"), "bis", format(date_range[2], "%Y-%m-%d"))
+  } else {
+    subtitle_text <- "Keine Daten für die gewählten Kriterien vorhanden"
+  }
+  
+  # Filter and process the input data for plotting
+  df_nightly_stats <- df_nightly_stats %>%
     filter(year %in% selected_years) %>%  # Filter by selected years
     filter(sun_alt <= -18) %>%                       
-    group_by(night_id) %>%
+    group_by(night_id = as.integer(difftime(time, as.POSIXct("1970-01-01 20:00:00", tz = "UTC"), units = "days")) +
+               ifelse(hour(time) < 5, -1, 0)) %>%
     summarise(max_msas = max(msas, na.rm = TRUE), night_date = as.Date(min(time)), .groups = "drop") %>%
     filter(max_msas > 21.3) %>%
     mutate(
@@ -92,9 +111,10 @@ plot_histogram <- function(df_nightly_stats, selected_years) {
       geom_blank() +
       labs(
         title = "Anzahl Nächte mit max. MSAS > 21.3 pro Monat",
-        subtitle = "Keine Nacht mit max. MSAS > 21.3 gefunden",
+        subtitle = subtitle_text,
         x = "Monat", y = "Anzahl Nächte"
       ) +
+      scale_y_continuous(limits = c(0, 31)) +  # Fix Y-axis range from 0 to 31
       theme_minimal() +
       annotate("text", x = 6.5, y = 15, label = "Keine Nacht mit max. MSAS > 21.3 gefunden", color = "red", size = 5, fontface = "bold")
   } else {
@@ -102,9 +122,10 @@ plot_histogram <- function(df_nightly_stats, selected_years) {
       geom_bar(stat = "identity", fill = "steelblue", show.legend = FALSE) +
       labs(
         title = "Anzahl Nächte mit max. MSAS > 21.3 pro Monat",
-        subtitle = paste("Analyse pro Jahr (", min(selected_years), "-", max(selected_years), ")", sep = ""), 
+        subtitle = subtitle_text,
         x = "Monat", y = "Anzahl Nächte"
       ) +
+      scale_y_continuous(limits = c(0, 31)) +  # Fix Y-axis range from 0 to 31
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 90, hjust = 1),
@@ -113,9 +134,10 @@ plot_histogram <- function(df_nightly_stats, selected_years) {
         plot.subtitle = element_text(size = 12, color = "gray"), 
         panel.spacing = unit(1, "lines")
       ) +
-      facet_wrap(~ year, ncol = 2)  # Set grid layout with 2 columns
+      facet_wrap(~ year, ncol = 2)
   }
 }
+
 
 # Main function to run the analysis
 main <- function(photometer_id, selected_years) {
