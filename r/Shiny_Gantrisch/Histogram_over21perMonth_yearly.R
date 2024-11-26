@@ -48,56 +48,6 @@ process_night_data <- function(df, selected_years) {
 }
 
 # Function to plot the histogram of nights with max_msas > 21.3
-library(DBI)
-library(RSQLite)
-library(dplyr)
-library(ggplot2)
-library(lubridate)
-
-# Path to the SQLite database
-db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
-
-# Function to load only necessary data from the SQLite database for a specific photometer
-load_data_from_database <- function(photometer_id) {
-  if (!file.exists(db_tess_data_path)) {
-    stop(paste("Database not found at path:", db_tess_data_path))
-  }
-  
-  conn <- dbConnect(RSQLite::SQLite(), db_tess_data_path)
-  table_name <- paste0(photometer_id, "_data")
-  query <- paste("SELECT time, msas, sun_alt FROM", table_name)
-  df <- dbGetQuery(conn, query)
-  dbDisconnect(conn)
-  
-  if (nrow(df) == 0) {
-    stop(paste("Keine Daten für Photometer gefunden:", photometer_id))
-  }
-  
-  return(df)
-}
-
-# Function to process the data to count nights with max_msas > 21.3
-process_night_data <- function(df, selected_years) {
-  df <- df %>%
-    mutate(
-      time = as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
-      night_id = as.integer(difftime(time, as.POSIXct("1970-01-01 20:00:00", tz = "UTC"), units = "days")) +
-        ifelse(hour(time) < 5, -1, 0),
-      year = year(time)
-    ) %>%
-    filter(year %in% selected_years)  # Filter by selected years
-  
-  result <- df %>%
-    filter(sun_alt <= -18) %>%                      
-    group_by(night_id) %>%                          
-    summarise(max_msas = max(msas, na.rm = TRUE)) %>%
-    filter(max_msas > 21.3) %>%
-    summarise(nights_over_21_3 = n())               
-  
-  return(result$nights_over_21_3)
-}
-
-# Function to plot the histogram of nights with max_msas > 21.3
 plot_histogram <- function(df_nightly_stats, selected_years) {
   df_nightly_stats <- df_nightly_stats %>%
     mutate(
