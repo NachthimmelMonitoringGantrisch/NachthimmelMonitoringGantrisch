@@ -56,6 +56,8 @@ def install_libraries(venv_path):
     packages = [
         "notebook",
         "matplotlib",
+        "aiohttp==3.9.5",  # Ensure compatibility
+        "aiodns==3.0.0",   # Use a compatible version for Windows
         "git+https://github.com/STARS4ALL/TESS-IDA-TOOLS#main"
     ]
 
@@ -149,42 +151,6 @@ def run_schema_create(jupyter_dir):
         print("Schema creation completed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"Error occurred while running the command: {e}")
-
-def run_tess_ida_pipe(jupyter_dir):
-    """
-    Runs the tess-ida-pipe command with the specified arguments.
-    """
-    venv_path = os.path.join(jupyter_dir, ".venv", "Scripts")
-    tess_ida_pipe_path = os.path.join(venv_path, "tess-ida-pipe.exe")
-
-    # Check if tess-ida-pipe exists
-    if not os.path.exists(tess_ida_pipe_path):
-        print(f"tess-ida-pipe executable not found at {tess_ida_pipe_path}")
-        return
-
-    # Command to execute
-    command = [
-        tess_ida_pipe_path,
-        "--console", "single",
-        "--in-dir", "IDA",
-        "--out-dir", "ECSV",
-        "--name", "stars926",
-        "--month", "2024-03"
-    ]
-    print(f"Command: {command}")
-
-    # Set up the environment variables
-    env = os.environ.copy()
-    env["PATH"] = f"{venv_path};{env['PATH']}"
-
-    try:
-        # Run the command
-        subprocess.run(command, cwd=jupyter_dir, env=env, check=True)
-        print("tess-ida-pipe executed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"Error occurred while running tess-ida-pipe: {e}")
-    except FileNotFoundError:
-        print("tess-ida-pipe command not found. Ensure tess-ida-pipe is installed correctly.")
 
 # Call the functions
 target_dir, jupyter_dir = install_tess()  # Step 1: Install repository and get paths
