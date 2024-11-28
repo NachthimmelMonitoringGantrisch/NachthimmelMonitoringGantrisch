@@ -6,27 +6,56 @@ library(jsonlite)
 library(DT)
 library(dplyr)
 
-# Define Python setup script path (relative)
-setup_script_path <- normalizePath(file.path("..", "..", "python", "setup_venv_R.py"), mustWork = TRUE)
+#----------------------------------------------------------------------
+# Initialization of `setup_venv_R.py`
+#----------------------------------------------------------------------
 
-# Run the Python setup script using system() instead of reticulate
+# Define Python setup script path for `setup_venv_R.py`
+setup_venv_script_path <- normalizePath(file.path("..", "..", "python", "setup_venv_R.py"), mustWork = TRUE)
+
+# Run the Python setup script using system()
 tryCatch({
-  message("Setting up virtual environment...")
-  setup_command <- sprintf(
-    'python "%s"',
-    normalizePath("../../python/setup_venv_R.py", mustWork = TRUE)
-  )
-  system(setup_command, intern = TRUE)
-  message("Virtual environment setup completed successfully.")
+  message("Setting up virtual environment for R integration...")
+  setup_command <- sprintf('python "%s"', setup_venv_script_path)
+  
+  # Execute the script and capture output
+  system_output <- system(setup_command, intern = TRUE)
+  print(system_output)
+  
+  message("Virtual environment setup for R completed successfully.")
 }, error = function(e) {
-  stop("Failed to set up the virtual environment. Error: ", e$message)
+  stop("Failed to set up the virtual environment for R. Error: ", e$message)
 })
 
+#----------------------------------------------------------------------
+# Initialization of `setup_TESS-IDA-TOOLS.py`
+#----------------------------------------------------------------------
 
-# Set Python environment path using a relative path
+# Define Python setup script path for `setup_TESS-IDA-TOOLS.py`
+setup_tess_script_path <- normalizePath(file.path("..", "..", "python", "setup_TESS-IDA-TOOLS.py"), mustWork = TRUE)
+
+# Run the Python setup script using system()
+tryCatch({
+  message("Initializing TESS-IDA-TOOLS setup...")
+  setup_command <- sprintf('python "%s"', setup_tess_script_path)
+  
+  # Execute the script and capture output
+  system_output <- system(setup_command, intern = TRUE)
+  print(system_output)
+  
+  message("TESS-IDA-TOOLS setup completed successfully.")
+}, error = function(e) {
+  stop("Failed to initialize TESS-IDA-TOOLS. Error: ", e$message)
+})
+
+#----------------------------------------------------------------------
+# Set Python Environment for Reticulate
+#----------------------------------------------------------------------
+
+# Define the Python environment path for reticulate
 python_env_path <- normalizePath(file.path("..", "..", ".venv_R", "Scripts", "python.exe"), mustWork = TRUE)
 
-# Use the Python environment
+# Use the Python environment with reticulate
 use_python(python_env_path, required = TRUE)
 
 # Check if reticulate is correctly configured
@@ -167,7 +196,7 @@ server <- function(input, output, session) {
       })
       
       #-------------------------------------------------------------------
-      # "downloadData" / "Daten herunterladen" - Observe event for  button click
+      # "downloadData" / "Daten herunterladen" - Observe event for button click
       #-------------------------------------------------------------------
       
       observeEvent(input$downloadData, {
@@ -224,7 +253,41 @@ server <- function(input, output, session) {
         })
         
         print("Download starting...")
-      })  # End of observeEvent
+        
+        # Run Python script with parameters
+        tryCatch({
+          py_run_file("../../python/download_TESS_data.py")
+          py$photometer_names <- names_list
+          py$start_date <- start_date
+          py$end_date <- end_date
+          
+          # Call the main function in the Python script
+          py_run_string("
+      print('Ensuring database and table...')
+      create_table()
+      
+      # Set the directory to the jupyter folder
+      script_dir = os.path.abspath(os.path.dirname(__file__))
+      jupyter_dir = os.path.join(script_dir, 'TESS-IDA-TOOLS', 'jupyter')
+      
+      # Generate filtered months for each photometer
+      for photometer_name in photometer_names:
+          print(f'Generating month list for photometer: {photometer_name}')
+          filtered_months = generate_month_list(photometer_name, start_date, end_date)
+          
+          # Iterate through each month for the current photometer
+          for month in filtered_months:
+              run_tess_ida_pipe(jupyter_dir, photometer_name, month)
+    ")
+          print("Download completed successfully.")
+        }, error = function(e) {
+          print(paste("Error occurred during download:", e$message))
+          output$notificationArea <- renderUI({
+            div(style = "color: red; font-weight: bold;",
+                paste("Fehler beim Download:", e$message))
+          })
+        })
+      })
       
     }, error = function(e) {
       print(paste("Error connecting to database at path:", db_metadata_path, ":", e$message))
