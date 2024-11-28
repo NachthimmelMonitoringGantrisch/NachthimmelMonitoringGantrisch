@@ -12,7 +12,7 @@ def activate_venv(jupyter_dir):
     """
     Activates the virtual environment in the jupyter directory.
     """
-    venv_path = os.path.join(jupyter_dir, ".venv", "Scripts", "activate.bat")
+    venv_path = os.path.join(jupyter_dir, ".venv", "Scripts", "python.exe")
 
     if not os.path.exists(venv_path):
         print(f"Virtual environment activation script not found at {venv_path}. Ensure the environment exists.")
