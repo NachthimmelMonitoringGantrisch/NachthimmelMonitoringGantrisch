@@ -7,12 +7,13 @@ def install_tess():
     Clones the TESS-IDA-TOOLS repository into the correct python folder if it doesn't already exist
     and ensures the jupyter folder exists.
     """
-    # Get the correct parent directory
-    parent_dir = os.path.abspath(os.path.join(os.getcwd(), "python"))
-    target_dir = os.path.join(parent_dir, "TESS-IDA-TOOLS")
+    # Set the target directory for TESS-IDA-TOOLS inside the python folder
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    python_dir = os.path.join(project_root, "python")
+    target_dir = os.path.join(python_dir, "TESS-IDA-TOOLS")
 
     # Ensure the python directory exists
-    os.makedirs(parent_dir, exist_ok=True)
+    os.makedirs(python_dir, exist_ok=True)
 
     # Clone the repository if it doesn't exist
     if not os.path.exists(target_dir):
@@ -71,8 +72,9 @@ def setup_tess_directory():
     """
     Ensures the TESS-IDA-TOOLS directory structure exists.
     """
-    parent_dir = os.path.abspath(os.getcwd())
-    tess_tools_dir = os.path.join(parent_dir, "python", "TESS-IDA-TOOLS")
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    python_dir = os.path.join(project_root, "python")
+    tess_tools_dir = os.path.join(python_dir, "TESS-IDA-TOOLS")
     jupyter_dir = os.path.join(tess_tools_dir, "jupyter")
 
     if not os.path.exists(jupyter_dir):
@@ -86,14 +88,10 @@ def activate_venv():
     """
     Activates the virtual environment depending on the operating system.
     """
-    parent_dir = os.path.abspath(os.path.join(os.getcwd(),))
-    target_dir = os.path.join(parent_dir, "TESS-IDA-TOOLS", "jupyter")
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    jupyter_dir = os.path.join(project_root, "python", "TESS-IDA-TOOLS", "jupyter")
+    venv_path_win = os.path.join(jupyter_dir, '.venv', 'Scripts', 'activate.bat')
 
-    # Define paths for Windows (activate.bat) and Unix (activate)
-    venv_path_win = os.path.join(target_dir, '.venv', 'Scripts', 'activate.bat')
-
-
-    # Determine the OS and use the appropriate activation method
     if os.name == 'nt':  # For Windows
         if os.path.exists(venv_path_win):
             subprocess.call([venv_path_win], shell=True)

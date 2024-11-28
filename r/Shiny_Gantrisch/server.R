@@ -78,6 +78,19 @@ source_python_code <- function(photometer_name, start_date, end_date, preprocess
 }
 
 #----------------------------------------------------------------------
+# Helper Function: Switch Python Virtual Environment
+#----------------------------------------------------------------------
+switch_python_env <- function(env_path) {
+  # Switch to the specified Python environment using reticulate
+  tryCatch({
+    use_python(env_path, required = TRUE)
+    message("Switched to Python environment at: ", env_path)
+  }, error = function(e) {
+    stop("Failed to switch Python environment. Error: ", e$message)
+  })
+}
+
+#----------------------------------------------------------------------
 # Define the server function
 #----------------------------------------------------------------------
 
@@ -253,6 +266,13 @@ server <- function(input, output, session) {
         })
         
         print("Download starting...")
+        
+        # Switch to the TESS-IDA-TOOLS virtual environment
+        tess_venv_path <- normalizePath(
+          file.path("..", "..", "python", "TESS-IDA-TOOLS", "jupyter", ".venv", "Scripts", "python.exe"),
+          mustWork = TRUE
+        )
+        switch_python_env(tess_venv_path)
         
         # Run Python script with parameters
         tryCatch({

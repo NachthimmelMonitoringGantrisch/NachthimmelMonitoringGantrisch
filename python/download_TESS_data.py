@@ -29,32 +29,26 @@ def run_tess_ida_pipe(jupyter_dir, photometer_name, month):
     """
     Runs the tess-ida-pipe command to download data for a specific photometer and month.
     """
-    # Activate the virtual environment
-    activate_venv(jupyter_dir)
+    venv_python = activate_venv(jupyter_dir)
+    tess_ida_pipe_path = os.path.join(jupyter_dir, ".venv", "Scripts", "tess-ida-pipe.exe")
 
-    venv_path = os.path.join(jupyter_dir, ".venv", "Scripts")
-    tess_ida_pipe_path = os.path.join(venv_path, "tess-ida-pipe.exe")
-
-    # Ensure tess-ida-pipe exists
     if not os.path.exists(tess_ida_pipe_path):
-        print(f"tess-ida-pipe executable not found at {tess_ida_pipe_path}")
-        return
+        raise FileNotFoundError(f"tess-ida-pipe executable not found at {tess_ida_pipe_path}.")
 
-    # Command to execute
     command = [
         tess_ida_pipe_path,
         "--console", "single",
         "--in-dir", "IDA",
         "--out-dir", "ECSV",
         "--name", photometer_name,
-        "--month", month
+        "--month", month,
     ]
     print(f"Running command for photometer: {photometer_name}, month: {month}")
     print(f"Command: {command}")
 
     # Set up the environment variables
     env = os.environ.copy()
-    env["PATH"] = f"{venv_path};{env['PATH']}"
+    env["PATH"] = f"{os.path.dirname(venv_python)};{env['PATH']}"
     env["AIODNS_RESOLVER"] = "default"  # Force default resolver
 
     try:
