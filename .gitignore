@@ -5,6 +5,7 @@
 .RData
 data/tess_data.db
 data/TessNetwork_metadata.db
+python/__pycache__
 python/TESS-IDA-TOOLS
 python/adm
 python/ECSV
