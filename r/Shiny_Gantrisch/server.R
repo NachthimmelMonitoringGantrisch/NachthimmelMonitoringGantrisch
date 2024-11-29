@@ -228,53 +228,58 @@ server <- function(input, output, session) {
       #-------------------------------------------------------------------
       
       observeEvent(input$downloadData, {
-        # Clear previous notifications
+        # Clear previous notification
         output$notificationArea <- renderUI({ NULL })
         
-        # Get selected photometer names and date range
+        # Fetch selected photometer names and date range
         names_list <- selected_names()
         date_range <- selected_date_range()
         
         # Validate inputs
-        if (is.null(date_range) || length(names_list) == 0) {
+        if (is.null(names_list) || length(names_list) == 0) {
           output$notificationArea <- renderUI({
-            div(style = "color: red; font-weight: bold;",
-                "Error: Please select valid photometer names and date range.")
+            div(style = "color: red; font-weight: bold;", "Fehler: Es wurde kein Photometer ausgewählt.")
+          })
+          return()
+        }
+        if (is.null(date_range) || length(date_range) != 2) {
+          output$notificationArea <- renderUI({
+            div(style = "color: red; font-weight: bold;", "Fehler: Bitte wählen Sie einen gültigen Datumsbereich aus.")
           })
           return()
         }
         
+        # Format arguments
+        photometers <- paste(names_list, collapse = ",")
         start_date <- date_range[1]
         end_date <- date_range[2]
         
-        if (start_date > end_date) {
-          output$notificationArea <- renderUI({
-            div(style = "color: red; font-weight: bold;",
-                "Error: Start date cannot be later than end date.")
-          })
-          return()
-        }
+        # Command to call the Python script
+        python_path <- normalizePath(file.path("..", "..", "python", "TESS-IDA-TOOLS", "jupyter", ".venv", "Scripts", "python.exe"))
+        script_path <- normalizePath(file.path("..", "..", "python", "download_TESS_data.py"))
+        command <- sprintf('"%s" "%s" "%s" "%s" "%s"', python_path, script_path, photometers, start_date, end_date)
         
-        # Notify user and start download
-        output$notificationArea <- renderUI({
-          div(style = "color: green; font-weight: bold;",
-              "Download in progress...")
-        })
-        
-        print(paste("Starting download for photometers:", paste(names_list, collapse = ", ")))
-        print(paste("Date range:", start_date, "-", end_date))
-        
-        # Call helper function to run the Python script
-        tryCatch({
-          message <- run_tess_download(names_list, start_date, end_date)
-          output$notificationArea <- renderUI({
-            div(style = "color: green; font-weight: bold;", message)
+        # Display progress bar while running the command
+        withProgress(message = "Daten werden heruntergeladen...", value = 0, {
+          incProgress(0.3, detail = "Eingabedaten werden verarbeitet")
+          tryCatch({
+            output_log <- system(command, intern = TRUE)
+            print(output_log)  # Log to console for debugging
+            
+            # Update notification area with success message
+            incProgress(0.85, detail = "Download abgeschlossen.")
+            output$notificationArea <- renderUI({
+              div(style = "color: green; font-weight: bold;",
+                  sprintf("Download von %s erfolgreich abgeschlossen.", paste(names_list, collapse = ", ")))
+            })
+          }, error = function(e) {
+            # Update notification area with error message
+            print(e$message)
+            output$notificationArea <- renderUI({
+              div(style = "color: red; font-weight: bold;", paste("Fehler beim Download:", e$message))
+            })
           })
-        }, error = function(e) {
-          output$notificationArea <- renderUI({
-            div(style = "color: red; font-weight: bold;",
-                paste("Error:", e$message))
-          })
+          incProgress(1, detail = "Fertig.")
         })
       })
       

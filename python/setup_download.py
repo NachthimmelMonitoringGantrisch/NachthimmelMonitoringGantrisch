@@ -26,7 +26,7 @@ def execute_command(command, params=None):
     with engine.connect() as connection:
         connection.execute(text(command), params or {})
 
-def create_table():
+def create_input_control_table():
     """
     Create the `data_import_control` table if it doesn't already exist.
     """
@@ -76,7 +76,7 @@ def generate_month_list(photometer_name, start_date, end_date):
 if __name__ == "__main__":
     # Ensure database and table
     print(f"Database path: {db_name}")
-    create_table()
+    create_input_control_table()
 
     # Example usage
     photometer_name = 'stars926'

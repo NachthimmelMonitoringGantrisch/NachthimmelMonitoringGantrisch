@@ -28,8 +28,13 @@ ui <- navbarPage(
                    column(12, actionButton("downloadData", "Daten herunterladen", class = "btn-custom"))
                  ),
                  fluidRow(
-                   column(12, uiOutput("notificationArea"))
-                 ),
+                   column(12, 
+                          div(
+                            h4("Statusbereich:", style = "font-weight: bold; margin-top: 10px; font-size: 14px"),  # Add title
+                            uiOutput("notificationArea")
+                          )
+                   )
+                 )
                ),
                mainPanel(
                  DTOutput("tablePhotometerDownload", height = "100%", width = "100%")
