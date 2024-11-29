@@ -22,7 +22,7 @@ def library_installed(pip_executable, library):
 
 def create_and_setup_venv(requirements_file):
     # Define the root directory and the virtual environment directory
-    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))  # Root folder
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  # Root folder
     venv_dir = os.path.join(root_dir, ".venv_R")  # Path to .venv_R in root
 
     # Check if the virtual environment already exists

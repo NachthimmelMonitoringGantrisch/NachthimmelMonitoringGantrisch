@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text
 from datetime import datetime, timedelta
 
 # Configuration
-db_name = os.path.abspath(os.path.join(os.getcwd(), 'data', 'TessNetwork_data.db'))
+db_name = os.path.abspath(os.path.join(os.getcwd(), '..', '..', 'data', 'TessNetwork_data.db'))
 
 # Ensure the data folder exists
 os.makedirs(os.path.dirname(db_name), exist_ok=True)
