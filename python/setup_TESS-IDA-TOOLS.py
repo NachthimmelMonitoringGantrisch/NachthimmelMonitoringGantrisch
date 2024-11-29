@@ -57,6 +57,7 @@ def install_libraries(venv_path):
     packages = [
         "notebook",
         "matplotlib",
+        "sqlalchemy",
         "aiohttp==3.9.5",  # Ensure compatibility
         "aiodns==3.0.0",   # Use a compatible version for Windows
         "git+https://github.com/STARS4ALL/TESS-IDA-TOOLS#main"

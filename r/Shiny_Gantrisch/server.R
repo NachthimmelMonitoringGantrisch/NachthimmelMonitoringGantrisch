@@ -78,15 +78,30 @@ source_python_code <- function(photometer_name, start_date, end_date, preprocess
 }
 
 #----------------------------------------------------------------------
-# Helper Function: Switch Python Virtual Environment
+# Run Tess Download function
 #----------------------------------------------------------------------
-switch_python_env <- function(env_path) {
-  # Switch to the specified Python environment using reticulate
+
+# Add the `run_tess_download` function here
+run_tess_download <- function(photometer_names, start_date, end_date) {
+  python_script <- normalizePath("../../python/download_TESS_data.py", mustWork = TRUE)
+  tess_env_python <- normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/Scripts/python.exe", mustWork = TRUE)
+  
+  photometer_names_arg <- paste(photometer_names, collapse = ",")
+  command <- sprintf(
+    '"%s" "%s" "%s" "%s" "%s"',
+    tess_env_python,
+    python_script,
+    photometer_names_arg,
+    start_date,
+    end_date
+  )
+  
   tryCatch({
-    use_python(env_path, required = TRUE)
-    message("Switched to Python environment at: ", env_path)
+    system_output <- system(command, intern = TRUE)
+    print(system_output)
+    return("Download completed successfully.")
   }, error = function(e) {
-    stop("Failed to switch Python environment. Error: ", e$message)
+    stop(paste("Error during Python script execution:", e$message))
   })
 }
 
@@ -213,98 +228,52 @@ server <- function(input, output, session) {
       #-------------------------------------------------------------------
       
       observeEvent(input$downloadData, {
-        # Clear any previous notification
+        # Clear previous notifications
         output$notificationArea <- renderUI({ NULL })
         
-        # Fetch selected photometer names
+        # Get selected photometer names and date range
         names_list <- selected_names()
         date_range <- selected_date_range()
         
-        # Validate the date range
-        if (!is.null(date_range)) {
-          start_date <- date_range[1]
-          end_date <- date_range[2]
-          
-          # Check if start date is after end date
-          if (start_date > end_date) {
-            print("Fehler: Startdatum ist später als Enddatum.")
-            output$notificationArea <- renderUI({
-              div(style = "color: red; font-weight: bold;",
-                  "Fehler: Das Startdatum darf nicht später als das Enddatum sein.")
-            })
-            return()
-          }
-          
-          print("Selected Date Range:")
-          print(paste("Start Date:", start_date, "| End Date:", end_date))
-        } else {
-          print("Kein Datumsbereich ausgewählt.")
+        # Validate inputs
+        if (is.null(date_range) || length(names_list) == 0) {
           output$notificationArea <- renderUI({
             div(style = "color: red; font-weight: bold;",
-                "Fehler: Bitte wählen Sie einen gültigen Datumsbereich aus.")
+                "Error: Please select valid photometer names and date range.")
           })
           return()
         }
         
-        # Print selected photometer names
-        if (!is.null(names_list) && length(names_list) > 0) {
-          print("Selected Photometer Names:")
-          print(names_list)
-        } else {
-          print("Keine Photometer ausgewählt.")
+        start_date <- date_range[1]
+        end_date <- date_range[2]
+        
+        if (start_date > end_date) {
           output$notificationArea <- renderUI({
             div(style = "color: red; font-weight: bold;",
-                "Fehler: Es wurde kein Photometer ausgewählt.")
+                "Error: Start date cannot be later than end date.")
           })
           return()
         }
         
-        # If all validations pass, display a green notification and start the download
+        # Notify user and start download
         output$notificationArea <- renderUI({
           div(style = "color: green; font-weight: bold;",
-              "Download wird gestartet...")
+              "Download in progress...")
         })
         
-        print("Download starting...")
+        print(paste("Starting download for photometers:", paste(names_list, collapse = ", ")))
+        print(paste("Date range:", start_date, "-", end_date))
         
-        # Switch to the TESS-IDA-TOOLS virtual environment
-        tess_venv_path <- normalizePath(
-          file.path("..", "..", "python", "TESS-IDA-TOOLS", "jupyter", ".venv", "Scripts", "python.exe"),
-          mustWork = TRUE
-        )
-        switch_python_env(tess_venv_path)
-        
-        # Run Python script with parameters
+        # Call helper function to run the Python script
         tryCatch({
-          py_run_file("../../python/download_TESS_data.py")
-          py$photometer_names <- names_list
-          py$start_date <- start_date
-          py$end_date <- end_date
-          
-          # Call the main function in the Python script
-          py_run_string("
-      print('Ensuring database and table...')
-      create_table()
-      
-      # Set the directory to the jupyter folder
-      script_dir = os.path.abspath(os.path.dirname(__file__))
-      jupyter_dir = os.path.join(script_dir, 'TESS-IDA-TOOLS', 'jupyter')
-      
-      # Generate filtered months for each photometer
-      for photometer_name in photometer_names:
-          print(f'Generating month list for photometer: {photometer_name}')
-          filtered_months = generate_month_list(photometer_name, start_date, end_date)
-          
-          # Iterate through each month for the current photometer
-          for month in filtered_months:
-              run_tess_ida_pipe(jupyter_dir, photometer_name, month)
-    ")
-          print("Download completed successfully.")
+          message <- run_tess_download(names_list, start_date, end_date)
+          output$notificationArea <- renderUI({
+            div(style = "color: green; font-weight: bold;", message)
+          })
         }, error = function(e) {
-          print(paste("Error occurred during download:", e$message))
           output$notificationArea <- renderUI({
             div(style = "color: red; font-weight: bold;",
-                paste("Fehler beim Download:", e$message))
+                paste("Error:", e$message))
           })
         })
       })
@@ -316,7 +285,6 @@ server <- function(input, output, session) {
       })
     })
   }
-  
   
   #-------------------------------------------------------------------
   # "PhotometerDropdown" - Load Data and Populate Dropdown
