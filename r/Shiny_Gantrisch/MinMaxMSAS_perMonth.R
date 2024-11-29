@@ -8,11 +8,6 @@ library(lubridate)
 # Path to the SQLite database
 db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
 
-# Set photometer ID, year, month, and filtering criteria as variables
-# photometer_id <- "stars926"  # Replace with the desired photometer ID
-# selected_year <- 2024        # Set the desired year
-# selected_month <- 2          # Set the desired month
-
 # Load data from the SQLite database for the specified photometer
 load_data_from_database <- function(photometer_id) {
   if (!file.exists(db_tess_data_path)) {
@@ -108,7 +103,7 @@ plot_month <- function(df_night_stats, month) {
     )
 }
 
-  # Main function to run the analysis
+# Main function to run the analysis
 main <- function(photometer_id, month) {
   data <- load_data_from_database(photometer_id)
   yearly_counts <- process_data(data, month)

@@ -122,7 +122,11 @@ ui <- navbarPage(
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Monat'",
-                 plotOutput("plotHistogramPerMonth")
+                 plotOutput("plotMinMaxMSASPerMonth")
+               ),
+               conditionalPanel(
+                 condition = "input.analysisType == 'Analyse pro Monat'",
+                 plotOutput("plotDarkTimeMoonPerMonth")
                )
              )
            )),
