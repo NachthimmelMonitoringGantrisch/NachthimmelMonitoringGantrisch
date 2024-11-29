@@ -532,14 +532,16 @@ server <- function(input, output, session) {
   
   output$plotHistogramPerMonth <- renderPlot({
     photometer_id <- input$photometerDropdown  # Selected photometer ID
+    month <- input$singleMonthsDropdown # Selected month
     print(photometer_id)
+    print(month)
     
     withProgress(message = "Rendering Photometer Statistics...", value = 0, {
       incProgress(0.3, detail = "Loading data and processing...")
       
       if (!is.null(photometer_id) && photometer_id != "") {
         source("MinMax_MSAS_perMonth_and_Moon.R")
-        plot_result <- main(photometer_id)
+        plot_result <- main(photometer_id, month)
         
         if (!is.null(plot_result)) {
           incProgress(1, detail = "Render complete.")
