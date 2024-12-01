@@ -41,11 +41,14 @@ def create_input_control_table():
     execute_command(command)
     print("Table `data_import_control` ensured.")
 
-def generate_month_list(photometer_name, start_date, end_date):
+def generate_month_list(photometer_names, start_date, end_date):
     """
     Generate a list of months between two dates (inclusive) in 'YYYY-MM' format,
     excluding months that are already marked as complete in the `data_import_control` table.
+    Supports multiple photometers.
     """
+    from datetime import datetime, timedelta
+
     # Convert start_date and end_date to datetime objects
     start = datetime.strptime(start_date, '%Y-%m-%d')
     end = datetime.strptime(end_date, '%Y-%m-%d')
@@ -57,16 +60,21 @@ def generate_month_list(photometer_name, start_date, end_date):
         months.append(current.strftime('%Y-%m'))
         current = (current.replace(day=1) + timedelta(days=31)).replace(day=1)  # Move to the next month
 
-    # Query the database for completed months
+    # Initialize a set to store completed months for all photometers
+    completed_months = set()
+
+    # Query the database for completed months for each photometer
     query = """
     SELECT strftime('%Y-%m', date_of_data_name) AS month
     FROM data_import_control
     WHERE name = :photometer_name
     AND complete = 1
     """
-    completed_months = set(
-        row[0] for row in execute_query(query, {"photometer_name": photometer_name})
-    )
+    
+    for photometer_name in photometer_names:
+        # Fetch completed months for the current photometer
+        results = execute_query(query, {"photometer_name": photometer_name})
+        completed_months.update(row[0] for row in results)
 
     # Filter out months that are already completed
     filtered_months = [month for month in months if month not in completed_months]

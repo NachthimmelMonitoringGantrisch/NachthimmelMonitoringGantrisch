@@ -54,30 +54,37 @@ def run_tess_ida_pipe(jupyter_dir, photometer_name, month):
         return error_output  # Return error details
 
 if __name__ == "__main__":
-    # Get input from command-line arguments
+     # Get input from command-line arguments
     photometer_names = sys.argv[1].split(",")  # Comma-separated list of photometers
     start_date = sys.argv[2]  # Start date in "YYYY-MM-DD" format
     end_date = sys.argv[3]    # End date in "YYYY-MM-DD" format
+
+    # Set the directory relative to the script's location
+    script_dir = os.path.abspath(os.path.dirname(__file__))
+    jupyter_dir = os.path.join(script_dir, "TESS-IDA-TOOLS", "jupyter")
 
     # Ensure the database and table exist
     print("Ensuring database and table...")
     create_input_control_table()
 
-    # Set the directory to the jupyter folder
-    script_dir = os.path.abspath(os.path.dirname(__file__))
-    jupyter_dir = os.path.join(script_dir, "TESS-IDA-TOOLS", "jupyter")
+    # Generate filtered months for all photometers
+    print(f"Generating month list for photometers: {photometer_names}")
+    filtered_months = generate_month_list(photometer_names, start_date, end_date)
+    print(f"Months to process: {filtered_months}")
 
-    # Generate filtered months for each photometer
+    # Iterate through each photometer and its months
     for photometer_name in photometer_names:
-        print(f"Generating month list for photometer: {photometer_name}")
-        filtered_months = generate_month_list(photometer_name, start_date, end_date)
-
-        # Iterate through each month for the current photometer
         for month in filtered_months:
             run_tess_ida_pipe(jupyter_dir, photometer_name, month)
 
     # Process and import data into SQLite database
-    ecsv_folder = os.path.join(script_dir, "TESS-IDA-TOOLS", "jupyter", "ECSV")
-    relative_db_path = os.path.join("..", "data", "TessNetwork_data.db")
+    ecsv_folder = os.path.join(jupyter_dir, "ECSV")
+    relative_db_path = os.path.join(script_dir, "..", "data", "TessNetwork_data.db")
+    absolute_db_path = os.path.abspath(relative_db_path)
 
-    process_ecsv_files(ecsv_folder, photometer_names, relative_db_path)
+    print(f"ECSV Folder: {ecsv_folder}")
+    print(f"Database Path: {absolute_db_path}")
+
+    process_ecsv_files(ecsv_folder, photometer_names, filtered_months, absolute_db_path)
+
+

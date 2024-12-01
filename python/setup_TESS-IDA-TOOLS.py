@@ -59,6 +59,7 @@ def install_libraries(venv_path):
         "matplotlib",
         "sqlalchemy",
         "pandas",
+        "re",
         "numpy",
         "aiohttp==3.9.5",  # Ensure compatibility
         "aiodns==3.0.0",   # Use a compatible version for Windows
