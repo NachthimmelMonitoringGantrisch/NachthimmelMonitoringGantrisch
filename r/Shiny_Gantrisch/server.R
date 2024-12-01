@@ -261,17 +261,33 @@ server <- function(input, output, session) {
         
         # Display progress bar while running the command
         withProgress(message = "Daten werden heruntergeladen...", value = 0, {
-          incProgress(0.3, detail = "Eingabedaten werden verarbeitet")
+          incProgress(0.3, detail = "Start...")
           tryCatch({
             output_log <- system(command, intern = TRUE)
             print(output_log)  # Log to console for debugging
             
-            # Update notification area with success message
-            incProgress(0.85, detail = "Download abgeschlossen.")
-            output$notificationArea <- renderUI({
-              div(style = "color: green; font-weight: bold;",
-                  sprintf("Download von %s erfolgreich abgeschlossen.", paste(names_list, collapse = ", ")))
-            })
+            # Parse output for specific warnings
+            warning_message <- NULL
+            for (line in output_log) {
+              if (grepl("No monthly file exists", line)) {
+                warning_message <- sub(".*\\[WARNING\\] \\[download\\] \\[(.*?)\\] No monthly file exists: (.*?)\\.dat", 
+                                       "Keine Daten für \\2 gefunden.", line)
+                break
+              }
+            }
+            
+            # Update notification area
+            if (!is.null(warning_message)) {
+              output$notificationArea <- renderUI({
+                div(style = "color: orange; font-weight: bold;", warning_message)
+              })
+            } else {
+              # If no warnings, display success message with photometer names
+              output$notificationArea <- renderUI({
+                div(style = "color: green; font-weight: bold;", paste("Download von", photometers, "abgeschlossen."))
+              })
+            }
+            
           }, error = function(e) {
             # Update notification area with error message
             print(e$message)

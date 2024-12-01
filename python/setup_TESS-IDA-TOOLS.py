@@ -58,6 +58,8 @@ def install_libraries(venv_path):
         "notebook",
         "matplotlib",
         "sqlalchemy",
+        "pandas",
+        "numpy",
         "aiohttp==3.9.5",  # Ensure compatibility
         "aiodns==3.0.0",   # Use a compatible version for Windows
         "git+https://github.com/STARS4ALL/TESS-IDA-TOOLS#main"

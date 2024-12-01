@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 from setup_download import generate_month_list, create_input_control_table
+from data_2_DB import process_ecsv_files
 
 def activate_venv(jupyter_dir):
     """
@@ -20,6 +21,7 @@ def activate_venv(jupyter_dir):
 def run_tess_ida_pipe(jupyter_dir, photometer_name, month):
     """
     Runs the tess-ida-pipe command to download data for a specific photometer and month.
+    Returns error or warning messages, if any.
     """
     venv_python = activate_venv(jupyter_dir)
     tess_ida_pipe_path = os.path.join(jupyter_dir, ".venv", "Scripts", "tess-ida-pipe.exe")
@@ -43,12 +45,13 @@ def run_tess_ida_pipe(jupyter_dir, photometer_name, month):
     env["AIODNS_RESOLVER"] = "default"
 
     try:
-        subprocess.run(command, cwd=jupyter_dir, env=env, check=True)
+        result = subprocess.run(command, cwd=jupyter_dir, env=env, capture_output=True, text=True, check=True)
         print(f"tess-ida-pipe executed successfully for {photometer_name}, {month}.")
+        return None  # No errors
     except subprocess.CalledProcessError as e:
-        print(f"Error occurred while running tess-ida-pipe for {photometer_name}, {month}: {e}")
-    except FileNotFoundError:
-        print("tess-ida-pipe command not found. Ensure tess-ida-pipe is installed correctly.")
+        error_output = e.stderr or e.stdout
+        print(f"Error occurred for {photometer_name}, {month}: {error_output}")
+        return error_output  # Return error details
 
 if __name__ == "__main__":
     # Get input from command-line arguments
@@ -72,3 +75,9 @@ if __name__ == "__main__":
         # Iterate through each month for the current photometer
         for month in filtered_months:
             run_tess_ida_pipe(jupyter_dir, photometer_name, month)
+
+    # Process and import data into SQLite database
+    ecsv_folder = os.path.join(script_dir, "TESS-IDA-TOOLS", "jupyter", "ECSV")
+    relative_db_path = os.path.join("..", "data", "TessNetwork_data.db")
+
+    process_ecsv_files(ecsv_folder, photometer_names, relative_db_path)
