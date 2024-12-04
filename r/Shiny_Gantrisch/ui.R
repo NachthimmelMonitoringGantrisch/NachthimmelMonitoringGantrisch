@@ -91,7 +91,7 @@ ui <- navbarPage(
                # Analyse Einzelnächte
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse Einzelnächte'",
-                 selectInput("singleMonthsDropdown", 
+                 selectInput("singleNightsMonthsDropdown",  # New unique ID
                              "Auswahl Monat:", 
                              choices = NULL)
                ),
@@ -124,6 +124,10 @@ ui <- navbarPage(
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Jahr'",
                  plotOutput("plotHistogramPerYear")
+               ),
+               conditionalPanel(
+                 condition = "input.analysisType == 'Analyse Einzelnächte'",
+                 plotOutput("plotSingleNightAnalysis")
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Monat'",
