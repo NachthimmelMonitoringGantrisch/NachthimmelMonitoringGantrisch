@@ -28,13 +28,8 @@ ui <- navbarPage(
                    column(12, actionButton("downloadData", "Daten herunterladen", class = "btn-custom"))
                  ),
                  fluidRow(
-                   column(12, 
-                          div(
-                            h4("Statusbereich:", style = "font-weight: bold; margin-top: 10px; font-size: 14px"),  # Add title
-                            uiOutput("notificationArea")
-                          )
-                   )
-                 )
+                   column(12, uiOutput("notificationArea"))
+                 ),
                ),
                mainPanel(
                  DTOutput("tablePhotometerDownload", height = "100%", width = "100%")
@@ -126,17 +121,8 @@ ui <- navbarPage(
                  plotOutput("plotHistogramPerYear")
                ),
                conditionalPanel(
-<<<<<<< Updated upstream
-                 condition = "input.analysisType == 'Analyse pro Monat'",
-                 plotOutput("plotMinMaxMSASPerMonth")
-               ),
-               conditionalPanel(
-                 condition = "input.analysisType == 'Analyse pro Monat'",
-                 plotOutput("plotDarkTimeMoonPerMonth")
-=======
                  condition = "input.analysisType == 'Analyse Einzelnächte'",
                  plotOutput("plotSingleNightAnalysis")
->>>>>>> Stashed changes
                )
              )
            )),
