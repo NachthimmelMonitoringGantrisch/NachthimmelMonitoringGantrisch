@@ -1,8 +1,8 @@
 import os
 import subprocess
 import sys
-from setup_download import generate_month_list, create_input_control_table
-from data_2_DB import process_ecsv_files
+from D_setup_download import generate_month_list, create_input_control_table
+from E_data_2_DB import process_ecsv_files
 
 def activate_venv(jupyter_dir):
     """

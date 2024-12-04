@@ -7,11 +7,11 @@ library(DT)
 library(dplyr)
 
 #----------------------------------------------------------------------
-# Initialization of `setup_venv_R.py`
+# Initialization of `A_setup_venv_R.py`
 #----------------------------------------------------------------------
 
 # Define Python setup script path for `setup_venv_R.py`
-setup_venv_script_path <- normalizePath(file.path("..", "..", "python", "setup_venv_R.py"), mustWork = TRUE)
+setup_venv_script_path <- normalizePath(file.path("..", "..", "python", "A_setup_venv_R.py"), mustWork = TRUE)
 
 # Run the Python setup script using system()
 tryCatch({
@@ -28,11 +28,11 @@ tryCatch({
 })
 
 #----------------------------------------------------------------------
-# Initialization of `setup_TESS-IDA-TOOLS.py`
+# Initialization of `B_setup_TESS-IDA-TOOLS.py`
 #----------------------------------------------------------------------
 
 # Define Python setup script path for `setup_TESS-IDA-TOOLS.py`
-setup_tess_script_path <- normalizePath(file.path("..", "..", "python", "setup_TESS-IDA-TOOLS.py"), mustWork = TRUE)
+setup_tess_script_path <- normalizePath(file.path("..", "..", "python", "B_setup_TESS-IDA-TOOLS.py"), mustWork = TRUE)
 
 # Run the Python setup script using system()
 tryCatch({
@@ -83,7 +83,7 @@ source_python_code <- function(photometer_name, start_date, end_date, preprocess
 
 # Add the `run_tess_download` function here
 run_tess_download <- function(photometer_names, start_date, end_date) {
-  python_script <- normalizePath("../../python/download_TESS_data.py", mustWork = TRUE)
+  python_script <- normalizePath("../../python/F_download_TESS_data.py", mustWork = TRUE)
   tess_env_python <- normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/Scripts/python.exe", mustWork = TRUE)
   
   photometer_names_arg <- paste(photometer_names, collapse = ",")
@@ -112,13 +112,13 @@ run_tess_download <- function(photometer_names, start_date, end_date) {
 server <- function(input, output, session) {
   
   #-------------------------------------------------------------------
-  # Run initial setup "metadata_2_DB.py"
+  # Run initial setup "C_metadata_2_DB.py"
   #-------------------------------------------------------------------
 
   observe({
     withProgress(message = "Initialisiere Metadaten Datenbank", value = 0, {
       tryCatch({
-        fetch_metadata_path <- normalizePath("../../python/metadata_2_DB.py", mustWork = TRUE)
+        fetch_metadata_path <- normalizePath("../../python/C_metadata_2_DB.py", mustWork = TRUE)
         
         incProgress(0.2, detail = "Starte Live-Abfrage @ https://api.stars4all.eu/photometers")
         py_run_file(fetch_metadata_path)
@@ -256,7 +256,7 @@ server <- function(input, output, session) {
         
         # Command to call the Python script
         python_path <- normalizePath(file.path("..", "..", "python", "TESS-IDA-TOOLS", "jupyter", ".venv", "Scripts", "python.exe"))
-        script_path <- normalizePath(file.path("..", "..", "python", "download_TESS_data.py"))
+        script_path <- normalizePath(file.path("..", "..", "python", "F_download_TESS_data.py"))
         command <- sprintf('"%s" "%s" "%s" "%s" "%s"', python_path, script_path, photometers, start_date, end_date)
         
         # Display progress bar while running the command
