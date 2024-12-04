@@ -436,7 +436,6 @@ server <- function(input, output, session) {
     
     # Update the "singleMonthsDropdown" with the available months grouped by year, latest month on top
     updateSelectInput(session, "singleMonthsDropdown", choices = available_months, selected = NULL)
-    updateSelectInput(session, "singleNightsMonthsDropdown", choices = available_months, selected = NULL)  # For "Analyse Einzelnächte"
   })
   
   #-------------------------------------------------------------------
@@ -517,7 +516,6 @@ server <- function(input, output, session) {
   })
   
   #-------------------------------------------------------------------
-<<<<<<< Updated upstream
   # Call "MinMaxMSAS_perMonth.R" Script and Generate Plot
   #-------------------------------------------------------------------
   
@@ -571,44 +569,10 @@ server <- function(input, output, session) {
         }
       } else {
         print("No photometer selected in the dropdown.")
-=======
-  # Call "MSAS_Werte_nachtPerMonat_skyTemperature.R" Script and Generate Plot
-  #-------------------------------------------------------------------
-  
-  output$plotSingleNightAnalysis <- renderPlot({
-    photometer_id <- input$photometerDropdown  # Get selected photometer ID
-    selected_month_year <- input$singleNightsMonthsDropdown  # Get selected month-year
-    
-    if (is.null(selected_month_year) || is.null(photometer_id) || photometer_id == "") {
-      print("Please select a photometer and a valid month-year combination.")  # Warning for missing inputs
-      return(NULL)
-    }
-    
-    # Extract year and month from dropdown value
-    selected_year <- as.numeric(substr(selected_month_year, 1, 4))  # Year
-    selected_month <- as.numeric(substr(selected_month_year, 6, 7)) # Month
-    
-    withProgress(message = "Rendering Photometer Statistics...", value = 0, {  # Show progress bar
-      incProgress(0.3, detail = "Loading data and processing...")
-      
-      source("MSAS_Werte_nachtPerMonat_skyTemperature.R")  # Load external script
-      plot_result <- main(photometer_id, input_year = selected_year, input_month = selected_month)  # Call analysis function
-      
-      if (!is.null(plot_result)) {
-        incProgress(1, detail = "Render complete.")  # Indicate completion
-        plot_result  # Display the generated plot
-      } else {
-        print("Plot could not be generated. Check MSAS_Werte_nachtPerMonat_skyTemperature.R for issues.")
-        return(NULL)
->>>>>>> Stashed changes
       }
     })
   })
   
-<<<<<<< Updated upstream
-=======
-  
->>>>>>> Stashed changes
   #-------------------------------------------------------------------
   # Report Status Placeholder
   #-------------------------------------------------------------------

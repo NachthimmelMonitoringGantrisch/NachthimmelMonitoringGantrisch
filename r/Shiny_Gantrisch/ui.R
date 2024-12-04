@@ -91,7 +91,7 @@ ui <- navbarPage(
                # Analyse Einzelnächte
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse Einzelnächte'",
-                 selectInput("singleNightsMonthsDropdown",  # New unique ID
+                 selectInput("singleMonthsDropdown", 
                              "Auswahl Monat:", 
                              choices = NULL)
                ),
@@ -126,17 +126,12 @@ ui <- navbarPage(
                  plotOutput("plotHistogramPerYear")
                ),
                conditionalPanel(
-<<<<<<< Updated upstream
                  condition = "input.analysisType == 'Analyse pro Monat'",
                  plotOutput("plotMinMaxMSASPerMonth")
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Monat'",
                  plotOutput("plotDarkTimeMoonPerMonth")
-=======
-                 condition = "input.analysisType == 'Analyse Einzelnächte'",
-                 plotOutput("plotSingleNightAnalysis")
->>>>>>> Stashed changes
                )
              )
            )),
