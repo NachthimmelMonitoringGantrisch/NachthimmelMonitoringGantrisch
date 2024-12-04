@@ -517,10 +517,10 @@ server <- function(input, output, session) {
   })
   
   #-------------------------------------------------------------------
-  # Call "MinMaxMSAS_perMonth.R" Script and Generate Plot
+  # Call "MinMaxMSAS_DarkTimeMoon_perMonth.R" Script and Generate Plot
   #-------------------------------------------------------------------
   
-  output$plotMinMaxMSASPerMonth <- renderPlot({
+  output$plotMinMaxMSASDarkTimeMoonPerMonth <- renderPlot({
     photometer_id <- input$photometerDropdown  # Selected photometer ID
     month <- input$singleMonthsDropdown # Selected month
     print(photometer_id)
@@ -530,36 +530,7 @@ server <- function(input, output, session) {
       incProgress(0.3, detail = "Loading data and processing...")
       
       if (!is.null(photometer_id) && photometer_id != "") {
-        source("MinMaxMSAS_perMonth.R")
-        plot_result <- main(photometer_id, month)
-        
-        if (!is.null(plot_result)) {
-          incProgress(1, detail = "Render complete.")
-          plot_result
-        } else {
-          print("Plot could not be generated. PhotometerStatistics_overYears.R for issues.")
-        }
-      } else {
-        print("No photometer selected in the dropdown.")
-      }
-    })
-  })
-
-  #-------------------------------------------------------------------
-  # Call "DarkTimeMoon_perMonth.R" Script and Generate Plot
-  #-------------------------------------------------------------------
-  
-  output$plotDarkTimeMoonPerMonth <- renderPlot({
-    photometer_id <- input$photometerDropdown  # Selected photometer ID
-    month <- input$singleMonthsDropdown # Selected month
-    print(photometer_id)
-    print(month)
-    
-    withProgress(message = "Rendering Photometer Statistics...", value = 0, {
-      incProgress(0.3, detail = "Loading data and processing...")
-      
-      if (!is.null(photometer_id) && photometer_id != "") {
-        source("DarkTimeMoon_perMonth.R")
+        source("MinMaxMSAS_DarkTimeMoon_perMonth.R")
         plot_result <- main(photometer_id, month)
         
         if (!is.null(plot_result)) {
