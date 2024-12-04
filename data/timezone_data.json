@@ -1,0 +1,2390 @@
+[
+    {
+        "timezone": "Africa/Abidjan",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Accra",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Addis_Ababa",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Africa/Algiers",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Asmara",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Africa/Asmera",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Africa/Bamako",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Bangui",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Banjul",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Bissau",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Blantyre",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Brazzaville",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Bujumbura",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Cairo",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Casablanca",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Ceuta",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Conakry",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Dakar",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Dar_es_Salaam",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Africa/Djibouti",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Africa/Douala",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/El_Aaiun",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Freetown",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Gaborone",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Harare",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Johannesburg",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Juba",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Kampala",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Africa/Khartoum",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Kigali",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Kinshasa",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Lagos",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Libreville",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Lome",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Luanda",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Lubumbashi",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Lusaka",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Malabo",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Maputo",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Maseru",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Mbabane",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Mogadishu",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Africa/Monrovia",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Nairobi",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Africa/Ndjamena",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Niamey",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Nouakchott",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Ouagadougou",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Porto-Novo",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Sao_Tome",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Timbuktu",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Africa/Tripoli",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Africa/Tunis",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Africa/Windhoek",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "America/Adak",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "America/Anchorage",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "America/Anguilla",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Antigua",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Araguaina",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Buenos_Aires",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Catamarca",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/ComodRivadavia",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Cordoba",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Jujuy",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/La_Rioja",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Mendoza",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Rio_Gallegos",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Salta",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/San_Juan",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/San_Luis",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Tucuman",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Argentina/Ushuaia",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Aruba",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Asuncion",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Atikokan",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Atka",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "America/Bahia",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Bahia_Banderas",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Barbados",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Belem",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Belize",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Blanc-Sablon",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Boa_Vista",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Bogota",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Boise",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Buenos_Aires",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Cambridge_Bay",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Campo_Grande",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Cancun",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Caracas",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Catamarca",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Cayenne",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Cayman",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Chicago",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Chihuahua",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Ciudad_Juarez",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Coral_Harbour",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Cordoba",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Costa_Rica",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Creston",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Cuiaba",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Curacao",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Danmarkshavn",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "America/Dawson",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Dawson_Creek",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Denver",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Detroit",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Dominica",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Edmonton",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Eirunepe",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/El_Salvador",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Ensenada",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "America/Fort_Nelson",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Fort_Wayne",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Fortaleza",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Glace_Bay",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Godthab",
+        "utc_offset": "\u221202:00"
+    },
+    {
+        "timezone": "America/Goose_Bay",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Grand_Turk",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Grenada",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Guadeloupe",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Guatemala",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Guayaquil",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Guyana",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Halifax",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Havana",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Hermosillo",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Indiana/Indianapolis",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Indiana/Knox",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Indiana/Marengo",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Indiana/Petersburg",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Indiana/Tell_City",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Indiana/Vevay",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Indiana/Vincennes",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Indiana/Winamac",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Indianapolis",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Inuvik",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Iqaluit",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Jamaica",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Jujuy",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Juneau",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "America/Kentucky/Louisville",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Kentucky/Monticello",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Knox_IN",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Kralendijk",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/La_Paz",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Lima",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Los_Angeles",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "America/Louisville",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Lower_Princes",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Maceio",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Managua",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Manaus",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Marigot",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Martinique",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Matamoros",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Mazatlan",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Mendoza",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Menominee",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Merida",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Metlakatla",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "America/Mexico_City",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Miquelon",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Moncton",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Monterrey",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Montevideo",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Montreal",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Montserrat",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Nassau",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/New_York",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Nipigon",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Nome",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "America/Noronha",
+        "utc_offset": "\u221202:00"
+    },
+    {
+        "timezone": "America/North_Dakota/Beulah",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/North_Dakota/Center",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/North_Dakota/New_Salem",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Nuuk",
+        "utc_offset": "\u221202:00"
+    },
+    {
+        "timezone": "America/Ojinaga",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Panama",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Pangnirtung",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Paramaribo",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Phoenix",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Port-au-Prince",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Port_of_Spain",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Porto_Acre",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Porto_Velho",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Puerto_Rico",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Punta_Arenas",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Rainy_River",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Rankin_Inlet",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Recife",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Regina",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Resolute",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Rio_Branco",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Rosario",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Santa_Isabel",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "America/Santarem",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Santiago",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Santo_Domingo",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Sao_Paulo",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "America/Scoresbysund",
+        "utc_offset": "\u221202:00"
+    },
+    {
+        "timezone": "America/Shiprock",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Sitka",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "America/St_Barthelemy",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/St_Johns",
+        "utc_offset": "\u221203:30"
+    },
+    {
+        "timezone": "America/St_Kitts",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/St_Lucia",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/St_Thomas",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/St_Vincent",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Swift_Current",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Tegucigalpa",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Thule",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Thunder_Bay",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Tijuana",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "America/Toronto",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "America/Tortola",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Vancouver",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "America/Virgin",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "America/Whitehorse",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "America/Winnipeg",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "America/Yakutat",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "America/Yellowknife",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "Antarctica/Casey",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Antarctica/Davis",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Antarctica/DumontDUrville",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Antarctica/Macquarie",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Antarctica/Mawson",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Antarctica/McMurdo",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Antarctica/Palmer",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "Antarctica/Rothera",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "Antarctica/South_Pole",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Antarctica/Syowa",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Antarctica/Troll",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Antarctica/Vostok",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Arctic/Longyearbyen",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Asia/Aden",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Almaty",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Amman",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Anadyr",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Asia/Aqtau",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Aqtobe",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Ashgabat",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Ashkhabad",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Atyrau",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Baghdad",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Bahrain",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Baku",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Asia/Bangkok",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Barnaul",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Beirut",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Asia/Bishkek",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Asia/Brunei",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Calcutta",
+        "utc_offset": "+05:30"
+    },
+    {
+        "timezone": "Asia/Chita",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Asia/Choibalsan",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Chongqing",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Chungking",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Colombo",
+        "utc_offset": "+05:30"
+    },
+    {
+        "timezone": "Asia/Dacca",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Asia/Damascus",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Dhaka",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Asia/Dili",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Asia/Dubai",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Asia/Dushanbe",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Famagusta",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Asia/Gaza",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Asia/Harbin",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Hebron",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Asia/Ho_Chi_Minh",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Hong_Kong",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Hovd",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Irkutsk",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Istanbul",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Jakarta",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Jayapura",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Asia/Jerusalem",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Asia/Kabul",
+        "utc_offset": "+04:30"
+    },
+    {
+        "timezone": "Asia/Kamchatka",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Asia/Karachi",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Kashgar",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Asia/Kathmandu",
+        "utc_offset": "+05:45"
+    },
+    {
+        "timezone": "Asia/Katmandu",
+        "utc_offset": "+05:45"
+    },
+    {
+        "timezone": "Asia/Khandyga",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Asia/Kolkata",
+        "utc_offset": "+05:30"
+    },
+    {
+        "timezone": "Asia/Krasnoyarsk",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Kuala_Lumpur",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Kuching",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Kuwait",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Macao",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Macau",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Magadan",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Asia/Makassar",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Manila",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Muscat",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Asia/Nicosia",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Asia/Novokuznetsk",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Novosibirsk",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Omsk",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Asia/Oral",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Phnom_Penh",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Pontianak",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Pyongyang",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Asia/Qatar",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Qostanay",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Qyzylorda",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Rangoon",
+        "utc_offset": "+06:30"
+    },
+    {
+        "timezone": "Asia/Riyadh",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Asia/Saigon",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Sakhalin",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Asia/Samarkand",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Seoul",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Asia/Shanghai",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Singapore",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Srednekolymsk",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Asia/Taipei",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Tashkent",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Tbilisi",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Asia/Tehran",
+        "utc_offset": "+03:30"
+    },
+    {
+        "timezone": "Asia/Tel_Aviv",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Asia/Thimbu",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Asia/Thimphu",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Asia/Tokyo",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Asia/Tomsk",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Ujung_Pandang",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Ulaanbaatar",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Ulan_Bator",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Asia/Urumqi",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Asia/Ust-Nera",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Asia/Vientiane",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Asia/Vladivostok",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Asia/Yakutsk",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Asia/Yangon",
+        "utc_offset": "+06:30"
+    },
+    {
+        "timezone": "Asia/Yekaterinburg",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Asia/Yerevan",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Atlantic/Azores",
+        "utc_offset": "\u221201:00"
+    },
+    {
+        "timezone": "Atlantic/Bermuda",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "Atlantic/Canary",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Atlantic/Cape_Verde",
+        "utc_offset": "\u221201:00"
+    },
+    {
+        "timezone": "Atlantic/Faeroe",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Atlantic/Faroe",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Atlantic/Jan_Mayen",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Atlantic/Madeira",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Atlantic/Reykjavik",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Atlantic/South_Georgia",
+        "utc_offset": "\u221202:00"
+    },
+    {
+        "timezone": "Atlantic/St_Helena",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Atlantic/Stanley",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "Australia/ACT",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/Adelaide",
+        "utc_offset": "+09:30"
+    },
+    {
+        "timezone": "Australia/Brisbane",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/Broken_Hill",
+        "utc_offset": "+09:30"
+    },
+    {
+        "timezone": "Australia/Canberra",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/Currie",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/Darwin",
+        "utc_offset": "+09:30"
+    },
+    {
+        "timezone": "Australia/Eucla",
+        "utc_offset": "+08:45"
+    },
+    {
+        "timezone": "Australia/Hobart",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/LHI",
+        "utc_offset": "+10:30"
+    },
+    {
+        "timezone": "Australia/Lindeman",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/Lord_Howe",
+        "utc_offset": "+10:30"
+    },
+    {
+        "timezone": "Australia/Melbourne",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/North",
+        "utc_offset": "+09:30"
+    },
+    {
+        "timezone": "Australia/NSW",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/Perth",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Australia/Queensland",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/South",
+        "utc_offset": "+09:30"
+    },
+    {
+        "timezone": "Australia/Sydney",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/Tasmania",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/Victoria",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Australia/West",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Australia/Yancowinna",
+        "utc_offset": "+09:30"
+    },
+    {
+        "timezone": "Brazil/Acre",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "Brazil/DeNoronha",
+        "utc_offset": "\u221202:00"
+    },
+    {
+        "timezone": "Brazil/East",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "Brazil/West",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "Canada/Atlantic",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "Canada/Central",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "Canada/Eastern",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "Canada/Mountain",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "Canada/Newfoundland",
+        "utc_offset": "\u221203:30"
+    },
+    {
+        "timezone": "Canada/Pacific",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "Canada/Saskatchewan",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "Canada/Yukon",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "CET",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Chile/Continental",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "Chile/EasterIsland",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "CST6CDT",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "Cuba",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "EET",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Egypt",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Eire",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "EST",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "EST5EDT",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "Etc/GMT",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Etc/GMT+0",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Etc/GMT+1",
+        "utc_offset": "\u221201:00"
+    },
+    {
+        "timezone": "Etc/GMT+10",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "Etc/GMT+11",
+        "utc_offset": "\u221211:00"
+    },
+    {
+        "timezone": "Etc/GMT+12",
+        "utc_offset": "\u221212:00"
+    },
+    {
+        "timezone": "Etc/GMT+2",
+        "utc_offset": "\u221202:00"
+    },
+    {
+        "timezone": "Etc/GMT+3",
+        "utc_offset": "\u221203:00"
+    },
+    {
+        "timezone": "Etc/GMT+4",
+        "utc_offset": "\u221204:00"
+    },
+    {
+        "timezone": "Etc/GMT+5",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "Etc/GMT+6",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "Etc/GMT+7",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "Etc/GMT+8",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "Etc/GMT+9",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "Etc/GMT-0",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Etc/GMT-1",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Etc/GMT-10",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Etc/GMT-11",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Etc/GMT-12",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Etc/GMT-13",
+        "utc_offset": "+13:00"
+    },
+    {
+        "timezone": "Etc/GMT-14",
+        "utc_offset": "+14:00"
+    },
+    {
+        "timezone": "Etc/GMT-2",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Etc/GMT-3",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Etc/GMT-4",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Etc/GMT-5",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Etc/GMT-6",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Etc/GMT-7",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Etc/GMT-8",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Etc/GMT-9",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Etc/GMT0",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Etc/Greenwich",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Etc/UCT",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Etc/Universal",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Etc/UTC",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Etc/Zulu",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Europe/Amsterdam",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Andorra",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Astrakhan",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Europe/Athens",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Belfast",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Europe/Belgrade",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Berlin",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Bratislava",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Brussels",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Bucharest",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Budapest",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Busingen",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Chisinau",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Copenhagen",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Dublin",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Europe/Gibraltar",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Guernsey",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Europe/Helsinki",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Isle_of_Man",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Europe/Istanbul",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Europe/Jersey",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Europe/Kaliningrad",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Kiev",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Kirov",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Europe/Kyiv",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Lisbon",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Europe/Ljubljana",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/London",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Europe/Luxembourg",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Madrid",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Malta",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Mariehamn",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Minsk",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Europe/Monaco",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Moscow",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Europe/Nicosia",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Oslo",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Paris",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Podgorica",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Prague",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Riga",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Rome",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Samara",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Europe/San_Marino",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Sarajevo",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Saratov",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Europe/Simferopol",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Europe/Skopje",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Sofia",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Stockholm",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Tallinn",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Tirane",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Tiraspol",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Ulyanovsk",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Europe/Uzhgorod",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Vaduz",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Vatican",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Vienna",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Vilnius",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Volgograd",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Europe/Warsaw",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Zagreb",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Europe/Zaporozhye",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Europe/Zurich",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Factory",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "GB",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "GB-Eire",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "GMT",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "GMT+0",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "GMT-0",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "GMT0",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Greenwich",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Hongkong",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "HST",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "Iceland",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Indian/Antananarivo",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Indian/Chagos",
+        "utc_offset": "+06:00"
+    },
+    {
+        "timezone": "Indian/Christmas",
+        "utc_offset": "+07:00"
+    },
+    {
+        "timezone": "Indian/Cocos",
+        "utc_offset": "+06:30"
+    },
+    {
+        "timezone": "Indian/Comoro",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Indian/Kerguelen",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Indian/Mahe",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Indian/Maldives",
+        "utc_offset": "+05:00"
+    },
+    {
+        "timezone": "Indian/Mauritius",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Indian/Mayotte",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "Indian/Reunion",
+        "utc_offset": "+04:00"
+    },
+    {
+        "timezone": "Iran",
+        "utc_offset": "+03:30"
+    },
+    {
+        "timezone": "Israel",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "Jamaica",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "Japan",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Kwajalein",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Libya",
+        "utc_offset": "+02:00"
+    },
+    {
+        "timezone": "MET",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Mexico/BajaNorte",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "Mexico/BajaSur",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "Mexico/General",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "MST",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "MST7MDT",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "Navajo",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "NZ",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "NZ-CHAT",
+        "utc_offset": "+12:45"
+    },
+    {
+        "timezone": "Pacific/Apia",
+        "utc_offset": "+13:00"
+    },
+    {
+        "timezone": "Pacific/Auckland",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Bougainville",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Pacific/Chatham",
+        "utc_offset": "+12:45"
+    },
+    {
+        "timezone": "Pacific/Chuuk",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Pacific/Easter",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "Pacific/Efate",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Pacific/Enderbury",
+        "utc_offset": "+13:00"
+    },
+    {
+        "timezone": "Pacific/Fakaofo",
+        "utc_offset": "+13:00"
+    },
+    {
+        "timezone": "Pacific/Fiji",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Funafuti",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Galapagos",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "Pacific/Gambier",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "Pacific/Guadalcanal",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Pacific/Guam",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Pacific/Honolulu",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "Pacific/Johnston",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "Pacific/Kanton",
+        "utc_offset": "+13:00"
+    },
+    {
+        "timezone": "Pacific/Kiritimati",
+        "utc_offset": "+14:00"
+    },
+    {
+        "timezone": "Pacific/Kosrae",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Pacific/Kwajalein",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Majuro",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Marquesas",
+        "utc_offset": "\u221209:30"
+    },
+    {
+        "timezone": "Pacific/Midway",
+        "utc_offset": "\u221211:00"
+    },
+    {
+        "timezone": "Pacific/Nauru",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Niue",
+        "utc_offset": "\u221211:00"
+    },
+    {
+        "timezone": "Pacific/Norfolk",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Pacific/Noumea",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Pacific/Pago_Pago",
+        "utc_offset": "\u221211:00"
+    },
+    {
+        "timezone": "Pacific/Palau",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Pacific/Pitcairn",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "Pacific/Pohnpei",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Pacific/Ponape",
+        "utc_offset": "+11:00"
+    },
+    {
+        "timezone": "Pacific/Port_Moresby",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Pacific/Rarotonga",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "Pacific/Saipan",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Pacific/Samoa",
+        "utc_offset": "\u221211:00"
+    },
+    {
+        "timezone": "Pacific/Tahiti",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "Pacific/Tarawa",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Tongatapu",
+        "utc_offset": "+13:00"
+    },
+    {
+        "timezone": "Pacific/Truk",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Pacific/Wake",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Wallis",
+        "utc_offset": "+12:00"
+    },
+    {
+        "timezone": "Pacific/Yap",
+        "utc_offset": "+10:00"
+    },
+    {
+        "timezone": "Poland",
+        "utc_offset": "+01:00"
+    },
+    {
+        "timezone": "Portugal",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "PRC",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "PST8PDT",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "ROC",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "ROK",
+        "utc_offset": "+09:00"
+    },
+    {
+        "timezone": "Singapore",
+        "utc_offset": "+08:00"
+    },
+    {
+        "timezone": "Turkey",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "UCT",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Universal",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "US/Alaska",
+        "utc_offset": "\u221209:00"
+    },
+    {
+        "timezone": "US/Aleutian",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "US/Arizona",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "US/Central",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "US/East-Indiana",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "US/Eastern",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "US/Hawaii",
+        "utc_offset": "\u221210:00"
+    },
+    {
+        "timezone": "US/Indiana-Starke",
+        "utc_offset": "\u221206:00"
+    },
+    {
+        "timezone": "US/Michigan",
+        "utc_offset": "\u221205:00"
+    },
+    {
+        "timezone": "US/Mountain",
+        "utc_offset": "\u221207:00"
+    },
+    {
+        "timezone": "US/Pacific",
+        "utc_offset": "\u221208:00"
+    },
+    {
+        "timezone": "US/Samoa",
+        "utc_offset": "\u221211:00"
+    },
+    {
+        "timezone": "UTC",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "W-SU",
+        "utc_offset": "+03:00"
+    },
+    {
+        "timezone": "WET",
+        "utc_offset": "+00:00"
+    },
+    {
+        "timezone": "Zulu",
+        "utc_offset": "+00:00"
+    }
+]
