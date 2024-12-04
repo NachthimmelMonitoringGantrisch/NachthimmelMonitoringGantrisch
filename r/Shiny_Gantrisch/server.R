@@ -6,10 +6,56 @@ library(jsonlite)
 library(DT)
 library(dplyr)
 
-# Set Python environment path using a relative path
+#----------------------------------------------------------------------
+# Initialization of `A_setup_venv_R.py`
+#----------------------------------------------------------------------
+
+# Define Python setup script path for `setup_venv_R.py`
+setup_venv_script_path <- normalizePath(file.path("..", "..", "python", "A_setup_venv_R.py"), mustWork = TRUE)
+
+# Run the Python setup script using system()
+tryCatch({
+  message("Setting up virtual environment for R integration...")
+  setup_command <- sprintf('python "%s"', setup_venv_script_path)
+  
+  # Execute the script and capture output
+  system_output <- system(setup_command, intern = TRUE)
+  print(system_output)
+  
+  message("Virtual environment setup for R completed successfully.")
+}, error = function(e) {
+  stop("Failed to set up the virtual environment for R. Error: ", e$message)
+})
+
+#----------------------------------------------------------------------
+# Initialization of `B_setup_TESS-IDA-TOOLS.py`
+#----------------------------------------------------------------------
+
+# Define Python setup script path for `setup_TESS-IDA-TOOLS.py`
+setup_tess_script_path <- normalizePath(file.path("..", "..", "python", "B_setup_TESS-IDA-TOOLS.py"), mustWork = TRUE)
+
+# Run the Python setup script using system()
+tryCatch({
+  message("Initializing TESS-IDA-TOOLS setup...")
+  setup_command <- sprintf('python "%s"', setup_tess_script_path)
+  
+  # Execute the script and capture output
+  system_output <- system(setup_command, intern = TRUE)
+  print(system_output)
+  
+  message("TESS-IDA-TOOLS setup completed successfully.")
+}, error = function(e) {
+  stop("Failed to initialize TESS-IDA-TOOLS. Error: ", e$message)
+})
+
+#----------------------------------------------------------------------
+# Set Python Environment for Reticulate
+#----------------------------------------------------------------------
+
+# Define the Python environment path for reticulate
 python_env_path <- normalizePath(file.path("..", "..", ".venv_R", "Scripts", "python.exe"), mustWork = TRUE)
 
-# Use the Python environment
+# Use the Python environment with reticulate
 use_python(python_env_path, required = TRUE)
 
 # Check if reticulate is correctly configured
@@ -32,19 +78,47 @@ source_python_code <- function(photometer_name, start_date, end_date, preprocess
 }
 
 #----------------------------------------------------------------------
+# Run Tess Download function
+#----------------------------------------------------------------------
+
+# Add the `run_tess_download` function here
+run_tess_download <- function(photometer_names, start_date, end_date) {
+  python_script <- normalizePath("../../python/F_download_TESS_data.py", mustWork = TRUE)
+  tess_env_python <- normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/Scripts/python.exe", mustWork = TRUE)
+  
+  photometer_names_arg <- paste(photometer_names, collapse = ",")
+  command <- sprintf(
+    '"%s" "%s" "%s" "%s" "%s"',
+    tess_env_python,
+    python_script,
+    photometer_names_arg,
+    start_date,
+    end_date
+  )
+  
+  tryCatch({
+    system_output <- system(command, intern = TRUE)
+    print(system_output)
+    return("Download completed successfully.")
+  }, error = function(e) {
+    stop(paste("Error during Python script execution:", e$message))
+  })
+}
+
+#----------------------------------------------------------------------
 # Define the server function
 #----------------------------------------------------------------------
 
 server <- function(input, output, session) {
   
   #-------------------------------------------------------------------
-  # Run initial setup "metadata_2_DB.py"
+  # Run initial setup "C_metadata_2_DB.py"
   #-------------------------------------------------------------------
 
   observe({
     withProgress(message = "Initialisiere Metadaten Datenbank", value = 0, {
       tryCatch({
-        fetch_metadata_path <- normalizePath("../../python/metadata_2_DB.py", mustWork = TRUE)
+        fetch_metadata_path <- normalizePath("../../python/C_metadata_2_DB.py", mustWork = TRUE)
         
         incProgress(0.2, detail = "Starte Live-Abfrage @ https://api.stars4all.eu/photometers")
         py_run_file(fetch_metadata_path)
@@ -150,64 +224,80 @@ server <- function(input, output, session) {
       })
       
       #-------------------------------------------------------------------
-      # "downloadData" / "Daten herunterladen" - Observe event for  button click
+      # "downloadData" / "Daten herunterladen" - Observe event for button click
       #-------------------------------------------------------------------
       
       observeEvent(input$downloadData, {
-        # Clear any previous notification
+        # Clear previous notification
         output$notificationArea <- renderUI({ NULL })
         
-        # Fetch selected photometer names
+        # Fetch selected photometer names and date range
         names_list <- selected_names()
         date_range <- selected_date_range()
         
-        # Validate the date range
-        if (!is.null(date_range)) {
-          start_date <- date_range[1]
-          end_date <- date_range[2]
-          
-          # Check if start date is after end date
-          if (start_date > end_date) {
-            print("Fehler: Startdatum ist später als Enddatum.")
+        # Validate inputs
+        if (is.null(names_list) || length(names_list) == 0) {
+          output$notificationArea <- renderUI({
+            div(style = "color: red; font-weight: bold;", "Fehler: Es wurde kein Photometer ausgewählt.")
+          })
+          return()
+        }
+        if (is.null(date_range) || length(date_range) != 2) {
+          output$notificationArea <- renderUI({
+            div(style = "color: red; font-weight: bold;", "Fehler: Bitte wählen Sie einen gültigen Datumsbereich aus.")
+          })
+          return()
+        }
+        
+        # Format arguments
+        photometers <- paste(names_list, collapse = ",")
+        start_date <- date_range[1]
+        end_date <- date_range[2]
+        
+        # Command to call the Python script
+        python_path <- normalizePath(file.path("..", "..", "python", "TESS-IDA-TOOLS", "jupyter", ".venv", "Scripts", "python.exe"))
+        script_path <- normalizePath(file.path("..", "..", "python", "F_download_TESS_data.py"))
+        command <- sprintf('"%s" "%s" "%s" "%s" "%s"', python_path, script_path, photometers, start_date, end_date)
+        
+        # Display progress bar while running the command
+        withProgress(message = "Daten werden heruntergeladen...", value = 0, {
+          incProgress(0.3, detail = "Start...")
+          tryCatch({
+            output_log <- system(command, intern = TRUE)
+            print(output_log)  # Log to console for debugging
+            
+            # Parse output for specific warnings
+            warning_message <- NULL
+            for (line in output_log) {
+              if (grepl("No monthly file exists", line)) {
+                warning_message <- sub(".*\\[WARNING\\] \\[download\\] \\[(.*?)\\] No monthly file exists: (.*?)\\.dat", 
+                                       "Keine Daten für \\2 gefunden.", line)
+                break
+              }
+            }
+            
+            # Update notification area
+            if (!is.null(warning_message)) {
+              output$notificationArea <- renderUI({
+                div(style = "color: orange; font-weight: bold;", warning_message)
+              })
+            } else {
+              # If no warnings, display success message with photometer names
+              output$notificationArea <- renderUI({
+                div(style = "color: green; font-weight: bold;", paste("Download von", photometers, "abgeschlossen."))
+              })
+            }
+            
+          }, error = function(e) {
+            # Update notification area with error message
+            print(e$message)
             output$notificationArea <- renderUI({
-              div(style = "color: red; font-weight: bold;",
-                  "Fehler: Das Startdatum darf nicht später als das Enddatum sein.")
+              div(style = "color: red; font-weight: bold;", paste("Fehler beim Download:", e$message))
             })
-            return()
-          }
-          
-          print("Selected Date Range:")
-          print(paste("Start Date:", start_date, "| End Date:", end_date))
-        } else {
-          print("Kein Datumsbereich ausgewählt.")
-          output$notificationArea <- renderUI({
-            div(style = "color: red; font-weight: bold;",
-                "Fehler: Bitte wählen Sie einen gültigen Datumsbereich aus.")
           })
-          return()
-        }
-        
-        # Print selected photometer names
-        if (!is.null(names_list) && length(names_list) > 0) {
-          print("Selected Photometer Names:")
-          print(names_list)
-        } else {
-          print("Keine Photometer ausgewählt.")
-          output$notificationArea <- renderUI({
-            div(style = "color: red; font-weight: bold;",
-                "Fehler: Es wurde kein Photometer ausgewählt.")
-          })
-          return()
-        }
-        
-        # If all validations pass, display a green notification and start the download
-        output$notificationArea <- renderUI({
-          div(style = "color: green; font-weight: bold;",
-              "Download wird gestartet...")
+          incProgress(1, detail = "Fertig.")
         })
-        
-        print("Download starting...")
-      })  # End of observeEvent
+      })
       
     }, error = function(e) {
       print(paste("Error connecting to database at path:", db_metadata_path, ":", e$message))
@@ -216,7 +306,6 @@ server <- function(input, output, session) {
       })
     })
   }
-  
   
   #-------------------------------------------------------------------
   # "PhotometerDropdown" - Load Data and Populate Dropdown
@@ -356,25 +445,48 @@ server <- function(input, output, session) {
   
   output$plotHistogramPerYear <- renderPlot({
     photometer_id <- input$photometerDropdown  # Selected photometer ID
-    print(photometer_id)
+    selected_years <- input$multipleYearsDropdown  # Selected years from the dropdown
+    
+    # Ensure valid inputs
+    req(photometer_id, selected_years)
     
     withProgress(message = "Rendering Photometer Statistics...", value = 0, {
       incProgress(0.3, detail = "Loading data and processing...")
-    
-    if (!is.null(photometer_id) && photometer_id != "") {
-      source("Histogram_over21perMonth_yearly.R")
-      plot_result <- main(photometer_id)  # Call the main function from photometer_statistics with the selected photometer ID
       
-      if (!is.null(plot_result)) {
-        incProgress(1, detail = "Render complete.")
-        plot_result
-      } else {
-        print("Plot could not be generated. Check Histogram_over21perMonth_yearly.R for issues.")
-      }
-    } else {
-      print("No photometer selected in the dropdown.")
-    }
-   })
+      tryCatch({
+        # Source the script to ensure updated logic
+        source("Histogram_over21perMonth_yearly.R")
+        
+        # Call the main function with photometer ID and selected years
+        plot_result <- main(photometer_id, as.numeric(selected_years))
+        
+        # Ensure the plot result is valid
+        if (!is.null(plot_result)) {
+          incProgress(1, detail = "Render complete.")
+          return(plot_result)
+        } else {
+          stop("The plot could not be generated. Please check your data or the script.")
+        }
+      },
+      error = function(e) {
+        # Log the error and notify the user
+        print(paste("Error occurred:", e$message))
+        showNotification(
+          paste("Error rendering plot:", e$message),
+          type = "error",
+          duration = 5
+        )
+      },
+      warning = function(w) {
+        # Log warnings
+        print(paste("Warning occurred:", w$message))
+        showNotification(
+          paste("Warning during rendering:", w$message),
+          type = "warning",
+          duration = 5
+        )
+      })
+    })
   })
   
   #-------------------------------------------------------------------
@@ -405,6 +517,61 @@ server <- function(input, output, session) {
   })
   
   #-------------------------------------------------------------------
+<<<<<<< Updated upstream
+  # Call "MinMaxMSAS_perMonth.R" Script and Generate Plot
+  #-------------------------------------------------------------------
+  
+  output$plotMinMaxMSASPerMonth <- renderPlot({
+    photometer_id <- input$photometerDropdown  # Selected photometer ID
+    month <- input$singleMonthsDropdown # Selected month
+    print(photometer_id)
+    print(month)
+    
+    withProgress(message = "Rendering Photometer Statistics...", value = 0, {
+      incProgress(0.3, detail = "Loading data and processing...")
+      
+      if (!is.null(photometer_id) && photometer_id != "") {
+        source("MinMaxMSAS_perMonth.R")
+        plot_result <- main(photometer_id, month)
+        
+        if (!is.null(plot_result)) {
+          incProgress(1, detail = "Render complete.")
+          plot_result
+        } else {
+          print("Plot could not be generated. PhotometerStatistics_overYears.R for issues.")
+        }
+      } else {
+        print("No photometer selected in the dropdown.")
+      }
+    })
+  })
+
+  #-------------------------------------------------------------------
+  # Call "DarkTimeMoon_perMonth.R" Script and Generate Plot
+  #-------------------------------------------------------------------
+  
+  output$plotDarkTimeMoonPerMonth <- renderPlot({
+    photometer_id <- input$photometerDropdown  # Selected photometer ID
+    month <- input$singleMonthsDropdown # Selected month
+    print(photometer_id)
+    print(month)
+    
+    withProgress(message = "Rendering Photometer Statistics...", value = 0, {
+      incProgress(0.3, detail = "Loading data and processing...")
+      
+      if (!is.null(photometer_id) && photometer_id != "") {
+        source("DarkTimeMoon_perMonth.R")
+        plot_result <- main(photometer_id, month)
+        
+        if (!is.null(plot_result)) {
+          incProgress(1, detail = "Render complete.")
+          plot_result
+        } else {
+          print("Plot could not be generated. PhotometerStatistics_overYears.R for issues.")
+        }
+      } else {
+        print("No photometer selected in the dropdown.")
+=======
   # Call "MSAS_Werte_nachtPerMonat_skyTemperature.R" Script and Generate Plot
   #-------------------------------------------------------------------
   
@@ -433,11 +600,15 @@ server <- function(input, output, session) {
       } else {
         print("Plot could not be generated. Check MSAS_Werte_nachtPerMonat_skyTemperature.R for issues.")
         return(NULL)
+>>>>>>> Stashed changes
       }
     })
   })
   
+<<<<<<< Updated upstream
+=======
   
+>>>>>>> Stashed changes
   #-------------------------------------------------------------------
   # Report Status Placeholder
   #-------------------------------------------------------------------
