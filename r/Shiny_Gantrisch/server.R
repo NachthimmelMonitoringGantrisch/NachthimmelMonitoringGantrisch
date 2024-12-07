@@ -237,20 +237,18 @@ server <- function(input, output, session) {
       #-------------------------------------------------------------------
       
       observeEvent(input$downloadData, {
-        # Clear previous notification
-        output$notificationArea <- renderUI({ NULL })
+        output$notificationArea <- renderUI({ NULL })  # Reset notification area
         
-        # Fetch selected photometer names and date range
         names_list <- selected_names()
         date_range <- selected_date_range()
         
-        # Validate inputs
         if (is.null(names_list) || length(names_list) == 0) {
           output$notificationArea <- renderUI({
             div(style = "color: red; font-weight: bold;", "Fehler: Es wurde kein Photometer ausgewählt.")
           })
           return()
         }
+        
         if (is.null(date_range) || length(date_range) != 2) {
           output$notificationArea <- renderUI({
             div(style = "color: red; font-weight: bold;", "Fehler: Bitte wählen Sie einen gültigen Datumsbereich aus.")
@@ -258,52 +256,66 @@ server <- function(input, output, session) {
           return()
         }
         
-        # Format arguments
         photometers <- paste(names_list, collapse = ",")
         start_date <- date_range[1]
         end_date <- date_range[2]
         
-        # Command to call the Python script
         python_path <- normalizePath(file.path("..", "..", "python", "TESS-IDA-TOOLS", "jupyter", ".venv", "Scripts", "python.exe"))
         script_path <- normalizePath(file.path("..", "..", "python", "F_download_TESS_data.py"))
         command <- sprintf('"%s" "%s" "%s" "%s" "%s"', python_path, script_path, photometers, start_date, end_date)
         
-        # Display progress bar while running the command
         withProgress(message = "Daten werden heruntergeladen...", value = 0, {
           incProgress(0.3, detail = "Start...")
+          
           tryCatch({
+            # Run the system command and capture the output
             output_log <- system(command, intern = TRUE)
-            print(output_log)  # Log to console for debugging
+            print(output_log)  # Debugging purposes
             
-            # Parse output for specific warnings
-            warning_message <- NULL
+            # Initialize error messages container
+            error_messages <- c()
+            success_flag <- TRUE  # Tracks if all operations were successful
+            
             for (line in output_log) {
-              if (grepl("No monthly file exists", line)) {
-                warning_message <- sub(".*\\[WARNING\\] \\[download\\] \\[(.*?)\\] No monthly file exists: (.*?)\\.dat", 
-                                       "Keine Daten für \\2 gefunden.", line)
-                break
+              # Collect only the summary messages for missing months
+              if (grepl("Monat .* von .* ist nicht verfügbar", line)) {
+                error_message <- sub(".*(Monat .* von .* ist nicht verfügbar).*", "\\1", line)
+                if (!(error_message %in% error_messages)) {  # Avoid duplicates
+                  error_messages <- c(error_messages, error_message)
+                }
+                success_flag <- FALSE
               }
             }
             
-            # Update notification area
-            if (!is.null(warning_message)) {
+            # Render error messages or success message
+            if (!success_flag && length(error_messages) > 0) {
               output$notificationArea <- renderUI({
-                div(style = "color: orange; font-weight: bold;", warning_message)
+                HTML(
+                  paste(
+                    sapply(error_messages, function(msg) {
+                      sprintf('<div style="color: red; font-weight: bold;">%s</div>', msg)
+                    }),
+                    collapse = ""
+                  )
+                )
               })
             } else {
-              # If no warnings, display success message with photometer names
+              # Success message only if no errors
               output$notificationArea <- renderUI({
-                div(style = "color: green; font-weight: bold;", paste("Download von", photometers, "abgeschlossen."))
+                div(
+                  style = "color: green; font-weight: bold;",
+                  paste("Download von", photometers, "abgeschlossen.")
+                )
               })
             }
             
           }, error = function(e) {
-            # Update notification area with error message
-            print(e$message)
+            # Handle system command errors
             output$notificationArea <- renderUI({
               div(style = "color: red; font-weight: bold;", paste("Fehler beim Download:", e$message))
             })
           })
+          
           incProgress(1, detail = "Fertig.")
         })
       })

@@ -21,7 +21,7 @@ def activate_venv(jupyter_dir):
 def run_tess_ida_pipe(jupyter_dir, photometer_name, month):
     """
     Runs the tess-ida-pipe command to download data for a specific photometer and month.
-    Returns error or warning messages, if any.
+    Captures errors and warnings to return them for further handling.
     """
     venv_python = activate_venv(jupyter_dir)
     tess_ida_pipe_path = os.path.join(jupyter_dir, ".venv", "Scripts", "tess-ida-pipe.exe")
@@ -45,46 +45,70 @@ def run_tess_ida_pipe(jupyter_dir, photometer_name, month):
     env["AIODNS_RESOLVER"] = "default"
 
     try:
+        # Run the tess-ida-pipe command
         result = subprocess.run(command, cwd=jupyter_dir, env=env, capture_output=True, text=True, check=True)
-        print(f"tess-ida-pipe executed successfully for {photometer_name}, {month}.")
-        return None  # No errors
+        print(f"TESS-IDA-Pipe erfolgreich ausgeführt für {photometer_name}, {month}.")
     except subprocess.CalledProcessError as e:
         error_output = e.stderr or e.stdout
         print(f"Error occurred for {photometer_name}, {month}: {error_output}")
-        return error_output  # Return error details
+        
+        if "No monthly file exists" in error_output:
+            return f"Monat {month} von {photometer_name} ist nicht verfügbar."
+        
+        if "Cannot connect to host" in error_output:
+            return "Keine Internetverbindung vorhanden."
+        
+        return "Unbekannter Fehler aufgetreten."
+
+    # Check if the expected .ecsv file exists
+    ecsv_folder = os.path.join(jupyter_dir, "ECSV", photometer_name)
+    ecsv_file_path = os.path.join(ecsv_folder, f"{photometer_name}_{month}.ecsv")
+
+    if not os.path.exists(ecsv_file_path):
+        print(f"Datei {photometer_name}_{month}.ecsv nicht gefunden in {ecsv_folder}.")
+        return f"Monat {month} von {photometer_name} ist nicht verfügbar."
+    
+    # File exists, no error
+    print(f"Datei {ecsv_file_path} gefunden.")
+    return None
 
 if __name__ == "__main__":
-     # Get input from command-line arguments
-    photometer_names = sys.argv[1].split(",")  # Comma-separated list of photometers
-    start_date = sys.argv[2]  # Start date in "YYYY-MM-DD" format
-    end_date = sys.argv[3]    # End date in "YYYY-MM-DD" format
+    photometer_names = sys.argv[1].split(",")
+    start_date = sys.argv[2]
+    end_date = sys.argv[3]
 
-    # Set the directory relative to the script's location
     script_dir = os.path.abspath(os.path.dirname(__file__))
     jupyter_dir = os.path.join(script_dir, "TESS-IDA-TOOLS", "jupyter")
 
-    # Ensure the database and table exist
     print("Ensuring database and table...")
     create_input_control_table()
 
-    # Generate filtered months for all photometers
     print(f"Generating month list for photometers: {photometer_names}")
     filtered_months = generate_month_list(photometer_names, start_date, end_date)
     print(f"Months to process: {filtered_months}")
 
-    # Iterate through each photometer and its months
+    errors = []  # Collect errors for each photometer and month
     for photometer_name in photometer_names:
         for month in filtered_months:
-            run_tess_ida_pipe(jupyter_dir, photometer_name, month)
+            result = run_tess_ida_pipe(jupyter_dir, photometer_name, month)
+            if result:  # If an error or warning was returned
+                errors.append(result)  # Store the error
+            else:
+                print(f"Download für {photometer_name} im Monat {month} abgeschlossen.")  # Success for this month
 
-    # Process and import data into SQLite database
     ecsv_folder = os.path.join(jupyter_dir, "ECSV")
     relative_db_path = os.path.join(script_dir, "..", "data", "TessNetwork_data.db")
     absolute_db_path = os.path.abspath(relative_db_path)
 
     print(f"ECSV Folder: {ecsv_folder}")
     print(f"Database Path: {absolute_db_path}")
-
     process_ecsv_files(ecsv_folder, photometer_names, filtered_months, absolute_db_path)
+
+    if errors:
+        print("Zusammenfassung der Warnungen/Fehler:")
+        for error in errors:
+            print(error)
+    else:
+        print("Download aller Dateien erfolgreich abgeschlossen.")
 
 
