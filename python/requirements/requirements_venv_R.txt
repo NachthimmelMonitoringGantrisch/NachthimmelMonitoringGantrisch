@@ -3,4 +3,3 @@ sqlalchemy
 requests
 numpy
 lxml
-re
