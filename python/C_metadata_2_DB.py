@@ -50,12 +50,19 @@ engine = create_engine(f'sqlite:///{db_name}')
 photometer_api_url = "http://api.stars4all.eu/photometers"
 
 def fetch_photometer_metadata(api_url, max_retries=3, backoff_factor=5):
+    """
+    Fetches photometer metadata from the API with retry logic.
+    If there is no internet, the function will still continue to process but will notify the user.
+    """
     for attempt in range(1, max_retries + 1):
         try:
+            # Attempt to fetch the photometer data
             response = requests.get(api_url, timeout=10)  # Add a timeout to avoid hanging
-            response.raise_for_status()  # Raise HTTP errors
+            response.raise_for_status()  # Raise an exception for HTTP errors (e.g., 404, 500)
+            
+            # Parse the response if successful
             data = response.json()
-
+            
             if not isinstance(data, list):
                 raise ValueError("Expected API to return a list of photometer data.")
 
@@ -78,7 +85,10 @@ def fetch_photometer_metadata(api_url, max_retries=3, backoff_factor=5):
             return df
 
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
-            print(f"Attempt {attempt}/{max_retries} failed: {e}")
+            print("Internetverbindung nicht vorhanden, Metadatentabelle ist nicht aktuell.")
+            break  # No internet, stop retrying
+        except requests.exceptions.RequestException as e:
+            print(f"HTTP error: {e}")
             if attempt < max_retries:
                 sleep_time = backoff_factor * attempt
                 print(f"Retrying in {sleep_time} seconds...")
@@ -86,33 +96,35 @@ def fetch_photometer_metadata(api_url, max_retries=3, backoff_factor=5):
             else:
                 raise RuntimeError("Maximum retries reached. Unable to fetch data.") from e
 
+    # Return an empty DataFrame if no data could be fetched
+    return pd.DataFrame(columns=["name", "latitude", "longitude", "country", "city", "place", "local_timezone_name", "local_timezone", "org_name"])
+
 photometer_metadata = fetch_photometer_metadata(photometer_api_url)
 print(f"Total rows fetched from API: {len(photometer_metadata)}")
 
-# 4. Map Timezones
+# 4. Fetch and Map Timezones
 wikipedia_url = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
 
 def fetch_timezone_data(wikipedia_url):
-    tables = pd.read_html(wikipedia_url, header=[0, 1])  # Fetch all tables with multi-level headers
-
-    for i, table in enumerate(tables):
-        if ('TZ identifier' in table.columns.get_level_values(1) and 
-            'UTC offset ±hh:mm' in table.columns.get_level_values(0)):
-            # Extract the relevant columns
-            timezone_data = table[[('TZ identifier', 'TZ identifier'), 
-                                   ('UTC offset ±hh:mm', 'SDT')]].copy()
-            timezone_data.columns = ['timezone', 'utc_offset']
-            
-            return timezone_data
-
-    raise ValueError("Expected timezone table not found.")
+    try:
+        tables = pd.read_html(wikipedia_url, header=[0, 1])  # Fetch all tables with multi-level headers
+        for table in tables:
+            if ('TZ identifier' in table.columns.get_level_values(1) and 
+                'UTC offset ±hh:mm' in table.columns.get_level_values(0)):
+                timezone_data = table[[('TZ identifier', 'TZ identifier'), 
+                                       ('UTC offset ±hh:mm', 'SDT')]].copy()
+                timezone_data.columns = ['timezone', 'utc_offset']
+                return timezone_data
+    except Exception as e:
+        print("Internetverbindung nicht vorhanden, Zeitzonen konnten nicht aktualisiert werden.")
+    return pd.DataFrame(columns=['timezone', 'utc_offset'])
 
 timezone_data = fetch_timezone_data(wikipedia_url)
 
 def map_timezones(photometer_df, timezone_df):
     def map_timezone(row):
         if not isinstance(row['local_timezone_name'], str) or not row['local_timezone_name']:
-            return None  # Skip invalid or missing values
+            return None
         if row['local_timezone_name'] in timezone_df['timezone'].values:
             return timezone_df.loc[timezone_df['timezone'] == row['local_timezone_name'], 'utc_offset'].values[0]
         if "UTC" in row['local_timezone_name']:
@@ -129,12 +141,6 @@ def map_timezones(photometer_df, timezone_df):
     return photometer_df
 
 photometer_metadata = map_timezones(photometer_metadata, timezone_data)
-
-column_order = [
-    "name", "latitude", "longitude", "country", "city", "place", 
-    "local_timezone_name", "local_timezone", "org_name"
-]
-photometer_metadata = photometer_metadata[column_order]
 
 # 5. Save to SQLite
 photometer_metadata.to_sql('TessNetwork_metadata', con=engine, if_exists='replace', index=False)

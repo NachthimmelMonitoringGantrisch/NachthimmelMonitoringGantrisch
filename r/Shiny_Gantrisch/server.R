@@ -121,7 +121,16 @@ server <- function(input, output, session) {
         fetch_metadata_path <- normalizePath("../../python/C_metadata_2_DB.py", mustWork = TRUE)
         
         incProgress(0.2, detail = "Starte Live-Abfrage @ https://api.stars4all.eu/photometers")
-        py_run_file(fetch_metadata_path)
+        
+        output_log <- system(sprintf('python "%s"', fetch_metadata_path), intern = TRUE)
+        print(output_log)
+        
+        # Check for 'Internetverbindung nicht vorhanden' in the output log
+        if (any(grepl("Internetverbindung nicht vorhanden", output_log))) {
+          output$notificationArea <- renderUI({
+            div(style = "color: red; font-weight: bold;", "Internetverbindung nicht vorhanden, Metadatentabelle ist nicht aktuell.")
+          })
+        }
         
         incProgress(0.7, detail = "Finalisiere Setup Metadaten")
         print("Python script executed successfully.")
