@@ -5,6 +5,7 @@ import requests
 import pandas as pd
 from sqlalchemy import create_engine
 from time import sleep
+import pytz
 
 # 2. Define and Create Database Path
 db_path = '../../data/'
@@ -102,45 +103,36 @@ def fetch_photometer_metadata(api_url, max_retries=3, backoff_factor=5):
 photometer_metadata = fetch_photometer_metadata(photometer_api_url)
 print(f"Total rows fetched from API: {len(photometer_metadata)}")
 
-# 4. Fetch and Map Timezones
-wikipedia_url = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
-
-def fetch_timezone_data(wikipedia_url):
-    try:
-        tables = pd.read_html(wikipedia_url, header=[0, 1])  # Fetch all tables with multi-level headers
-        for table in tables:
-            if ('TZ identifier' in table.columns.get_level_values(1) and 
-                'UTC offset ±hh:mm' in table.columns.get_level_values(0)):
-                timezone_data = table[[('TZ identifier', 'TZ identifier'), 
-                                       ('UTC offset ±hh:mm', 'SDT')]].copy()
-                timezone_data.columns = ['timezone', 'utc_offset']
-                return timezone_data
-    except Exception as e:
-        print("Internetverbindung nicht vorhanden, Zeitzonen konnten nicht aktualisiert werden.")
-    return pd.DataFrame(columns=['timezone', 'utc_offset'])
-
-timezone_data = fetch_timezone_data(wikipedia_url)
-
-def map_timezones(photometer_df, timezone_df):
+# 4. Map Timezones Using pytz
+def map_timezones(photometer_df):
+    """
+    Maps the local timezone name to a valid timezone using pytz.
+    """
     def map_timezone(row):
-        if not isinstance(row['local_timezone_name'], str) or not row['local_timezone_name']:
-            return None
-        if row['local_timezone_name'] in timezone_df['timezone'].values:
-            return timezone_df.loc[timezone_df['timezone'] == row['local_timezone_name'], 'utc_offset'].values[0]
-        if "UTC" in row['local_timezone_name']:
+        local_timezone_name = row.get('local_timezone_name', "")
+        
+        # Validate timezone using pytz
+        if local_timezone_name in pytz.all_timezones:
+            return local_timezone_name  # Valid timezone name
+
+        # Handle cases with UTC offsets (e.g., "UTC+1")
+        if "UTC" in local_timezone_name:
             try:
-                offset = row['local_timezone_name'].replace("UTC", "").replace("+", "+0").replace("-", "-0")
+                offset = local_timezone_name.replace("UTC", "").replace("+", "+0").replace("-", "-0")
                 if len(offset) == 2:
                     offset += ":00"
-                return offset
+                return f"Etc/GMT{offset}" if offset.startswith("-") else f"Etc/GMT+{offset}"
             except Exception:
                 return None
+
+        # Return None for invalid timezone names
         return None
 
+    # Apply the mapping
     photometer_df['local_timezone'] = photometer_df.apply(map_timezone, axis=1)
     return photometer_df
 
-photometer_metadata = map_timezones(photometer_metadata, timezone_data)
+photometer_metadata = map_timezones(photometer_metadata)
 
 # 5. Save to SQLite
 photometer_metadata.to_sql('TessNetwork_metadata', con=engine, if_exists='replace', index=False)
