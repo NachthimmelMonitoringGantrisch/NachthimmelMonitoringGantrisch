@@ -3,6 +3,20 @@ import re
 import pandas as pd
 import datetime
 from sqlalchemy import create_engine, text
+import pytz
+
+def get_timezone_from_ecsv(file_path):
+    """
+    Reads the timezone information from the meta section of the .ecsv file.
+    Extracts the `Local timezone` value.
+    """
+    with open(file_path, 'r') as f:
+        for line in f:
+            # Look for the "Local timezone" field in the meta section
+            match = re.search(r"Local timezone:\s*([\w/]+)", line)
+            if match:
+                return match.group(1).strip()
+    raise ValueError("Timezone information not found in the meta section of the .ecsv file.")
 
 def create_table_for_photometer(engine, photometer_name):
     create_table_query = f'''
@@ -26,7 +40,11 @@ def create_table_for_photometer(engine, photometer_name):
         connection.execute(text(create_table_query))
         print(f"Table {photometer_name}_data ensured in the database.")
 
-def filter_and_process_data(data, photometer_name):
+def filter_and_process_data(data, photometer_name, ecsv_file_path):
+    """
+    Processes data, including dynamic timezone adjustment based on the .ecsv file.
+    """
+
     data.columns = [
         'time',
         'enclosure_temperature',
@@ -40,12 +58,17 @@ def filter_and_process_data(data, photometer_name):
         'moon_illumination'
     ]
     data['time'] = pd.to_datetime(data['time'], utc=True)
-    local_timezone = "Europe/Zurich"
+
+    local_timezone = get_timezone_from_ecsv(ecsv_file_path)
+
+    # Adjust times to the extracted local timezone
+    if local_timezone not in pytz.all_timezones:
+        raise ValueError(f"Invalid timezone: {local_timezone}")
     data['time'] = data['time'].dt.tz_convert(local_timezone).dt.tz_localize(None)
 
     # Define night start and end times
-    night_start_hour = 16  # 16:00 (4 PM)
-    night_end_hour = 9     # 09:00 (9 AM)
+    night_start_hour = 16  # 16:00
+    night_end_hour = 9     # 09:00
 
     # Assign night ID based on the adjusted night logic
     def calculate_night_id(timestamp):
@@ -162,7 +185,7 @@ def process_ecsv_files(ecsv_folder, photometer_names, months_list, db_path):
             if os.path.exists(file_path):
                 print(f"Processing file: {file_path}")
                 raw_data = pd.read_csv(file_path, comment='#', delimiter=',')
-                processed_data = filter_and_process_data(raw_data, photometer_name)
+                processed_data = filter_and_process_data(raw_data, photometer_name, file_path)
                 processed_data.to_sql(f'{photometer_name}_data', engine, if_exists='append', index=False)
                 print(f"Imported data from {file_name} successfully.")
                 add_data_import_entry(engine, photometer_name, month)
