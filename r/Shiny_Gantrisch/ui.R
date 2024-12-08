@@ -152,5 +152,13 @@ ui <- navbarPage(
              mainPanel(
                textOutput("reportStatus")  # Placeholder for export status
              )
-           ))
+           )),
+  
+  # Add settings icon to the top-right of the navbar
+  header = div(class = "navbar-right",
+               tags$img(src = "settings-icon.png", 
+                        style = "width: 24px; height: 24px; cursor: pointer; margin-right: 15px;", 
+                        title = "Einstellungen", 
+                        onclick = "alert('Settings clicked!')")
+  )
 )

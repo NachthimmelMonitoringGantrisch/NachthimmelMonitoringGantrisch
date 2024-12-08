@@ -270,3 +270,15 @@ table.dataTable thead th {
     z-index: 9999;
     transform: translate(-50%, -50%);
 }
+
+/* Position settings icon on the top-right */
+.navbar-right img {
+    float: right;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* Hover effect for the settings icon */
+.navbar-right img:hover {
+    opacity: 0.8;
+}
