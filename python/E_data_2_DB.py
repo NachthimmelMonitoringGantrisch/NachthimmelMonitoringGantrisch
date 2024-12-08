@@ -42,8 +42,33 @@ def filter_and_process_data(data, photometer_name):
     data['time'] = pd.to_datetime(data['time'], utc=True)
     local_timezone = "Europe/Zurich"
     data['time'] = data['time'].dt.tz_convert(local_timezone).dt.tz_localize(None)
-    data['night_id'] = data['time'].apply(lambda x: f"N{x.strftime('%Y%m%d')}")
+
+    # Define night start and end times
+    night_start_hour = 16  # 16:00 (4 PM)
+    night_end_hour = 9     # 09:00 (9 AM)
+
+    # Assign night ID based on the adjusted night logic
+    def calculate_night_id(timestamp):
+        if timestamp.hour < night_end_hour:
+            # Before 09:00 -> previous night's date
+            night_date = (timestamp - pd.Timedelta(days=1)).strftime('%Y%m%d')
+        elif timestamp.hour >= night_start_hour:
+            # After 16:00 -> current night's date
+            night_date = timestamp.strftime('%Y%m%d')
+        else:
+            # Between 09:00 and 16:00 -> no night ID (daytime data)
+            return None
+        return f"N{night_date}"
+
+    data['night_id'] = data['time'].apply(calculate_night_id)
+
+    # Filter out daytime data (optional)
+    data = data[data['night_id'].notna()]
+
+    # Add astronomical night flag
     data['astronomical_night'] = data['sun_alt'] < -18
+
+    # Calculate cloud coverage
     data['cloud_coverage'] = data.apply(
         lambda row: max(0, min(100, 100 - 3 * (row['enclosure_temperature'] - row['sky_temperature']))),
         axis=1
