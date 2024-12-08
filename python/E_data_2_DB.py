@@ -83,6 +83,39 @@ def add_data_import_entry(engine, photometer_name, month):
             transaction.rollback()
             print(f"Error adding entry to data_import_control for {photometer_name} in month {month}: {e}")
 
+def delete_incomplete_month_data(engine, photometer_name, month):
+    """
+    Delete all entries for the specified month in the photometer's data table.
+    """
+    query = f"""
+    DELETE FROM {photometer_name}_data
+    WHERE strftime('%Y-%m', time) = :month
+    """
+    with engine.connect() as connection:
+        transaction = connection.begin()
+        try:
+            connection.execute(text(query), {"month": month})  # Execute deletion
+            transaction.commit()
+            print(f"Deleted existing data for {photometer_name} in {month}.")
+        except Exception as e:
+            transaction.rollback()
+            print(f"Error deleting data for {photometer_name} in {month}: {e}")
+
+def is_month_incomplete(engine, photometer_name, month):
+    """
+    Check if a specific month is marked as incomplete (complete = 0) in the data_import_control table.
+    """
+    query = """
+    SELECT complete
+    FROM data_import_control
+    WHERE name = :photometer_name
+    AND strftime('%Y-%m', date_of_data_name) = :month
+    LIMIT 1
+    """
+    with engine.connect() as connection:
+        result = connection.execute(text(query), {"photometer_name": photometer_name, "month": month}).fetchone()
+        return result is not None and result[0] == 0  # Returns True if incomplete, False otherwise
+
 def process_ecsv_files(ecsv_folder, photometer_names, months_list, db_path):
     if not os.path.exists(ecsv_folder):
         raise FileNotFoundError(f"ECSV folder does not exist: {ecsv_folder}")
@@ -91,6 +124,14 @@ def process_ecsv_files(ecsv_folder, photometer_names, months_list, db_path):
     for photometer_name in photometer_names:
         create_table_for_photometer(engine, photometer_name)
         for month in months_list:
+            # Check if the month is incomplete before deleting
+            if is_month_incomplete(engine, photometer_name, month):
+                print(f"Month {month} for photometer {photometer_name} is incomplete. Deleting old data...")
+                delete_incomplete_month_data(engine, photometer_name, month)
+            else:
+                print(f"Month {month} for photometer {photometer_name} is complete. Skipping deletion.")
+
+            # Process and import the new .ecsv file
             file_name = f"{photometer_name}_{month}.ecsv"
             file_path = os.path.join(ecsv_folder, photometer_name, file_name)
             if os.path.exists(file_path):
@@ -102,3 +143,5 @@ def process_ecsv_files(ecsv_folder, photometer_names, months_list, db_path):
                 add_data_import_entry(engine, photometer_name, month)
             else:
                 print(f"File {file_name} not found for photometer {photometer_name} in month {month}.")
+
+
