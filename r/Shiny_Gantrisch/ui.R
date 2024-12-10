@@ -3,7 +3,18 @@ library(DT)
 
 # UI-Komponente mit drei Tabs
 ui <- navbarPage(
-  title = "Nachthimmelmonitoring Naturpark Gantrisch",
+  title = tagList(
+    "Nachthimmelmonitoring Naturpark Gantrisch",
+    tags$a(
+      href = "https://github.com/NachthimmelMonitoringGantrisch/NachthimmelMonitoringGantrisch",
+      target = "_blank",
+      tags$img(
+        src = "GitHub-logo-weiss.png",
+        style = "width: 30px; height: 30px; position: absolute; right: 15px; top: 10px; cursor: pointer;",
+        title = "Hier zum GitHub Repository"
+      )
+    )
+  ),
   
   # Link to the CSS file
   tags$head(
