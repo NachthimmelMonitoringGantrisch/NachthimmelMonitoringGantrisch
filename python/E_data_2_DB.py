@@ -67,8 +67,8 @@ def filter_and_process_data(data, photometer_name, ecsv_file_path):
     data['time'] = data['time'].dt.tz_convert(local_timezone).dt.tz_localize(None)
 
     # Define night start and end times
-    night_start_hour = 16  # 16:00
-    night_end_hour = 9     # 09:00
+    night_start_hour = 16 
+    night_end_hour = 9
 
     # Assign night ID based on the adjusted night logic
     def calculate_night_id(timestamp):
@@ -83,53 +83,80 @@ def filter_and_process_data(data, photometer_name, ecsv_file_path):
             return None
         return f"N{night_date}"
 
+    # Assign night ID and create a copy to avoid SettingWithCopyWarning
     data['night_id'] = data['time'].apply(calculate_night_id)
 
-    # Filter out daytime data (optional)
-    data = data[data['night_id'].notna()]
+    # Filter out daytime data and create a copy to avoid warnings
+    data = data[data['night_id'].notna()].copy()
 
-    # Add astronomical night flag
-    data['astronomical_night'] = data['sun_alt'] < -18
+    # Add astronomical night flag using .loc
+    data.loc[:, 'astronomical_night'] = data['sun_alt'] < -18
 
-    # Calculate cloud coverage
-    data['cloud_coverage'] = data.apply(
+    # Calculate cloud coverage using .loc
+    data.loc[:, 'cloud_coverage'] = data.apply(
         lambda row: max(0, min(100, 100 - 3 * (row['enclosure_temperature'] - row['sky_temperature']))),
         axis=1
     )
+
     print(f"Filtered and processed data for {photometer_name}.")
     return data
 
 def add_data_import_entry(engine, photometer_name, month):
-    date_of_data_name = datetime.datetime.strptime(month, "%Y-%m").date().replace(day=1)
-    date_of_import = datetime.datetime.now().date()
-    next_month = (date_of_data_name.replace(day=1) + datetime.timedelta(days=31)).replace(day=1)
-    complete = 1 if date_of_import >= next_month else 0
-    command = f"""
+    """
+    Delete and insert a new entry in the data_import_control table, handling only dates (no time).
+    
+    If an entry exists for the photometer and month, delete it.
+    Then, insert a new row with updated date_of_import and complete status.
+    """
+    # Calculate date_of_data_name and next_month for complete status
+    date_of_data_name = datetime.datetime.strptime(month, "%Y-%m").date()  # First day of the month as a date
+    date_of_import = datetime.datetime.now().date()  # Today's date
+    next_month = (date_of_data_name + datetime.timedelta(days=31)).replace(day=1)  # First day of next month
+
+    # SQL query to delete existing entries
+    delete_query = """
+    DELETE FROM data_import_control 
+    WHERE name = :name 
+    AND date(date_of_data_name) = date(:date_of_data_name)
+    """
+    
+    # SQL query to insert a new entry with CASE for complete
+    insert_query = """
     INSERT INTO data_import_control (name, date_of_data_name, date_of_import, complete) 
     VALUES (
         :name,
-        :date_of_data_name,
-        :date_of_import,
-        :complete
-    );
+        date(:date_of_data_name),
+        date(:date_of_import),
+        CASE WHEN date(:date_of_import) >= date(:next_month) THEN 1 ELSE 0 END
+    )
     """
+    
     with engine.connect() as connection:
-        transaction = connection.begin()
+        transaction = connection.begin()  # Start a transaction
         try:
-            connection.execute(
-                text(command),
-                {
-                    "name": photometer_name,
-                    "date_of_data_name": date_of_data_name,
-                    "date_of_import": date_of_import,
-                    "complete": complete
-                }
-            )
+            # Step 1: Delete existing entry for this photometer + month
+            print(f"Deleting existing entry for {photometer_name} in month {month}.")
+            result = connection.execute(text(delete_query), {
+                "name": photometer_name, 
+                "date_of_data_name": date_of_data_name
+            })
+            print(f"Deleted {result.rowcount} entries for {photometer_name} in month {month}.")  # Show how many rows were deleted
+
+            # Step 2: Insert a new entry
+            print(f"Inserting new entry for {photometer_name} in month {month}.")
+            result = connection.execute(text(insert_query), {
+                "name": photometer_name,
+                "date_of_data_name": date_of_data_name,
+                "date_of_import": date_of_import,
+                "next_month": next_month
+            })
+            print(f"Inserted new entry for {photometer_name} in month {month}. Data: date_of_import={date_of_import}")
+            
+            # Commit the transaction
             transaction.commit()
-            print(f"Entry added for {photometer_name} in month {month} to data_import_control.")
         except Exception as e:
-            transaction.rollback()
-            print(f"Error adding entry to data_import_control for {photometer_name} in month {month}: {e}")
+            transaction.rollback()  # Rollback in case of error
+            print(f"Error inserting or updating entry for {photometer_name} in month {month}: {e}")
 
 def delete_incomplete_month_data(engine, photometer_name, month):
     """
@@ -165,31 +192,29 @@ def is_month_incomplete(engine, photometer_name, month):
         return result is not None and result[0] == 0  # Returns True if incomplete, False otherwise
 
 def process_ecsv_files(ecsv_folder, photometer_names, months_list, db_path):
-    if not os.path.exists(ecsv_folder):
-        raise FileNotFoundError(f"ECSV folder does not exist: {ecsv_folder}")
     engine = create_engine(f"sqlite:///{db_path}")
     print(f"Database engine initialized for: {db_path}")
+
     for photometer_name in photometer_names:
         create_table_for_photometer(engine, photometer_name)
+        
         for month in months_list:
-            # Check if the month is incomplete before deleting
-            if is_month_incomplete(engine, photometer_name, month):
-                print(f"Month {month} for photometer {photometer_name} is incomplete. Deleting old data...")
-                delete_incomplete_month_data(engine, photometer_name, month)
-            else:
-                print(f"Month {month} for photometer {photometer_name} is complete. Skipping deletion.")
-
-            # Process and import the new .ecsv file
             file_name = f"{photometer_name}_{month}.ecsv"
             file_path = os.path.join(ecsv_folder, photometer_name, file_name)
-            if os.path.exists(file_path):
+
+            if not os.path.exists(file_path):
+                print(f"File {file_name} not found for photometer {photometer_name} in month {month}. No entry will be made in data_import_control.")
+                continue  # Skip processing for this month
+
+            try:
                 print(f"Processing file: {file_path}")
                 raw_data = pd.read_csv(file_path, comment='#', delimiter=',')
                 processed_data = filter_and_process_data(raw_data, photometer_name, file_path)
                 processed_data.to_sql(f'{photometer_name}_data', engine, if_exists='append', index=False)
                 print(f"Imported data from {file_name} successfully.")
-                add_data_import_entry(engine, photometer_name, month)
-            else:
-                print(f"File {file_name} not found for photometer {photometer_name} in month {month}.")
+                add_data_import_entry(engine, photometer_name, month)  # Call only if successful
+            except Exception as e:
+                print(f"Error processing file {file_name} for {photometer_name} in month {month}: {e}")
+
 
 
