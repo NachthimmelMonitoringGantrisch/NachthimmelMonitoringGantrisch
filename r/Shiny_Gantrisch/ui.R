@@ -5,6 +5,19 @@ library(DT)
 ui <- navbarPage(
   title = tagList(
     "Nachthimmelmonitoring Naturpark Gantrisch",
+    
+    # Documentation icon (left)
+    tags$a(
+      href = "https://nachthimmel-monitoring-gantrisch-docs.vercel.app/",
+      target = "_blank",
+      tags$img(
+        src = "documentation-icon.png",
+        style = "width: 30px; height: 30px; position: absolute; right: 60px; top: 10px; cursor: pointer;",
+        title = "Hier zur Dokumentation"
+      )
+    ),
+    
+    # GitHub icon (right)
     tags$a(
       href = "https://github.com/NachthimmelMonitoringGantrisch/NachthimmelMonitoringGantrisch",
       target = "_blank",
