@@ -147,19 +147,47 @@ server <- function(input, output, session) {
   # "Datenbezug" - Load Metadata Table and Display
   #-------------------------------------------------------------------
   
-  db_metadata_path <- normalizePath(file.path("..", "..", "data", "TessNetwork_metadata.db"), mustWork = FALSE)
+  # Paths for main and backup metadata databases
+  db_main_path <- normalizePath(file.path("..", "..", "data", "TessNetwork_metadata.db"), mustWork = FALSE)
+  db_backup_path <- normalizePath(file.path("..", "..", "data", "Backup_metadata.db"), mustWork = FALSE)
   
-  if (!file.exists(db_metadata_path)) {
-    # Notify user of missing database file
-    print(paste("Database file not found at path:", db_metadata_path))
+  # Determine which database to use (fallback logic)
+  db_path_to_use <- if (file.exists(db_main_path)) {
+    print("Using TessNetwork_metadata.db as the primary database.")
+    db_metadata <- dbConnect(SQLite(), dbname = db_main_path)
+    
+    # Check if the main database has data
+    if (dbGetQuery(db_metadata, "SELECT COUNT(*) FROM TessNetwork_metadata")[1,1] > 0) {
+      dbDisconnect(db_metadata)
+      db_main_path
+    } else {
+      dbDisconnect(db_metadata)
+      print("TessNetwork_metadata.db is empty. Using Backup_metadata.db as fallback.")
+      if (file.exists(db_backup_path)) {
+        db_backup_path
+      } else {
+        print("No valid database found. Please check the TessNetwork_metadata.db and Backup_metadata.db files.")
+        NULL
+      }
+    }
+  } else if (file.exists(db_backup_path)) {
+    print("Main database not found. Using Backup_metadata.db as fallback.")
+    db_backup_path
+  } else {
+    print("No database file found. Neither TessNetwork_metadata.db nor Backup_metadata.db are available.")
+    NULL
+  }
+  
+  if (is.null(db_path_to_use)) {
+    # Notify user of missing database files
     output$tablePhotometerDownload <- renderText({
-      "Database file not found. Check the file path and try again."
+      "No database file found. Please ensure TessNetwork_metadata.db or Backup_metadata.db exists in the data directory."
     })
   } else {
-    # Connect to the metadata database and load data
     tryCatch({
-      db_metadata <- dbConnect(SQLite(), dbname = db_metadata_path)
-      print("Successfully connected to TessNetwork_metadata database.")
+      # Connect to the determined database
+      db_metadata <- dbConnect(SQLite(), dbname = db_path_to_use)
+      print(paste("Successfully connected to database at path:", db_path_to_use))
       
       # Check if the metadata table exists
       if ("TessNetwork_metadata" %in% dbListTables(db_metadata)) {
@@ -182,7 +210,7 @@ server <- function(input, output, session) {
       if (length(missing_columns) > 0) {
         stop(paste("The following required columns are missing:", paste(missing_columns, collapse = ", ")))
       }
-      photometer_metadata <- photometer_metadata[, desired_columns]
+      photometer_metadata <- photometer_metadata[, desired_columns, drop = FALSE]
       
       # Render the metadata table
       output$tablePhotometerDownload <- renderDT({
@@ -194,7 +222,7 @@ server <- function(input, output, session) {
             pageLength = 25,
             autoWidth = TRUE,
             scrollY = "calc(100vh - 200px)",  # Use viewport height dynamically for vertical scrolling
-            scrollX = TRUE,                 # Fully stretch horizontally to avoid horizontal scrolling
+            scrollX = TRUE,                  # Fully stretch horizontally to avoid horizontal scrolling
             columnDefs = list(
               list(width = "80px", targets = c(0, 1, 2)),  # Width for first three columns
               list(width = "100px", targets = c(3:(ncol(photometer_metadata) - 1)))  # Width for remaining columns
