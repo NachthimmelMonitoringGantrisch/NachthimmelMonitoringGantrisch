@@ -160,12 +160,12 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
       axis.text.y = element_text(size = 7),
       axis.title.x = element_text(size = 9),
       axis.title.y = element_text(size = 9),
-      plot.title = element_text(size = 10, hjust = 0.5),
+      plot.title = element_text(size = 14, hjust = 0.5, face = "bold"),
       legend.position = "bottom",  # Position legend at the bottom
       legend.title = element_text(size = 10),
       legend.text = element_text(size = 9),
       legend.box = "vertical",
-      plot.margin = unit(c(0, 0, 0, 0), "cm")
+      plot.margin = unit(c(2, 0, 0, 0), "cm"),
     )
   
   return(p)
