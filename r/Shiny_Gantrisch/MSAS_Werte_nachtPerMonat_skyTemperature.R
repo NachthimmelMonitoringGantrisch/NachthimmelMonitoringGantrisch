@@ -114,17 +114,18 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
     # Bortle scale background
     geom_rect(data = bortle_scale, aes(xmin = start_datetime, xmax = end_datetime, ymin = min_msas, ymax = max_msas, fill = bortle_class), 
               alpha = 0.1, inherit.aes = FALSE) +
-    scale_fill_manual(
-      values = bortle_scale$color,
-      name = "Bortle Class",
-      labels = bortle_scale$bortle_class
-    ) +
     # MSAS line (drawn on top of the bars)
     geom_line(data = df_night, aes(x = time, y = msas), color = "black", size = 1) +
     # Add green bars for below-zero temperature intervals
     {if (nrow(df_grouped) > 0) {
-      geom_rect(data = df_grouped, aes(xmin = start_time, xmax = end_time), ymin = 14, ymax = 15, fill = "green", alpha = 0.7)
+      geom_rect(data = df_grouped, aes(xmin = start_time, xmax = end_time, fill = "Below Zero Temperature"), ymin = 14, ymax = 15, alpha = 0.7)
     }} +
+    # Unified scale_fill_manual for Bortle scale and green bars
+    scale_fill_manual(
+      values = c(setNames(bortle_scale$color, bortle_scale$bortle_class), "Below Zero Temperature" = "green"),
+      name = "Legend",
+      labels = c(setNames(bortle_scale$bortle_class, bortle_scale$bortle_class), "Below Zero Temperature")
+    ) +
     # Add reference line for MSAS target value (21.3)
     geom_hline(aes(yintercept = 21.3, color = "MSAS Target"), linetype = "dashed", size = 1) +
     # Add dotted lines for astronomical night start and end
@@ -145,7 +146,7 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
     scale_color_manual(
       name = "Linear Elements",
       values = c("Night Start/End" = "black", "MSAS Target" = "red"),
-      labels = c("21.3 mag/arcsec2", "Night Start/End")
+      labels = c("21.3 mag/arcsec²", "Night Start/End")
     ) +
     # Title and theme
     labs(
