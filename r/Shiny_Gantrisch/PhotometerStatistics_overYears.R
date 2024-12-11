@@ -8,7 +8,7 @@ library(tidyr)
 library(gridExtra)
 
 # Path to the SQLite database
-db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
+db_tess_data_path <- normalizePath(file.path("..", "..", "data", "TessNetwork_data.db"), mustWork = FALSE)
 
 # Function to load data for the specified photometer, selecting only necessary columns
 load_data_from_database <- function(photometer_id) {

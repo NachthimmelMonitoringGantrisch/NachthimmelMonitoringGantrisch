@@ -5,7 +5,7 @@ library(ggplot2)
 library(lubridate)
 
 # Path to the SQLite database
-db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
+db_tess_data_path <- normalizePath(file.path("..", "..", "data", "TessNetwork_data.db"), mustWork = FALSE)
 
 # Function to load only necessary data from the SQLite database for a specific photometer
 load_data_from_database <- function(photometer_id) {

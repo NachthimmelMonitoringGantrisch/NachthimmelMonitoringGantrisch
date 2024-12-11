@@ -9,7 +9,7 @@ library(cowplot)
 library(patchwork)
 
 # Path to the SQLite database
-db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
+db_tess_data_path <- normalizePath(file.path("..", "..", "data", "TessNetwork_data.db"), mustWork = FALSE)
 
 # Load data from the SQLite database for the specified photometer
 load_data_from_database <- function(photometer_id) {

@@ -360,22 +360,22 @@ server <- function(input, output, session) {
   # "PhotometerDropdown" - Load Data and Populate Dropdown
   #-------------------------------------------------------------------
   
-  db_tess_data_path <- normalizePath(file.path("..", "..", "data", "tess_data.db"), mustWork = FALSE)
+  db_tess_data_path <- normalizePath(file.path("..", "..", "data", "TessNetwork_data.db"), mustWork = FALSE)
   
   if (!file.exists(db_tess_data_path)) {
-    print(paste("Database file 'tess_data' not found at path:", db_tess_data_path))
+    print(paste("Database file 'TessNetwork_data' not found at path:", db_tess_data_path))
     output$photometerDropdown <- renderUI({
       "Database file not found. Check the file path and try again."
     })
   } else {
     tryCatch({
       db_tess_data <- dbConnect(SQLite(), dbname = db_tess_data_path)
-      print("Successfully connected to tess_data database.")
+      print("Successfully connected to TessNetwork_data database.")
       
       table_names <- dbListTables(db_tess_data)
       table_names <- table_names[table_names != "data_import_control"]
       photometer_names <- gsub("_data$", "", table_names)
-      print("Tables in tess_data database:")
+      print("Tables in TessNetwork_data database:")
       print(photometer_names)
       
       # Update dropdown choices
@@ -386,9 +386,9 @@ server <- function(input, output, session) {
       dbDisconnect(db_tess_data)
       
     }, error = function(e) {
-      print(paste("Error connecting to 'tess_data' database at path:", db_tess_data_path, ":", e$message))
+      print(paste("Error connecting to 'TessNetwork_data' database at path:", db_tess_data_path, ":", e$message))
       output$photometerDropdown <- renderText({
-        "Unable to connect to tess_data database. Check connection settings."
+        "Unable to connect to TessNetwork_data database. Check connection settings."
       })
     })
   }
