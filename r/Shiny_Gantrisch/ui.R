@@ -151,7 +151,10 @@ ui <- navbarPage(
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse Einzelnächte'",
-                 plotOutput("plotSingleNightAnalysis")
+                 div(
+                   style = "height: calc(100vh - 120px); overflow-y: auto; margin: 0; padding: 0;", # Enable scrolling
+                   uiOutput("dynamicPlotContainer")  # Dynamically generated plot container
+                 )
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Monat'",

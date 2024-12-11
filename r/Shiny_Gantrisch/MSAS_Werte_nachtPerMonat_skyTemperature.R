@@ -3,6 +3,7 @@ library(RSQLite)
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+library(grid)
 library(gridExtra)
 
 # Path to the SQLite database
@@ -118,17 +119,17 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
       name = "Bortle Class",
       labels = bortle_scale$bortle_class
     ) +
-    # Add dotted lines for astronomical night start and end
-    geom_vline(data = night_intervals, aes(xintercept = as.numeric(start_night)), color = "black", linetype = "dotted", size = 1) +
-    geom_vline(data = night_intervals, aes(xintercept = as.numeric(end_night)), color = "black", linetype = "dotted", size = 1) +
+    # MSAS line (drawn on top of the bars)
+    geom_line(data = df_night, aes(x = time, y = msas), color = "black", size = 1) +
     # Add green bars for below-zero temperature intervals
     {if (nrow(df_grouped) > 0) {
       geom_rect(data = df_grouped, aes(xmin = start_time, xmax = end_time), ymin = 14, ymax = 15, fill = "green", alpha = 0.7)
     }} +
-    # MSAS line (drawn on top of the bars)
-    geom_line(data = df_night, aes(x = time, y = msas), color = "black", size = 1) +
     # Add reference line for MSAS target value (21.3)
-    geom_hline(yintercept = 21.3, color = "red", linetype = "dashed", size = 1) +
+    geom_hline(aes(yintercept = 21.3, color = "MSAS Target"), linetype = "dashed", size = 1) +
+    # Add dotted lines for astronomical night start and end
+    geom_vline(data = night_intervals, aes(xintercept = as.numeric(start_night), color = "Night Start/End"), linetype = "dotted", size = 1) +
+    geom_vline(data = night_intervals, aes(xintercept = as.numeric(end_night), color = "Night Start/End"), linetype = "dotted", size = 1) +
     # Axis settings
     scale_x_datetime(
       limits = c(start_datetime, end_datetime),
@@ -139,6 +140,12 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
       name = "MSAS [mag/arcsec²]",
       limits = c(15, 26),  # Start MSAS values from 15
       breaks = seq(15, 26, by = 2)
+    ) +
+    # Add legend for linear elements below the Bortle scale
+    scale_color_manual(
+      name = "Linear Elements",
+      values = c("Night Start/End" = "black", "MSAS Target" = "red"),
+      labels = c("21.3 mag/arcsec2", "Night Start/End")
     ) +
     # Title and theme
     labs(
@@ -153,35 +160,51 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
       axis.title.x = element_text(size = 9),
       axis.title.y = element_text(size = 9),
       plot.title = element_text(size = 10, hjust = 0.5),
-      legend.position = "none",
-      plot.margin = margin(2, 2, 2, 2)
+      legend.position = "bottom",  # Position legend at the bottom
+      legend.title = element_text(size = 10),
+      legend.text = element_text(size = 9),
+      legend.box = "vertical",
+      plot.margin = unit(c(0, 0, 0, 0), "cm")
     )
   
   return(p)
 }
 
-
-# Function to plot all nights for a given month
-plot_all_nights <- function(df, year, month) {
-  bortle_scale <- define_bortle_scale()  # Define Bortle scale once
+# Function to plot all nights for a given month with a dynamic plot container height
+plot_all_nights <- function(df, year, month, ncol = 3) {
+  # Define the Bortle scale once
+  bortle_scale <- define_bortle_scale()
   
+  # Get the number of days in the given month
   days_in_month <- days_in_month(ymd(paste(year, month, "01")))
   
+  # Generate a plot for each day
   plots <- lapply(1:days_in_month, function(day) {
-    create_night_plot(df, year, month, day, bortle_scale)  # Pass Bortle scale
+    create_night_plot(df, year, month, day, bortle_scale)  # Pass the Bortle scale
   })
   
+  # Filter out any NULL plots (days with no data)
   plots <- Filter(Negate(is.null), plots)
   
+  # Stop execution if no data is available for the entire month
   if (length(plots) == 0) {
     stop("No data available for the selected month.")
   }
   
-  grid.arrange(grobs = plots, ncol = 5)
+  # Render the plots using grid.arrange without fixed heights
+  grid.newpage()  # Clear the current graphic device
+  
+  grid.arrange(
+    grobs = plots,   # List of plots
+    ncol = ncol      # Number of columns
+  )
 }
 
 # Main function to run the analysis
 main <- function(photometer_id, input_year, input_month) {
+  # Load data from the database
   df <- load_data_from_database(photometer_id)
-  plot_all_nights(df, input_year, input_month)
+  
+  # Plot all nights for the specified year and month
+  plot_all_nights(df, input_year, input_month, ncol = 3)
 }

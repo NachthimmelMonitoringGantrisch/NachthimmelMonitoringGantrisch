@@ -595,35 +595,62 @@ server <- function(input, output, session) {
   })
   
   #-------------------------------------------------------------------
-  # Call "MSAS_Werte_nachtPerMonat_skyTemperature.R" Script and Generate Plot
+  # Call "MSAS_Werte_nachtPerMonat_skyTemperature.R" Script and Generate Plot with a dynamic height in function of the numbers of days per row
   #-------------------------------------------------------------------
   
-  output$plotSingleNightAnalysis <- renderPlot({
-    photometer_id <- input$photometerDropdown  # Get selected photometer ID
-    selected_month_year <- input$singleNightsMonthsDropdown  # Get selected month-year
+  output$dynamicPlotContainer <- renderUI({
+    req(input$photometerDropdown, input$singleNightsMonthsDropdown)  # Ensure inputs are available
     
-    if (is.null(selected_month_year) || is.null(photometer_id) || photometer_id == "") {
-      print("Please select a photometer and a valid month-year combination.")  # Warning for missing inputs
+    # Extract year and month from the selected value
+    selected_month_year <- input$singleNightsMonthsDropdown
+    selected_year <- as.numeric(substr(selected_month_year, 1, 4))
+    selected_month <- as.numeric(substr(selected_month_year, 6, 7))
+    
+    # Load data and count the number of days with valid data
+    tryCatch({
+      source("MSAS_Werte_nachtPerMonat_skyTemperature.R")  # Load the script
+      df <- load_data_from_database(input$photometerDropdown)  # Load photometer data
+      
+      # Filter data for the selected year and month
+      df_filtered <- df %>%
+        filter(year(time) == selected_year & month(time) == selected_month)
+      
+      # Calculate the number of unique days
+      num_days <- length(unique(day(df_filtered$time)))
+      
+      # Calculate the number of rows needed (3 days per row)
+      num_rows <- ceiling(num_days / 3)
+      
+      # Set a fixed height per row in cm
+      row_height_cm <- 10
+      
+      # Calculate the total height for the plot
+      total_height_cm <- num_rows * row_height_cm
+      
+      # Render a dynamic plotOutput with the calculated height
+      plotOutput("plotSingleNightAnalysis", height = paste0(total_height_cm, "cm"))
+      
+    }, error = function(e) {
+      showNotification("Error loading data or generating plot. Check your database and script.", type = "error")
       return(NULL)
-    }
+    })
+  })
+  
+  output$plotSingleNightAnalysis <- renderPlot({
+    req(input$photometerDropdown, input$singleNightsMonthsDropdown)  # Ensure inputs are valid
     
-    # Extract year and month from dropdown value
-    selected_year <- as.numeric(substr(selected_month_year, 1, 4))  # Year
-    selected_month <- as.numeric(substr(selected_month_year, 6, 7)) # Month
+    # Extract year and month
+    selected_month_year <- input$singleNightsMonthsDropdown
+    selected_year <- as.numeric(substr(selected_month_year, 1, 4))
+    selected_month <- as.numeric(substr(selected_month_year, 6, 7))
     
-    withProgress(message = "Rendering Photometer Statistics...", value = 0, {  # Show progress bar
-      incProgress(0.3, detail = "Loading data and processing...")
-      
-      source("MSAS_Werte_nachtPerMonat_skyTemperature.R")  # Load external script
-      plot_result <- main(photometer_id, input_year = selected_year, input_month = selected_month)  # Call analysis function
-      
-      if (!is.null(plot_result)) {
-        incProgress(1, detail = "Render complete.")  # Indicate completion
-        plot_result  # Display the generated plot
-      } else {
-        print("Plot could not be generated. Check MSAS_Werte_nachtPerMonat_skyTemperature.R for issues.")
-        return(NULL)
-      }
+    # Source the external script and call the main function
+    tryCatch({
+      source("MSAS_Werte_nachtPerMonat_skyTemperature.R")  # Load the script
+      main(input$photometerDropdown, input_year = selected_year, input_month = selected_month)  # Generate the plot
+    }, error = function(e) {
+      showNotification("Error generating plot. Check your script and data.", type = "error")
+      return(NULL)
     })
   })
   
