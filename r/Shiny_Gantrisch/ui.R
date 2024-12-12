@@ -8,7 +8,7 @@ ui <- navbarPage(
     
     # Documentation icon (left)
     tags$a(
-      href = "https://nachthimmel-monitoring-gantrisch-docs.vercel.app/",
+      href = "https://nachthimmel-monitoring-gantrisch-docs.vercel.app/bedienungsanleitung",
       target = "_blank",
       tags$img(
         src = "documentation-icon.png",
