@@ -1,42 +1,73 @@
-# Interaktive Webkarte Ballenberg
+# Naturpark Gantrisch: Analyse, Automatisierung und Visualisierung von Nachthimmelmonitoring
 
-## Documentation
+## Dokumentation
 
-<a href="https://nachthimmel-monitoring-gantrisch-docs.vercel.app/">Go directly to our Documentation</a>
+<a href="https://nachthimmel-monitoring-gantrisch-docs.vercel.app/">Go directly to the Documentation</a>
 
 ## Ordnerstruktur
 
-NACHTHIMMELMONITORINGGANTRISCH/
+NachthimmelMonitoringGantrisch
+├── .venv_R
+│   ├── Include
+│   ├── Lib
+│   ├── Scripts
+│   └── pyvenv.cfg
 │
-├── .idea/                         			# Projekt-Settings (z.B. IDE-spezifische Dateien)
-├── data/                          			# Ordner für Roh- und verarbeitete Daten
+├── data
+│   ├── Backup_metadata.db
+│   ├── TessNetwork_data.db
+│   └── TessNetwork_metadata.db
 │
-├── python/                        			# Python-Skripte und TESS-IDA-Tools
-│   ├── TESS-IDA-TOOLS/            			# TESS-IDA Tools Verzeichnis
-│   │   ├── doc/                   			# Dokumentation der TESS-IDA Tools
-│   │   ├── jupyter/               			# Jupyter-Notebooks für die Analyse
-│   │   └── src/                   			# Quellcode der TESS-IDA Tools
+├── python
+│   ├── development
+│   ├── requirements
+│   ├── TESS-IDA-TOOLS
+│   │   ├── doc
+│   │   ├── jupyter
+│   │   │   ├── .venv
+│   │   │   ├── adm
+│   │   │   ├── ECSV
+│   │   │   ├── IDA
+│   │   │   └── .env
+│   │   │
+│   │   ├── src
+│   │   ├── .gitignore
+│   │   ├── get-tess-ida.py
+│   │   ├── justfile
+│   │   ├── LICENSE
+│   │   ├── pyproject.toml
+│   │   ├── README.md
+│   │   ├── setup.cfg
+│   │   ├── tox.ini
+│   │   └── uv.lock
 │   │
-│   ├── .gitignore                 			# Git Ignore Datei für Python-Ordner
-│   ├── get-tess-ida.py            			# Python-Skript für TESS-IDA Datenabfrage
-│   ├── justfile                   			# Justfile für Skript-Kommandos
-│   ├── LICENSE                    			# Lizenzdatei (stars4all)
-│   ├── pyproject.toml             			# Konfigurationsdatei für Python-Paket
-│   ├── README_instruction.md      			# README mit Anweisungen für die Installation der TESS-IDA Tools
-│   ├── README.md                  			# Haupt-README für das Python-Projekt
-│   ├── setup.cfg                  			# Setup-Konfiguration
-│   ├── tox.ini                    			# Tox Konfiguration für Tests
-│   └── uv.lock                    			# Abhängigkeitsdatei
+│   ├── __pycache__
+│   ├── Dockerfile
+│   ├── A_setup_venv_R.py
+│   ├── B_setup_TESS-IDA-TOOLS.py
+│   ├── C_metadata_2_DB.py
+│   ├── D_setup_download.py
+│   ├── E_data_2_DB.py
+│   └── F_download_TESS_data.py
 │
-├── r/                             			# Ordner für R-Skripte und Shiny-App
-│   ├── Shiny_Gantrisch/           			# Ordner für die R Shiny App Gantrisch
-│   │   ├── app.R                  			# Haupt-R Shiny App
-│   │   ├── server.R               			# Server-Komponente der Shiny-App
-│   │   └── ui.R                   			# UI-Komponente der Shiny-App
+├── r
+│   ├── Shiny_Gantrisch
+│   │   ├── www
+│   │   ├── app.R
+│   │   ├── Histogram_over21perMonth_yearly.R
+│   │   ├── MinMaxMSAS_DarkTimeMoon_perMonth.R
+│   │   ├── MSAS_Werte_nachtPerMonat_skyTemperature.R
+│   │   ├── PhotometerStatistics_overYears.R
+│   │   ├── server.R
+│   │   └── ui.R
 │   │
-│   └── Dockerfile                 			# Dockerfile für den R Shiny-Container
+│   └── Dockerfile
 │
-├── docker-compose.yml             			# Docker-Compose Datei zur Verwaltung der Container
-├── NachthimmelMonitoringGantrisch.Rproj  	# R Projektdatei
-├── README.md                      			# Haupt-README für das Repository
-└── .gitignore                     			# Git Ignore Datei für das gesamte Projekt
+├── .gitignore
+├── docker-compose.yml
+├── NachthimmelMonitoringGantrisch.Rproj
+├── README.md
+├── README_Install_TESS-IDA-TOOLS.md
+├── README_R_Shiny.md
+└── README_venv_R.md
+
