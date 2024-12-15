@@ -17,7 +17,7 @@ load_data_from_database <- function(photometer_id) {
   
   conn <- dbConnect(RSQLite::SQLite(), db_tess_data_path)
   table_name <- paste0(photometer_id, "_data")
-  query <- paste("SELECT time, msas, sky_temperature, night_id, astronomical_night FROM", table_name)
+  query <- paste("SELECT time, msas, sky_temperature, moon_illumination, night_id, astronomical_night FROM", table_name)
   df <- dbGetQuery(conn, query)
   dbDisconnect(conn)
   
@@ -31,7 +31,7 @@ load_data_from_database <- function(photometer_id) {
 # Function to process the data for the required yearly counts
 process_night_data <- function(df) {
   df <- df %>%
-    filter(astronomical_night == 1, sky_temperature < 0) %>%
+    filter(astronomical_night == 1, sky_temperature < 0, moon_illumination < 0.3) %>%
     mutate(
       year = year(as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
     )
@@ -87,7 +87,7 @@ plot_yearly_counts <- function(yearly_counts, filtered_data) {
                               "nights_over_21_3" = "Nächte mit max MSAS > 21.3", 
                               "nights_cold" = "Nächte mit 90% Himmelstemperatur < 0"))
   
-  fixed_y_limit <- 300 # Fixed y-axis scale limit
+  fixed_y_limit <- 200 # Fixed y-axis scale limit
   
   p1 <- ggplot(yearly_counts_long, aes(x = factor(year), y = count, fill = condition)) +
     geom_bar(stat = "identity", position = position_dodge(width = 0.5), width = 0.3) +
@@ -96,7 +96,7 @@ plot_yearly_counts <- function(yearly_counts, filtered_data) {
       subtitle = subtitle_text,
       x = "Jahr",
       y = "Anzahl der Nächte",
-      fill = "Bedingung"
+      fill = "Bedingung:"
     ) +
     scale_y_continuous(limits = c(0, fixed_y_limit), 
                        breaks = seq(0, fixed_y_limit, by = 25),
@@ -132,7 +132,7 @@ plot_yearly_counts <- function(yearly_counts, filtered_data) {
     p2 <- p2 + geom_text(aes(label = paste0(round(ratio, 1), "%")), vjust = -1, size = 4, color = "#404040")
   }
   
-  grid.arrange(p1, p2, ncol = 1, heights = c(10, 6))
+  grid.arrange(p1, p2, ncol = 1, heights = c(10, 7))
 }
 
 # Main function to run the analysis
