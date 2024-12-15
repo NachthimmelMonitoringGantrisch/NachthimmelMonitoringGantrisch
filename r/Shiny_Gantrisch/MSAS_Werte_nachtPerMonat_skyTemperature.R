@@ -12,7 +12,7 @@ db_tess_data_path <- normalizePath(file.path("..", "..", "data", "TessNetwork_da
 # Function to load data from the database
 load_data_from_database <- function(photometer_id) {
   if (!file.exists(db_tess_data_path)) {
-    stop(paste("Datenbank nicht gefunden am Pfad:", db_tess_data_path))
+    stop(paste("Database not found at path:", db_tess_data_path))
   }
   
   conn <- dbConnect(RSQLite::SQLite(), db_tess_data_path)
@@ -22,7 +22,7 @@ load_data_from_database <- function(photometer_id) {
   dbDisconnect(conn)
   
   if (nrow(df) == 0) {
-    stop(paste("Keine Daten gefunden für Photometer:", photometer_id))
+    stop(paste("No data found for photometer:", photometer_id))
   }
   
   df <- df %>%
@@ -118,19 +118,19 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
     geom_line(data = df_night, aes(x = time, y = msas), color = "black", size = 1) +
     # Add green bars for below-zero temperature intervals
     {if (nrow(df_grouped) > 0) {
-      geom_rect(data = df_grouped, aes(xmin = start_time, xmax = end_time, fill = "Temperaturen unter Null"), ymin = 14, ymax = 15, alpha = 0.7)
+      geom_rect(data = df_grouped, aes(xmin = start_time, xmax = end_time, fill = "Below Zero Temperature"), ymin = 14, ymax = 15, alpha = 0.7)
     }} +
     # Unified scale_fill_manual for Bortle scale and green bars
     scale_fill_manual(
-      values = c(setNames(bortle_scale$color, bortle_scale$bortle_class), "Temperaturen unter Null" = "green"),
-      name = "Bortle-Skala",
-      labels = c(setNames(bortle_scale$bortle_class, bortle_scale$bortle_class), "Temperaturen unter Null")
+      values = c(setNames(bortle_scale$color, bortle_scale$bortle_class), "Below Zero Temperature" = "green"),
+      name = "Legend",
+      labels = c(setNames(bortle_scale$bortle_class, bortle_scale$bortle_class), "Below Zero Temperature")
     ) +
     # Add reference line for MSAS target value (21.3)
-    geom_hline(aes(yintercept = 21.3, color = "MSAS Zielwert"), linetype = "dashed", size = 1) +
+    geom_hline(aes(yintercept = 21.3, color = "MSAS Target"), linetype = "dashed", size = 1) +
     # Add dotted lines for astronomical night start and end
-    geom_vline(data = night_intervals, aes(xintercept = as.numeric(start_night), color = "Nacht Start/Ende"), linetype = "dotted", size = 1) +
-    geom_vline(data = night_intervals, aes(xintercept = as.numeric(end_night), color = "Nacht Start/Ende"), linetype = "dotted", size = 1) +
+    geom_vline(data = night_intervals, aes(xintercept = as.numeric(start_night), color = "Night Start/End"), linetype = "dotted", size = 1) +
+    geom_vline(data = night_intervals, aes(xintercept = as.numeric(end_night), color = "Night Start/End"), linetype = "dotted", size = 1) +
     # Axis settings
     scale_x_datetime(
       limits = c(start_datetime, end_datetime),
@@ -144,14 +144,14 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
     ) +
     # Add legend for linear elements below the Bortle scale
     scale_color_manual(
-      name = "Linienelemente",
-      values = c("Nacht Start/Ende" = "black", "MSAS Zielwert" = "red"),
-      labels = c("21.3 mag/arcsec²", "Nacht Start/Ende")
+      name = "Linear Elements",
+      values = c("Night Start/End" = "black", "MSAS Target" = "red"),
+      labels = c("21.3 mag/arcsec²", "Night Start/End")
     ) +
     # Title and theme
     labs(
-      title = paste("MSAS für", sprintf("%02d", day), month.abb[month], year),
-      x = "Zeit",
+      title = paste("MSAS for", sprintf("%02d", day), month.abb[month], year),
+      x = "Time",
       y = "MSAS [mag/arcsec²]"
     ) +
     theme_minimal() +
@@ -189,7 +189,7 @@ plot_all_nights <- function(df, year, month, ncol = 3) {
   
   # Stop execution if no data is available for the entire month
   if (length(plots) == 0) {
-    stop("Keine Daten für den ausgewählten Monat verfügbar.")
+    stop("No data available for the selected month.")
   }
   
   # Render the plots using grid.arrange without fixed heights
