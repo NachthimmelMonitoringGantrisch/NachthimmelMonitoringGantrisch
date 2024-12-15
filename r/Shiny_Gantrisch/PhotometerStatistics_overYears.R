@@ -1,4 +1,3 @@
-# Load required libraries
 library(DBI)
 library(RSQLite)
 library(dplyr)
@@ -18,7 +17,7 @@ load_data_from_database <- function(photometer_id) {
   
   conn <- dbConnect(RSQLite::SQLite(), db_tess_data_path)
   table_name <- paste0(photometer_id, "_data")
-  query <- paste("SELECT time, msas, sky_temperature, sun_alt, moon_illumination FROM", table_name)
+  query <- paste("SELECT time, msas, sky_temperature, night_id, astronomical_night FROM", table_name)
   df <- dbGetQuery(conn, query)
   dbDisconnect(conn)
   
@@ -32,29 +31,39 @@ load_data_from_database <- function(photometer_id) {
 # Function to process the data for the required yearly counts
 process_night_data <- function(df) {
   df <- df %>%
+    filter(astronomical_night == 1, sky_temperature < 0) %>%
     mutate(
-      time = as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
-      year = year(time),
-      night_id = as.integer(difftime(time, as.POSIXct("1970-01-01 20:00:00", tz = "UTC"), units = "days")) +
-        ifelse(hour(time) < 9, -1, 0)
-    ) %>%
-    filter(sun_alt <= -18, sky_temperature < 0, moon_illumination <= 0.2)
+      year = year(as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+    )
+  
+  # Ensure all years in the data are represented
+  all_years <- tibble(year = unique(year(df$time)))
   
   night_stats <- df %>%
     group_by(year, night_id) %>%
     summarise(
       max_msas = max(msas, na.rm = TRUE),
-      sky_temp_below_zero_pct = mean(sky_temperature < 0, na.rm = TRUE)
-    ) %>%
-    ungroup()
+      sky_temp_below_zero_pct = mean(sky_temperature < 0, na.rm = TRUE),
+      .groups = 'drop'
+    )
   
   yearly_counts <- night_stats %>%
     group_by(year) %>%
     summarise(
       nights_over_21_3 = sum(max_msas > 21.3, na.rm = TRUE),
-      nights_cold = sum(sky_temp_below_zero_pct >= 0.9, na.rm = TRUE)
-    ) %>%
-    mutate(ratio = ifelse(nights_cold > 0, (nights_over_21_3 / nights_cold) * 100, NA))
+      nights_cold = sum(sky_temp_below_zero_pct >= 0.9, na.rm = TRUE),
+      ratio = ifelse(nights_cold > 0, (nights_over_21_3 / nights_cold) * 100, NA),
+      .groups = 'drop'
+    )
+  
+  # Merge to include all years with 0 where applicable
+  yearly_counts <- all_years %>%
+    left_join(yearly_counts, by = "year") %>%
+    mutate(
+      nights_over_21_3 = ifelse(is.na(nights_over_21_3), 0, nights_over_21_3),
+      nights_cold = ifelse(is.na(nights_cold), 0, nights_cold),
+      ratio = ifelse(is.na(ratio), 0, ratio)
+    )
   
   return(yearly_counts)
 }
@@ -78,6 +87,8 @@ plot_yearly_counts <- function(yearly_counts, filtered_data) {
                               "nights_over_21_3" = "Nächte mit max MSAS > 21.3", 
                               "nights_cold" = "Nächte mit 90% Himmelstemperatur < 0"))
   
+  fixed_y_limit <- 300 # Fixed y-axis scale limit
+  
   p1 <- ggplot(yearly_counts_long, aes(x = factor(year), y = count, fill = condition)) +
     geom_bar(stat = "identity", position = position_dodge(width = 0.5), width = 0.3) +
     labs(
@@ -87,7 +98,9 @@ plot_yearly_counts <- function(yearly_counts, filtered_data) {
       y = "Anzahl der Nächte",
       fill = "Bedingung"
     ) +
-    scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 25)) +
+    scale_y_continuous(limits = c(0, fixed_y_limit), 
+                       breaks = seq(0, fixed_y_limit, by = 25),
+                       minor_breaks = NULL) +
     theme_minimal() +
     theme(
       axis.text.x = element_text(angle = 0, hjust = 0.5),
@@ -99,13 +112,13 @@ plot_yearly_counts <- function(yearly_counts, filtered_data) {
     scale_fill_manual(values = c("#7A4EA3", "#C88719"))
   
   p2 <- ggplot(yearly_counts, aes(x = factor(year), y = ratio)) +
-    geom_point(color = "#C88719", size = 3) +
+    geom_linerange(aes(ymin = ratio - 1, ymax = ratio + 1), color = "#C88719", size = 7) +
     labs(
       title = "Anteil der Nächte mit max MSAS > 21.3 im Verhältnis zu Nächten mit Himmelstemperatur < 0°",
       x = "Jahr",
       y = "Anteil [%]"
     ) +
-    scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 25)) +
+    scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10), minor_breaks = NULL) +
     theme_minimal() +
     theme(
       axis.text.x = element_text(angle = 0, hjust = 0.5),
@@ -119,7 +132,7 @@ plot_yearly_counts <- function(yearly_counts, filtered_data) {
     p2 <- p2 + geom_text(aes(label = paste0(round(ratio, 1), "%")), vjust = -1, size = 4, color = "#404040")
   }
   
-  grid.arrange(p1, p2, ncol = 1, heights = c(2, 1))
+  grid.arrange(p1, p2, ncol = 1, heights = c(10, 6))
 }
 
 # Main function to run the analysis

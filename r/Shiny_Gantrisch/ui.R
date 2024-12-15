@@ -143,8 +143,11 @@ ui <- navbarPage(
              mainPanel(
                conditionalPanel(
                  condition = "input.analysisType == 'Photometer Statistik'",
-                 plotOutput("plotPhotometerStatistics")
-               ),
+                 div(
+                   style = "height: calc(100vh - 120px); overflow-y: auto;",
+                   plotOutput("plotPhotometerStatistics", width = "100%", height = "100%")
+                    )
+                 ),
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Jahr'",
                  plotOutput("plotHistogramPerYear")
@@ -158,7 +161,10 @@ ui <- navbarPage(
                ),
                conditionalPanel(
                  condition = "input.analysisType == 'Analyse pro Monat'",
-                 plotOutput("plotMinMaxMSASDarkTimeMoonPerMonth", height = "800px", width = "100%")
+                 div(
+                   style = "height: calc(100vh - 120px); overflow-y: auto;",
+                   plotOutput("plotMinMaxMSASDarkTimeMoonPerMonth", height = "100%", width = "100%")
+                 )
                )
              )
            )),
