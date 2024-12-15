@@ -659,6 +659,7 @@ server <- function(input, output, session) {
   #-------------------------------------------------------------------
   
   output$reportStatus <- renderText({
-    "Bereit zum Exportieren des Reports."
+    "Die Funktionen dieses Registers sind nicht implementiert. 
+       Die Eingabeelemente dienen der Veranschaulichung des Konzepts für eine eventuelle Erweiterung."
   })
 }

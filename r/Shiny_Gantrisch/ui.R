@@ -173,25 +173,35 @@ ui <- navbarPage(
   tabPanel("Analyse Report",
            sidebarLayout(
              sidebarPanel(
-               checkboxInput("check_Photometer Statistik", 
-                             "Photometer Statistik", value = TRUE),
-               checkboxInput("check_PhotometerGraphics", 
-                             "Visualisierung pro Monat", value = TRUE),
-               checkboxInput("check_PhotometerComparison", 
-                             "Photometer Vergleich", value = TRUE),
+               # Dropdowns at the top
+               selectInput("photometerDropdownReport", 
+                           "Auswahl Photometer:", 
+                           choices = NULL),
+               selectInput("multipleYearsDropdownReport", 
+                           "Auswahl der Jahre:", 
+                           choices = NULL, 
+                           multiple = TRUE),
+               
+               # Checkboxes for each analysis type
+               checkboxInput("check_PhotometerStatistik", 
+                             "Photometer Statistik", value = FALSE),
+               checkboxInput("check_AnalyseProJahr", 
+                             "Analyse pro Jahr", value = FALSE),
+               checkboxInput("check_AnalyseProMonat", 
+                             "Analyse pro Monat", value = FALSE),
+               checkboxInput("check_AnalyseEinzelnächte", 
+                             "Analyse Einzelnächte", value = FALSE),
+               checkboxInput("check_PhotometerVergleich", 
+                             "Photometer Vergleich", value = FALSE),
+               
+               # Export Button
                actionButton("exportButton", 
                             "Exportiere Report")
              ),
+             
+             # Main panel for output
              mainPanel(
-               textOutput("reportStatus")  # Placeholder for export status
+               textOutput("reportStatus")
              )
-           )),
-  
-  # Add settings icon to the top-right of the navbar
-  header = div(class = "navbar-right",
-               tags$img(src = "settings-icon.png", 
-                        style = "width: 24px; height: 24px; cursor: pointer; margin-right: 15px;", 
-                        title = "Einstellungen", 
-                        onclick = "alert('Settings clicked!')")
-  )
+           ))
 )
