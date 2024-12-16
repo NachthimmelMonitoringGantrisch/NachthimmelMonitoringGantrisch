@@ -118,13 +118,13 @@ create_night_plot <- function(df, year, month, day, bortle_scale) {
     geom_line(data = df_night, aes(x = time, y = msas), color = "black", size = 1) +
     # Add green bars for below-zero temperature intervals
     {if (nrow(df_grouped) > 0) {
-      geom_rect(data = df_grouped, aes(xmin = start_time, xmax = end_time, fill = "Temperaturen unter Null"), ymin = 14, ymax = 15, alpha = 0.7)
+      geom_rect(data = df_grouped, aes(xmin = start_time, xmax = end_time, fill = "Himmelstemperatur < 0°C"), ymin = 14, ymax = 15, alpha = 0.7)
     }} +
     # Unified scale_fill_manual for Bortle scale and green bars
     scale_fill_manual(
-      values = c(setNames(bortle_scale$color, bortle_scale$bortle_class), "Temperaturen unter Null" = "green"),
+      values = c(setNames(bortle_scale$color, bortle_scale$bortle_class), "Himmelstemperatur < 0°C" = "green"),
       name = "Bortle-Skala",
-      labels = c(setNames(bortle_scale$bortle_class, bortle_scale$bortle_class), "Temperaturen unter Null")
+      labels = c(setNames(bortle_scale$bortle_class, bortle_scale$bortle_class), "Himmelstemperatur < 0°C")
     ) +
     # Add reference line for MSAS target value (21.3)
     geom_hline(aes(yintercept = 21.3, color = "MSAS Zielwert"), linetype = "dashed", size = 1) +
