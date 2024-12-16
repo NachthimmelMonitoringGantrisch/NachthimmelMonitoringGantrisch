@@ -33,37 +33,49 @@ install.packages("patchwork")   # Komplexe Plot-Layouts
 ### Vorinstallierte R-Pakete
 Die folgende Liste zeigt die Pakete, die standardmäßig in der R-Installation enthalten sind. Diese Pakete sind in der Regel ohne zusätzliche Installation verfügbar.
 
-| **Package**      | **Version** |
-|------------------|-------------|
-| askpass          | 1.2.0       |
-| backports        | 1.5.0       |
-| base64enc        | 0.1-3       |
-| bit              | 4.5.0       |
-| bit64            | 4.5.2       |
-| blob             | 1.2.4       |
-| bslib            | 0.8.0       |
-| callr            | 3.7.6       |
-| cli              | 3.6.3       |
-| DBI              | 1.2.3       |
-| dplyr            | 1.1.4       |
-| DT               | 0.33        |
-| ggplot2          | 3.5.1       |
-| jsonlite         | 1.8.9       |
-| lubridate        | 1.9.3       |
-| reticulate       | 1.39.0      |
-| RSQLite          | 2.3.7       |
-| shiny            | 1.9.1       |
-| stringi          | 1.8.4       |
-| tibble           | 3.2.1       |
-| tidyr            | 1.3.1       |
-| utils            | 4.4.1       |
-| R6               | 2.5.1       |
-| rpart            | 4.1.23      |
-| rprojroot        | 2.0.4       |
-| survival         | 3.6-4       |
-| tools            | 4.4.1       |
-| stats            | 4.4.1       |
-| yaml             | 2.3.10      |
+<table>
+  <tr>
+    <td>
+      <table>
+        <tr><th>**Package**</th><th>**Version**</th></tr>
+        <tr><td>askpass</td><td>1.2.0</td></tr>
+        <tr><td>backports</td><td>1.5.0</td></tr>
+        <tr><td>base64enc</td><td>0.1-3</td></tr>
+        <tr><td>bit</td><td>4.5.0</td></tr>
+        <tr><td>bit64</td><td>4.5.2</td></tr>
+        <tr><td>blob</td><td>1.2.4</td></tr>
+        <tr><td>bslib</td><td>0.8.0</td></tr>
+        <tr><td>callr</td><td>3.7.6</td></tr>
+        <tr><td>cli</td><td>3.6.3</td></tr>
+        <tr><td>DBI</td><td>1.2.3</td></tr>
+        <tr><td>dplyr</td><td>1.1.4</td></tr>
+        <tr><td>DT</td><td>0.33</td></tr>
+        <tr><td>ggplot2</td><td>3.5.1</td></tr>
+        <tr><td>jsonlite</td><td>1.8.9</td></tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>**Package**</th><th>**Version**</th></tr>
+        <tr><td>lubridate</td><td>1.9.3</td></tr>
+        <tr><td>reticulate</td><td>1.39.0</td></tr>
+        <tr><td>RSQLite</td><td>2.3.7</td></tr>
+        <tr><td>shiny</td><td>1.9.1</td></tr>
+        <tr><td>stringi</td><td>1.8.4</td></tr>
+        <tr><td>tibble</td><td>3.2.1</td></tr>
+        <tr><td>tidyr</td><td>1.3.1</td></tr>
+        <tr><td>utils</td><td>4.4.1</td></tr>
+        <tr><td>R6</td><td>2.5.1</td></tr>
+        <tr><td>rpart</td><td>4.1.23</td></tr>
+        <tr><td>rprojroot</td><td>2.0.4</td></tr>
+        <tr><td>survival</td><td>3.6-4</td></tr>
+        <tr><td>tools</td><td>4.4.1</td></tr>
+        <tr><td>stats</td><td>4.4.1</td></tr>
+        <tr><td>yaml</td><td>2.3.10</td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
 
 Diese Pakete sind in der Regel in der Basisinstallation von R enthalten und erfordern keine zusätzliche Installation.
 
