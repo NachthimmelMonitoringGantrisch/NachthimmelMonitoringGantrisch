@@ -60,8 +60,8 @@ def install_libraries(venv_path):
         "sqlalchemy",
         "pandas==2.2.3", 
         "numpy==2.1.3",
-        "aiohttp==3.9.5",  # Ensure compatibility
-        "aiodns==3.0.0",   # Use a compatible version for Windows
+        "aiohttp==3.9.5",
+        "aiodns==3.0.0",
         "git+https://github.com/STARS4ALL/TESS-IDA-TOOLS#main"
     ]
 
