@@ -3,8 +3,12 @@
 ## Dokumentation und Bedienungsanleitung
 
 <a href="https://documentation-gantrisch.vercel.app/">Hier finden Sie die Dokumentation</a>
+---
 
 ## Installation
+Die Installation der Plattform "Nachthimmelmonitoring Naturpark Gantrisch" ist mit Docker Containern vorgesehen. Die Umsetzung mit Docker war jedoch nicht erfolgreich. 
+
+---
 
 ## Abhänigkeiten
 
@@ -26,7 +30,6 @@ install.packages("gridExtra")   # Kombinieren von Plots
 install.packages("cowplot")     # Verbessertes Plot-Layout
 install.packages("patchwork")   # Komplexe Plot-Layouts
 ```
----
 
 ### Vorinstallierte R-Pakete
 Die folgende Liste zeigt die Pakete, die standardmäßig in der R-Installation enthalten sind. Diese Pakete sind in der Regel ohne zusätzliche Installation verfügbar.
@@ -94,8 +97,6 @@ git+https://github.com/STARS4ALL/TESS-IDA-TOOLS#main
 - **aiodns==3.0.0**: Asynchrone DNS-Anfragen
 - **TESS-IDA-TOOLS**: GitHub-Repository, das die Tools zur Verarbeitung der TESS-Daten enthält
 
----
-
 #### 2. **Python-Umgebung mit Shiny**
 Die virtuelle Umgebung `.venv_R` wird verwendet, wenn Python-Skripte in der Shiny-App ausgeführt werden. Diese Umgebungsabhängigkeiten werden in der Datei `python/requirements/requirements_venv_R.txt` definiert. Diese Requirements werden automatisch bei einem Start der Plattform überprüft und installiert.
 
@@ -116,3 +117,5 @@ typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.2.3
 ```
+
+---
