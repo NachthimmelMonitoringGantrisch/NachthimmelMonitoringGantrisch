@@ -3,7 +3,6 @@
 ## Dokumentation und Bedienungsanleitung
 
 <a href="https://documentation-gantrisch.vercel.app/">Hier finden Sie die Dokumentation</a>
----
 
 ## Installation
 Die Installation der Plattform "Nachthimmelmonitoring Naturpark Gantrisch" ist mit Docker Containern vorgesehen. Die Umsetzung mit Docker war jedoch nicht erfolgreich. 
