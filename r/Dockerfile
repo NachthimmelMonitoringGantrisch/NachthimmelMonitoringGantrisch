@@ -1,17 +1,17 @@
-# Verwende ein Basis-Image mit R und Shiny
+# Verwende das Rocker-Image mit R und Shiny
 FROM rocker/shiny:latest
 
 # Setze das Arbeitsverzeichnis
 WORKDIR /srv/shiny-server
 
-# Kopiere die Shiny-App-Dateien in das Container-Verzeichnis
-COPY Shiny_Gantrisch/ .
+# Kopiere die R Shiny-App-Dateien
+COPY r/Shiny_Gantrisch/ /srv/shiny-server/
 
-# Installiere benötigte R-Pakete
-RUN R -e "install.packages(c('shiny', 'ggplot2', 'RSQLite', 'reticulate'))"
+# Installiere R-Bibliotheken
+RUN R -e "install.packages(c('shiny', 'ggplot2', 'RSQLite', 'jsonlite', 'reticulate', 'DT', 'dplyr', 'lubridate', 'DBI', 'tidyr', 'gridExtra', 'cowplot', 'patchwork'))"
 
-# Exponiere den Port
+# Exponiere den Port 3838
 EXPOSE 3838
 
-# Starte die Shiny-App
+# Setze den Befehl zum Starten der Shiny-App
 CMD ["R", "-e", "shiny::runApp('/srv/shiny-server/app.R', host='0.0.0.0', port=3838)"]

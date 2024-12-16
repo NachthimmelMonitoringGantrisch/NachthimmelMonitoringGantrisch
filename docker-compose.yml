@@ -1,31 +1,24 @@
-version: '3.8'
+version: '3'
 
 services:
-  tess-ida-tools:
+  shiny:
     build:
       context: .
-      dockerfile: Dockerfile.tess-ida  # Das Dockerfile für TESS-IDA-TOOLS
-    volumes:
-      - ./data:/app/TESS-IDA-TOOLS/IDA   # Lokales Verzeichnis für Datenablage
-      - ./ecsv:/app/TESS-IDA-TOOLS/ECSV  # ECSV Ausgabe
-    environment:
-      - IDA_URL=https://fta-cloud.fis.ucm.es/index.php/s/Gr9DAbfiX8Pdm86
-      - DATABASE_FILE=adm/tessida.db
-    networks:
-      - app_network
-    command: ["tess-ida-pipe", "--console", "range", "--in-dir", "IDA", "--out-dir", "ECSV", "--name", "stars926", "--since", "2023-10", "--until", "2024-09"]
-
-  shiny-app:
-    build:
-      context: .
-      dockerfile: Dockerfile.shiny  # Das Dockerfile für Shiny-App
-    volumes:
-      - ./Shiny_Gantrisch:/srv/shiny-server
+      dockerfile: r/Dockerfile
+    image: nachthimmel/shiny:latest
+    container_name: shiny_app
     ports:
-      - "3838:3838"
-    networks:
-      - app_network
+      - "3838:3838" 
+    volumes:
+      - ./r/Shiny_Gantrisch:/srv/shiny-server
+      - ./python:/srv/shiny-server/python  # Volume-Mount für den Python-Ordner
 
-networks:
-  app_network:
-    driver: bridge
+  python:
+    build:
+      context: .
+      dockerfile: python/Dockerfile
+    image: nachthimmel/python:latest
+    container_name: python_tess_ida
+    volumes:
+      - ./python:/app/python
+      - ./data:/app/data
