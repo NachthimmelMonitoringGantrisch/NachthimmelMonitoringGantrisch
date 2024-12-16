@@ -2,5 +2,7 @@
 
 ## Dokumentation und Bedienungsanleitung
 
-<a href="https://documentation-gantrisch.vercel.app/">Go directly to the Documentation</a>
+<a href="https://documentation-gantrisch.vercel.app/">Hier finden Sie die Dokumentation</a>
+
+## Installation
 
