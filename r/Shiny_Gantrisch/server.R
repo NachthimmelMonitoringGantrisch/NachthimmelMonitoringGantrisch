@@ -53,10 +53,12 @@ tryCatch({
 #----------------------------------------------------------------------
 
 # Define the Python environment path for reticulate
-python_env_path <- normalizePath(file.path("..", "..", ".venv_R", "Scripts", "python.exe"), mustWork = TRUE)
+#python_env_path <- normalizePath(file.path("..", "..", ".venv_R", "Scripts", "python.exe"), mustWork = TRUE)
 
 # Use the Python environment with reticulate
-use_python(python_env_path, required = TRUE)
+#use_python(python_env_path, required = TRUE)
+
+use_virtualenv(normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/"))
 
 # Check if reticulate is correctly configured
 print("Python Configuration:")
@@ -84,7 +86,12 @@ source_python_code <- function(photometer_name, start_date, end_date, preprocess
 # Add the `run_tess_download` function here
 run_tess_download <- function(photometer_names, start_date, end_date) {
   python_script <- normalizePath("../../python/F_download_TESS_data.py", mustWork = TRUE)
-  tess_env_python <- normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/Scripts/python.exe", mustWork = TRUE)
+  
+  if (.Platform$OS.type == "windows") {
+    tess_env_python <- normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/Scripts/python.exe", mustWork = FALSE)
+  } else {
+    tess_env_python <- normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/bin/python", mustWork = FALSE)
+  }
   
   photometer_names_arg <- paste(photometer_names, collapse = ",")
   command <- sprintf(
@@ -133,7 +140,7 @@ server <- function(input, output, session) {
         }
         
         incProgress(0.7, detail = "Finalisiere Setup Metadaten")
-        print("Python script executed successfully.")
+        print("C_metadata_2_DB.py executed successfully.")
         
         incProgress(0.95, detail = "Setup komplett.")
       }, error = function(e) {
@@ -288,15 +295,27 @@ server <- function(input, output, session) {
         start_date <- date_range[1]
         end_date <- date_range[2]
         
-        python_path <- normalizePath(file.path("..", "..", "python", "TESS-IDA-TOOLS", "jupyter", ".venv", "Scripts", "python.exe"))
         script_path <- normalizePath(file.path("..", "..", "python", "F_download_TESS_data.py"))
-        command <- sprintf('"%s" "%s" "%s" "%s" "%s"', python_path, script_path, photometers, start_date, end_date)
+        
+        if (.Platform$OS.type == "windows") {
+          venv_python_path <- normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/Scripts/python.exe", mustWork = FALSE)
+        } else {
+          venv_python_path <- normalizePath("../../python/TESS-IDA-TOOLS/jupyter/.venv/bin/python", mustWork = FALSE)
+        }
+        
+        command <- sprintf('"%s" "%s" "%s" "%s" "%s"',
+                           venv_python_path,
+                           script_path, 
+                           photometers, 
+                           start_date, 
+                           end_date)
         
         withProgress(message = "Daten werden heruntergeladen...", value = 0, {
           incProgress(0.3, detail = "Start...")
           
           tryCatch({
             # Run the system command and capture the output
+            print(command)
             output_log <- system(command, intern = TRUE)
             print(output_log)  # Debugging purposes
             

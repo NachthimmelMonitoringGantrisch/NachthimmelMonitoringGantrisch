@@ -36,7 +36,7 @@ def create_and_setup_venv(requirements_file):
         print(f"Virtual environment '{venv_dir}' already exists. Skipping creation.")
 
     # Construct the pip executable path within the virtual environment
-    pip_executable = os.path.join(venv_dir, "Scripts", "pip") if os.name == "nt" else os.path.join(venv_dir, "bin", "pip")
+    pip_executable = os.path.join(venv_dir, 'Scripts', 'pip') if os.name == 'nt' else os.path.join(venv_dir, 'bin', 'pip')
 
     # Install only missing libraries from the requirements file
     if os.path.exists(requirements_file):

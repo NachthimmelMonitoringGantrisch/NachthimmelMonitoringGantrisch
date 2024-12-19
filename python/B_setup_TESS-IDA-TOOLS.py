@@ -41,7 +41,7 @@ def create_virtual_env(jupyter_dir):
     venv_path = os.path.join(jupyter_dir, ".venv")
     if not os.path.exists(venv_path):
         print(f"Creating virtual environment in {venv_path}...")
-        subprocess.check_call([sys.executable, "-m", "venv", venv_path])
+        subprocess.check_call([sys.executable, "-m", "venv", "--copies", venv_path])
         print(f"Virtual environment created at {venv_path}")
     else:
         print(f"Virtual environment already exists at {venv_path}")
@@ -51,7 +51,7 @@ def install_libraries(venv_path):
     """
     Installs the required libraries into the virtual environment.
     """
-    pip_executable = os.path.join(venv_path, "Scripts", "pip.exe" if os.name == "nt" else "bin/pip")
+    pip_executable = os.path.join(venv_path, "Scripts/pip.exe" if os.name == "nt" else "bin/pip")
 
     # List of libraries to install
     packages = [
@@ -93,13 +93,14 @@ def activate_venv():
     """
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     jupyter_dir = os.path.join(project_root, "python", "TESS-IDA-TOOLS", "jupyter")
-    venv_path_win = os.path.join(jupyter_dir, '.venv', 'Scripts', 'activate.bat')
+    venv_path = os.path.join(jupyter_dir, '.venv', 'Scripts', f"activate{".bat" if os.name == 'nt' else ""}")
 
     if os.name == 'nt':  # For Windows
-        if os.path.exists(venv_path_win):
-            subprocess.call([venv_path_win], shell=True)
+        if os.path.exists(venv_path):
+            subprocess.call([venv_path], shell=True)
         else:
-            print("Windows virtual environment 'activate.bat' script not found!")
+            print("virtual environment 'activate' script not found!")
+
 
 def setup_tess():
     """
@@ -135,8 +136,9 @@ def run_schema_create(jupyter_dir):
     """
     Runs the `tess-ida-db --console schema create` command in the jupyter folder.
     """
-    venv_path = os.path.join(jupyter_dir, ".venv", "Scripts")
-    tess_ida_db_path = os.path.join(venv_path, "tess-ida-db.exe")
+    venv_path = os.path.join(jupyter_dir, ".venv", "Scripts") if os.name == "nt" else os.path.join(jupyter_dir, ".venv", "bin")
+    tess_ida_db_path = os.path.join(venv_path, "tess-ida-db.exe" if os.name == "nt" else "tess-ida-db")
+
 
     if not os.path.exists(tess_ida_db_path):
         print(f"Executable tess-ida-db not found at {tess_ida_db_path}")

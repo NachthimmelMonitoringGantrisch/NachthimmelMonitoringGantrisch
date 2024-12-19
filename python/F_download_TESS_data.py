@@ -9,7 +9,7 @@ def activate_venv(jupyter_dir):
     Activates the virtual environment in the jupyter directory.
     Returns the path to the Python executable if successful.
     """
-    venv_python = os.path.join(jupyter_dir, ".venv", "Scripts", "python.exe")
+    venv_python = os.path.join(jupyter_dir, ".venv", "Scripts", "python.exe") if os.name == "nt" else os.path.join(jupyter_dir, ".venv", "bin", "python")
 
     if not os.path.exists(venv_python):
         raise FileNotFoundError(
@@ -24,7 +24,8 @@ def run_tess_ida_pipe(jupyter_dir, photometer_name, month):
     Captures errors and warnings to return them for further handling.
     """
     venv_python = activate_venv(jupyter_dir)
-    tess_ida_pipe_path = os.path.join(jupyter_dir, ".venv", "Scripts", "tess-ida-pipe.exe")
+    tess_ida_pipe_path = os.path.join(jupyter_dir, ".venv", "Scripts", "tess-ida-pipe.exe") if os.name == "nt" else os.path.join(jupyter_dir, ".venv", "bin", "tess-ida-pipe")
+
 
     if not os.path.exists(tess_ida_pipe_path):
         raise FileNotFoundError(f"tess-ida-pipe executable not found at {tess_ida_pipe_path}.")

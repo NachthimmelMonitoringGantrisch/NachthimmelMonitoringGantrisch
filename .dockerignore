@@ -1,0 +1,21 @@
+# alle grossen Dateien
+*.tar
+*.zip
+*.gz
+
+# Caches, Logs und temporäre Dateien
+*.log
+*.tmp
+*.swp
+
+# venv und Python-Zwischendateien
+__pycache__/
+*.pyc
+*.pyo
+python/.venv/
+.venv_R/
+python/TESS-IDA-TOOLS
+
+# Git und Versionskontroll-Dateien
+.git/
+.gitignore
