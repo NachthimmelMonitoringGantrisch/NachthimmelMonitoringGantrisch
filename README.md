@@ -26,6 +26,7 @@
 3. **Nach "naamp/nachthimmelmonitoring" suchen**.
 4. **Das Image auswählen** und auf **Pull** (Herunterladen) klicken.
 5. **Fortschritt überprüfen**: Warten Sie, bis der Download abgeschlossen ist. Das Image wird in der Images-Liste angezeigt.
+6. **Image in Container starten**: 
 
 **Methode 2: Über die Konsole**
 
@@ -33,9 +34,19 @@
    - Windows: öffnen Sie die "Eingabeaufforderung" oder "PowerShell".
    - macOS / Linux: öffnen Sie ein Terminal.
 
-2. **Docker-Image herunterladen über die Konsole**: Führen Sie den folgenden Befehl in der Konsole aus:
+2. **Docker-Image über die Konsole herunterladen**: Führen Sie den folgenden Befehl in der Konsole aus:
    ```bash
    docker pull naamp/nachthimmelmonitoring:latest
+   ```
+
+3. **Docker-Image in Container über die Konsole starten**: Führen Sie den folgenden Befehl in der Konsole aus:
+  ```bash
+   docker run -d -p 3838:3838 --name nachthimmelmonitoring naamp/nachthimmelmonitoring:latest
+  ```
+
+4. **Aufrufen der Plattform im Webbrowser**
+
+http://localhost:3838/
 
 ---
 
@@ -115,7 +126,7 @@ Diese Pakete sind in der Regel in der Basisinstallation von R enthalten und erfo
 Es werden zwei separate Python-Umgebungen verwendet:
 
 #### 1. **TESS-IDA-TOOLS**
-Die virtuelle Umgebung `.venv` enthält die Abhängigkeiten für die TESS-IDA-TOOLS. Diese Abhängigkeiten werden in der Datei `B_setup_TESS-IDA-TOOLS.py` definiert und automatisch bei einem Start der Plattform installiert.
+Die virtuelle Umgebung `.venv` enthält die Abhängigkeiten für die [TESS-IDA-TOOLS](https://github.com/STARS4ALL/TESS-IDA-TOOLS). Diese Abhängigkeiten werden in der Datei `B_setup_TESS-IDA-TOOLS.py` definiert und automatisch bei einem Start der Plattform installiert.
 
 ```plaintext
 notebook==7.2.2
