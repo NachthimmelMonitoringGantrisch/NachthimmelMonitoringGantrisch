@@ -35,9 +35,9 @@
    - macOS / Linux: öffnen Sie ein Terminal.
 
 2. **Docker-Image über die Konsole herunterladen**: Führen Sie den folgenden Befehl in der Konsole aus:
-   ```bash
-   docker pull naamp/nachthimmelmonitoring:latest
-   ```
+  ```bash
+  docker pull naamp/nachthimmelmonitoring:latest
+  ```
 
 3. **Docker-Image in Container über die Konsole starten**: Führen Sie den folgenden Befehl in der Konsole aus:
   ```bash
