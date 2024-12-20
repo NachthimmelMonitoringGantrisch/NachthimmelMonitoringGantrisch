@@ -5,7 +5,37 @@
 <a href="https://documentation-gantrisch.vercel.app/">Hier finden Sie die Dokumentation</a>
 
 ## Installation
-Die Installation der Plattform "Nachthimmelmonitoring Naturpark Gantrisch" ist mit Docker Containern vorgesehen. Die Umsetzung mit Docker war jedoch nicht erfolgreich. 
+
+### 1. Download Docker Desktop
+
+1. **Besuchen Sie die offizielle Docker-Website**: [Docker Desktop herunterladen](https://www.docker.com/products/docker-desktop/).
+2. **Download starten**: Wählen Sie die Version aus, die zu Ihrem Betriebssystem passt (Windows, macOS oder Linux).
+3. **Installation durchführen**: Folgen Sie den Anweisungen des Installationsassistenten, um Docker Desktop zu installieren.
+4. **Docker starten**: Starten Sie Docker Desktop und stellen Sie sicher, dass der Docker-Dienst aktiv ist.
+
+**Hinweis**: Auf Windows müssen Sie sicherstellen, dass die Virtualisierungsoptionen im BIOS aktiviert sind.
+
+---
+
+### 2. Pull Docker Image
+
+**Methode 1: Über Docker Desktop (Empfohlen)**
+
+1. **Docker Desktop öffnen**.
+2. **Zur Registerkarte "Images" wechseln**.
+3. **Nach "naamp/nachthimmelmonitoring" suchen**.
+4. **Das Image auswählen** und auf **Pull** (Herunterladen) klicken.
+5. **Fortschritt überprüfen**: Warten Sie, bis der Download abgeschlossen ist. Das Image wird in der Images-Liste angezeigt.
+
+**Methode 2: Über die Konsole**
+
+1. **Docker-Konsole öffnen**: 
+   - Windows: öffnen Sie die "Eingabeaufforderung" oder "PowerShell".
+   - macOS / Linux: öffnen Sie ein Terminal.
+
+2. **Docker-Image herunterladen über die Konsole**: Führen Sie den folgenden Befehl in der Konsole aus:
+   ```bash
+   docker pull naamp/nachthimmelmonitoring:latest
 
 ---
 
